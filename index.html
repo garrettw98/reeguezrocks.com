@@ -137,6 +137,12 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 999;
         }
+        .success-message {
+            display: none; /* Hidden by default */
+            text-align: center;
+            margin-top: 20px;
+            color: #00ff00;
+        }
     </style>
 </head>
 <body>
@@ -148,6 +154,10 @@
                 <p class="hero-text">October 31st - November 3rd | Alabama Hills, CA</p>
                 <div id="countdown"></div>
                 <a href="#" class="cta-button" onclick="showForm()">STAY INFORMED</a>
+                <div class="success-message" id="success-message">
+                    <h2>Form Submitted Successfully!</h2>
+                    <p>&#10004; Thank you for your interest. We'll be in touch soon.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -173,7 +183,7 @@
     <div class="overlay" id="overlay" onclick="hideForm()"></div>
 
     <div class="form-container" id="form-container">
-        <form action="https://formspree.io/f/xjkbyznp" method="POST">
+        <form id="contact-form">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
             <label for="email">Email:</label>
@@ -192,9 +202,10 @@
             const eventDate = new Date('2024-10-31T00:00:00').getTime();
             const now = new Date().getTime();
             const timeLeft = eventDate - now;
-                        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
             const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
             document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
@@ -222,6 +233,39 @@
         window.addEventListener('scroll', function() {
             const scrolled = window.pageYOffset;
             document.querySelector('.parallax-bg').style.transform = 'translateY(' + (scrolled * 0.5) + 'px)';
+        });
+
+        // Handle form submission via AJAX
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            fetch('https://formspree.io/f/xjkbyznp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('form-container').style.display = 'none';
+                    document.getElementById('overlay').style.display = 'none';
+                    document.getElementById('success-message').style.display = 'block';
+                } else {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.error);
+                    });
+                }
+            })
+            .catch(error => {
+                alert('There was an error submitting the form: ' + error.message);
+            });
         });
     </script>
 </body>
