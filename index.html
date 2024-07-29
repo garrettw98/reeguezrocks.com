@@ -6,82 +6,71 @@
     <title>REEGUEZ ROCKS 2024</title>
     <style>
         body, html {
+            height: 100%;
             margin: 0;
-            padding: 0;
             font-family: Arial, sans-serif;
-            color: #ffffff;
-            background-color: #000000;
+            color: #fff;
         }
         .parallax-container {
-            height: 100vh;
+            height: 100%;
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .parallax-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url('Image.webp');
-            background-size: cover;
-            filter: brightness(0.5);
-            z-index: -1;
+            background-image: url('/Users/garrettwilliams/Documents/GitHub/reeguezrocks.com/Image.webp');
         }
         .content {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
             text-align: center;
             padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
         }
-        .content-inner {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        h1 {
-            font-size: 3em;
-            margin-bottom: 0.5em;
+        h1, h2 {
+            color: #ff6b6b;
         }
         .cta-button {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #9400D3;
+            background-color: #4ecdc4;
             color: white;
             text-decoration: none;
             border-radius: 5px;
-            font-weight: bold;
             margin-top: 20px;
-        }
-        .success-message {
-            display: none;
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        main {
-            padding: 40px;
-            max-width: 800px;
-            margin: 0 auto;
         }
         .description {
-            margin-bottom: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
         .separator {
             height: 2px;
-            background-color: #9400D3;
-            margin: 40px 0;
+            background-color: #ff6b6b;
+            margin: 20px auto;
+            width: 50%;
         }
-        .media-container {
+        .soundcloud-profiles {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .soundcloud-profile {
+            text-align: center;
+        }
+        .soundcloud-profile img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+        .media-container {
             margin-top: 40px;
+            text-align: center;
+        }
+        .instagram-embed {
+            max-width: 540px;
+            margin: 0 auto;
         }
         .overlay {
             display: none;
@@ -90,7 +79,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0,0,0,0.5);
             z-index: 1000;
         }
         .form-container {
@@ -101,39 +90,16 @@
             transform: translate(-50%, -50%);
             background-color: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 5px;
             z-index: 1001;
-            color: #000000;
         }
-        .form-container form {
-            display: flex;
-            flex-direction: column;
-        }
-        .form-container input {
-            margin-bottom: 10px;
-            padding: 5px;
-        }
-        .legal-warnings {
-            font-size: 0.8em;
-            margin-top: 10px;
-        }
-        .soundcloud-profiles {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+        .success-message {
+            display: none;
+            background-color: #4ecdc4;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
             margin-top: 20px;
-        }
-        .soundcloud-profile {
-            text-align: center;
-        }
-        .soundcloud-profile img {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-        }
-        .instagram-video {
-            max-width: 100%;
-            height: auto;
         }
     </style>
 </head>
@@ -144,9 +110,7 @@
             <div class="content-inner">
                 <h1>REEGUEZ ROCKS 2024</h1>
                 <p>October 31st - November 3rd | Alabama Hills, CA</p>
-                
                 <div id="countdown" aria-live="polite"></div>
-                
                 <a href="#" class="cta-button" onclick="showForm()" aria-label="Stay informed about the event">STAY INFORMED</a>
                 
                 <div class="soundcloud-profiles">
@@ -201,37 +165,37 @@
         </div>
 
         <div class="separator"></div>
+
         <div class="media-container">
-            <div class="instagram-video">
-                <a href="https://www.instagram.com/reel/Cr9zPq_gOJK/" target="_blank" rel="noopener noreferrer">
-                    View this post on Instagram
-                </a>
+            <div class="instagram-embed">
+                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/Cr9zPq_gOJK/" data-instgrm-version="14">
+                    <div style="padding:16px;">
+                        <a href="https://www.instagram.com/reel/Cr9zPq_gOJK/" style="background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
+                            View this post on Instagram
+                        </a>
+                    </div>
+                </blockquote>
+                <script async src="//www.instagram.com/embed.js"></script>
             </div>
         </div>
     </main>
 
     <div id="overlay" class="overlay" onclick="hideForm()"></div>
+
     <div id="form-container" class="form-container">
-        <form action="https://formspree.io/f/xayrjvww" method="POST" id="my-form">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required autocomplete="name">
-            
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required autocomplete="email">
-            
-            <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required autocomplete="tel">
-            
+        <form id="contact-form" action="https://formspree.io/f/xaygbdpp" method="POST">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="tel" name="phone" placeholder="Phone Number">
             <div class="legal-warnings">
                 <p>By providing your contact information, you agree to receive communications from us about the event. Your information will be used solely for this purpose and will not be shared with third parties.</p>
             </div>
-            
             <button type="submit">Submit</button>
         </form>
     </div>
 
     <script>
-        // Countdown timer
+        // Countdown Timer
         function updateCountdown() {
             const eventDate = new Date('2024-10-31T00:00:00').getTime();
             const now = new Date().getTime();
@@ -242,17 +206,17 @@
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-            document.getElementById('countdown').innerHTML = `
-                <div style="font-size: 2em; margin: 20px 0;">
-                    ${days}d ${hours}h ${minutes}m ${seconds}s
-                </div>
-            `;
+            document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+            if (timeLeft < 0) {
+                clearInterval(countdownTimer);
+                document.getElementById('countdown').innerHTML = "Event has started!";
+            }
         }
 
-        setInterval(updateCountdown, 1000);
-        updateCountdown(); // Initial call
+        const countdownTimer = setInterval(updateCountdown, 1000);
 
-        // Form functions
+        // Form Handling
         function showForm() {
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('form-container').style.display = 'block';
@@ -263,14 +227,12 @@
             document.getElementById('form-container').style.display = 'none';
         }
 
-        // Formspree submission handling
-        var form = document.getElementById("my-form");
-        
-        async function handleSubmit(event) {
-            event.preventDefault();
-            var status = document.getElementById("success-message");
-            var data = new FormData(event.target);
-            fetch(event.target.action, {
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const data = new FormData(form);
+            
+            fetch(form.action, {
                 method: form.method,
                 body: data,
                 headers: {
@@ -278,26 +240,21 @@
                 }
             }).then(response => {
                 if (response.ok) {
-                    status.style.display = 'block';
-                    form.reset()
+                    document.getElementById('form-container').style.display = 'none';
+                    document.getElementById('success-message').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('success-message').style.display = 'none';
+                    }, 3000);
+                    form.reset();
                 } else {
-                    response.json().then(data => {
-                        if (Object.hasOwn(data, 'errors')) {
-                            status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
-                        } else {
-                            status.innerHTML = "Oops! There was a problem submitting your form"
-                        }
-                    })
+                    throw new Error('Form submission failed');
                 }
             }).catch(error => {
-                status.innerHTML = "Oops! There was a problem submitting your form"
+                console.error('Error:', error);
+                alert('There was a problem submitting your form. Please try again later.');
             });
-            hideForm();
-            setTimeout(function() {
-                status.style.display = 'none';
-            }, 3000);
-        }
-        form.addEventListener("submit", handleSubmit)
+        });
     </script>
 </body>
 </html>
