@@ -148,7 +148,6 @@
                 <p class="hero-text">October 31st - November 3rd | Alabama Hills, CA</p>
                 <div id="countdown"></div>
                 <a href="#" class="cta-button" onclick="showForm()">STAY INFORMED</a>
-                <p class="hero-text">Website Currently Under Development</p>
             </div>
         </div>
     </div>
@@ -174,7 +173,7 @@
     <div class="overlay" id="overlay" onclick="hideForm()"></div>
 
     <div class="form-container" id="form-container">
-        <form>
+        <form action="https://formspree.io/f/xjkbyznp" method="POST">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
             <label for="email">Email:</label>
@@ -184,7 +183,7 @@
             <div class="legal-warnings">
                 <p>By providing your contact information, you agree to receive communications from us about the event. Your information will be used solely for this purpose and will not be shared with third parties.</p>
             </div>
-            <button type="submit" class="submit-button">Submit *Currently does nothing, check back soon*</button>
+            <button type="submit" class="submit-button">Submit</button>
         </form>
     </div>
 
@@ -193,7 +192,6 @@
             const eventDate = new Date('2024-10-31T00:00:00').getTime();
             const now = new Date().getTime();
             const timeLeft = eventDate - now;
-
                         const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
             const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
