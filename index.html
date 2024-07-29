@@ -178,6 +178,11 @@
             <p>If you already have the link to this website, chances are you are a dope person that we want to attend this event! These things cost a good deal of money to put on and in order to cover everything we are asking for donations and in return you will be added to our mailing list where all the information for the event will be sent!</p>
             <p>We are purposefully not looking to make any profit from this event, 100% of the donations will go towards all services and amenities provided, such as audio/visual rentals, bathrooms, communal food/drinks, decorations, and anything else to set the vibe right!</p>
             <p>In following this ideal we strive to provide the best microfestival possible for all of our friends and family here at Reeguez Rocks!</p>
+            <!-- New section for Instagram video -->
+            <div class="instagram-video">
+                <iframe src="https://www.instagram.com/p/CzcFB2WvDwS/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+            </div>
+        </div>
     </main>
 
     <div class="overlay" id="overlay" onclick="hideForm()"></div>
@@ -202,10 +207,9 @@
             const eventDate = new Date('2024-10-31T00:00:00').getTime();
             const now = new Date().getTime();
             const timeLeft = eventDate - now;
-
-            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
             const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
             document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
