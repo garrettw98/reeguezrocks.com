@@ -28,7 +28,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: url('path_to_your_background_image.jpg');
+            background-image: url('/Users/garrettwilliams/Documents/GitHub/reeguezrocks.com/Image.webp');
             background-size: cover;
             filter: brightness(0.5);
             z-index: -1;
@@ -50,7 +50,7 @@
         .cta-button {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #ff6600;
+            background-color: #9400D3;
             color: white;
             text-decoration: none;
             border-radius: 5px;
@@ -75,11 +75,13 @@
         }
         .separator {
             height: 2px;
-            background-color: #ff6600;
+            background-color: #9400D3;
             margin: 40px 0;
         }
         .media-container {
-            /* Add styles for your media content */
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
         }
         .overlay {
             display: none;
@@ -115,6 +117,20 @@
             font-size: 0.8em;
             margin-top: 10px;
         }
+        .soundcloud-profiles {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .soundcloud-profile {
+            text-align: center;
+        }
+        .soundcloud-profile img {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -125,13 +141,38 @@
                 <h1>REEGUEZ ROCKS 2024</h1>
                 <p>October 31st - November 3rd | Alabama Hills, CA</p>
                 
-                <div id="countdown"></div>
+                <div id="countdown" aria-live="polite"></div>
                 
-                <a href="#" class="cta-button" onclick="showForm()">STAY INFORMED</a>
+                <a href="#" class="cta-button" onclick="showForm()" aria-label="Stay informed about the event">STAY INFORMED</a>
                 
-                <div id="soundcloud-profiles"></div>
+                <div class="soundcloud-profiles">
+                    <div class="soundcloud-profile">
+                        <a href="https://soundcloud.com/reeguez" target="_blank" rel="noopener noreferrer">
+                            <img src="path_to_reeguez_avatar.jpg" alt="Reeguez">
+                            <p>Reeguez</p>
+                        </a>
+                    </div>
+                    <div class="soundcloud-profile">
+                        <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
+                            <img src="path_to_primetime_avatar.jpg" alt="PrimeTime">
+                            <p>PrimeTime</p>
+                        </a>
+                    </div>
+                    <div class="soundcloud-profile">
+                        <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
+                            <img src="path_to_myskosis_avatar.jpg" alt="Myskosis">
+                            <p>Myskosis</p>
+                        </a>
+                    </div>
+                    <div class="soundcloud-profile">
+                        <a href="https://soundcloud.com/dirtydbb" target="_blank" rel="noopener noreferrer">
+                            <img src="path_to_dirtydbb_avatar.jpg" alt="DirtyDBB">
+                            <p>DirtyDBB</p>
+                        </a>
+                    </div>
+                </div>
                 
-                <div id="success-message" class="success-message">
+                <div id="success-message" class="success-message" role="alert" aria-live="polite">
                     <h2>Form Submitted Successfully!</h2>
                     <p>✔ Thank you for your interest. We'll be in touch soon.</p>
                 </div>
@@ -156,20 +197,23 @@
         </div>
 
         <div class="separator"></div>
-        <div class="media-container"></div>
+        <div class="media-container">
+            <!-- Placeholder for Instagram video -->
+            <p>Instagram video placeholder: https://www.instagram.com/reel/Cr9zPq_gOJK/</p>
+        </div>
     </main>
 
     <div id="overlay" class="overlay" onclick="hideForm()"></div>
     <div id="form-container" class="form-container">
-        <form onsubmit="submitForm(event)">
+        <form action="https://formspree.io/f/xayrjvww" method="POST" id="my-form">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" required autocomplete="name">
             
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" required autocomplete="email">
             
             <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required>
+            <input type="tel" id="phone" name="phone" required autocomplete="tel">
             
             <div class="legal-warnings">
                 <p>By providing your contact information, you agree to receive communications from us about the event. Your information will be used solely for this purpose and will not be shared with third parties.</p>
@@ -178,60 +222,6 @@
             <button type="submit">Submit</button>
         </form>
     </div>
-
-    <!-- React and Babel scripts -->
-    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-
-    <!-- Soundcloud Profiles Component -->
-    <script type="text/babel">
-        const profiles = [
-            {
-                url: "https://soundcloud.com/reeguez",
-                name: "Reeguez"
-            },
-            {
-                url: "https://soundcloud.com/primetimedubs",
-                name: "PrimeTime"
-            },
-            {
-                url: "https://soundcloud.com/myskosis",
-                name: "Myskosis"
-            },
-            {
-                url: "https://soundcloud.com/dirtydbb",
-                name: "DirtyDBB"
-            }
-        ];
-
-        const SoundcloudProfiles = () => {
-            return (
-                <div style={{display: 'flex', justifyContent: 'center', gap: '2rem', margin: '2rem 0'}}>
-                    {profiles.map((profile, index) => (
-                        <a
-                            key={index}
-                            href={profile.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', color: 'inherit'}}
-                        >
-                            <img
-                                src={`${profile.url}/avatar-large`}
-                                alt={`${profile.name}'s profile picture`}
-                                style={{width: '64px', height: '64px', borderRadius: '50%'}}
-                            />
-                            <span style={{marginTop: '0.5rem', fontSize: '0.875rem', fontWeight: 'bold', fontFamily: "'Interstate', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Garuda, Verdana, Tahoma, sans-serif"}}>
-                                {profile.name}
-                            </span>
-                        </a>
-                    ))}
-                </div>
-            );
-        };
-
-        ReactDOM.render(<SoundcloudProfiles />, document.getElementById('soundcloud-profiles'));
-    </script>
 
     <script>
         // Countdown timer
@@ -266,17 +256,41 @@
             document.getElementById('form-container').style.display = 'none';
         }
 
-        function submitForm(event) {
+        // Formspree submission handling
+        var form = document.getElementById("my-form");
+        
+        async function handleSubmit(event) {
             event.preventDefault();
-            // Here you would typically send the form data to a server
-            // For this example, we'll just show the success message
-            document.getElementById('form-container').style.display = 'none';
-            document.getElementById('success-message').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('success-message').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
+            var status = document.getElementById("success-message");
+            var data = new FormData(event.target);
+            fetch(event.target.action, {
+                method: form.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    status.style.display = 'block';
+                    form.reset()
+                } else {
+                    response.json().then(data => {
+                        if (Object.hasOwn(data, 'errors')) {
+                            status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
+                        } else {
+                            status.innerHTML = "Oops! There was a problem submitting your form"
+                        }
+                    })
+                }
+            }).catch(error => {
+                status.innerHTML = "Oops! There was a problem submitting your form"
+            });
+            hideForm();
+            setTimeout(function() {
+                status.style.display = 'none';
             }, 3000);
         }
+        form.addEventListener("submit", handleSubmit)
     </script>
 </body>
 </html>
