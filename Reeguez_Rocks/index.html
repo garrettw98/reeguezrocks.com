@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REEGUEZ ROCKS 2024</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .parallax-container {
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('Image.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .content {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .content-inner {
+            background-color: rgba(0,0,0,0.7);
+            padding: 2rem;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        .hero-text {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        #countdown {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ff00ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #cc00cc;
+        }
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        h2 {
+            color: #ff00ff;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .description p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="parallax-container">
+        <div class="parallax-bg"></div>
+        <div class="content">
+            <div class="content-inner">
+                <h1>REEGUEZ ROCKS 2024</h1>
+                <p class="hero-text">October 31st - November 3rd | Alabama Hills, CA</p>
+                <div id="countdown"></div>
+                <a href="#" class="cta-button">GET TICKETS HERE!</a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <h2>4 Days of Impeccable Vibes</h2>
+        <div class="description">
+            <p>Featuring amazing artists, incredible scenery, and unforgettable experiences in the breathtaking Alabama Hills!</p>
+            
+            <p>Join us for our fourth annual Reeguez Rocks, what started as a few homies wanting to throw down among the rocks has blossomed into something magical that you have to experience to believe.</p>
+            
+            <p>Reeguez Rocks 2024 presents a diverse musical journey spanning multiple electronic genres. Attendees will experience a carefully curated lineup featuring dubstep, experimental bass, drum and bass, riddim, house, techno, and trance. Set against the stunning backdrop of the Alabama Hills, this four-day event offers a unique atmosphere that caters to the underground electronic music scene.</p>
+            
+            <p>The festival prides itself on its intimate and exclusive nature. Reeguez Rocks is not widely advertised; instead, it relies on a community-driven invitation system. This approach ensures a gathering of like-minded individuals who appreciate the raw, unfiltered essence of electronic music culture. The event welcomes various forms of artistic expression, adding to the creative and immersive atmosphere. From the music to the scenery, every aspect of Reeguez Rocks is designed to create an unforgettable experience that resonates with true music enthusiasts and adventure seekers alike.</p>
+        </div>
+    </main>
+
+    <script>
+        function updateCountdown() {
+            const eventDate = new Date('2024-10-31T00:00:00').getTime();
+            const now = new Date().getTime();
+            const timeLeft = eventDate - now;
+
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+            if (timeLeft < 0) {
+                clearInterval(countdownTimer);
+                document.getElementById('countdown').innerHTML = "Event has started!";
+            }
+        }
+
+        const countdownTimer = setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
