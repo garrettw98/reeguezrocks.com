@@ -170,7 +170,7 @@
             <p>In following this ideal we strive to provide the best microfestival possible for all of our friends and family here at Reeguez Rocks!</p>
     </main>
 
-    <div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay" onclick="hideForm()"></div>
 
     <div class="form-container" id="form-container">
         <form>
@@ -193,7 +193,7 @@
             const now = new Date().getTime();
             const timeLeft = eventDate - now;
 
-            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
             const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
@@ -206,4 +206,24 @@
             }
         }
 
-       
+        const countdownTimer = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function showForm() {
+            document.getElementById('form-container').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function hideForm() {
+            document.getElementById('form-container').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Parallax effect
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            document.querySelector('.parallax-bg').style.transform = 'translateY(' + (scrolled * 0.5) + 'px)';
+        });
+    </script>
+</body>
+</html>
