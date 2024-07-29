@@ -84,6 +84,59 @@
             line-height: 1.6;
             margin-bottom: 1rem;
         }
+        .form-container {
+            display: none; /* Hidden by default */
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 15px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            width: 80%;
+            max-width: 500px;
+        }
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-container label {
+            margin-bottom: 0.5rem;
+        }
+        .form-container input {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: none;
+        }
+        .form-container .submit-button {
+            padding: 10px 20px;
+            background-color: #ff00ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-container .submit-button:hover {
+            background-color: #cc00cc;
+        }
+        .form-container .legal-warnings {
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        .overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
@@ -94,7 +147,7 @@
                 <h1>REEGUEZ ROCKS 2024</h1>
                 <p class="hero-text">October 31st - November 3rd | Alabama Hills, CA</p>
                 <div id="countdown"></div>
-                <a href="#" class="cta-button">GET TICKETS HERE!</a>
+                <a href="#" class="cta-button" onclick="showForm()">STAY INFORMED</a>
             </div>
         </div>
     </div>
@@ -117,6 +170,23 @@
             <p>In following this ideal we strive to provide the best microfestival possible for all of our friends and family here at Reeguez Rocks!</p>
     </main>
 
+    <div class="overlay" id="overlay"></div>
+
+    <div class="form-container" id="form-container">
+        <form>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+            <div class="legal-warnings">
+                <p>By providing your contact information, you agree to receive communications from us about the event. Your information will be used solely for this purpose and will not be shared with third parties.</p>
+            </div>
+            <button type="submit" class="submit-button">Submit</button>
+        </form>
+    </div>
+
     <script>
         function updateCountdown() {
             const eventDate = new Date('2024-10-31T00:00:00').getTime();
@@ -136,14 +206,4 @@
             }
         }
 
-        const countdownTimer = setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // Parallax effect
-        window.addEventListener('scroll', function() {
-            const scrolled = window.pageYOffset;
-            document.querySelector('.parallax-bg').style.transform = 'translateY(' + (scrolled * 0.5) + 'px)';
-        });
-    </script>
-</body>
-</html>
+       
