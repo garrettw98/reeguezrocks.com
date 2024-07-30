@@ -8,68 +8,168 @@
         body, html {
             height: 100%;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            background: linear-gradient(135deg, #6d00e0 0%, #ff00c3 100%);
+            background-attachment: fixed;
         }
         .parallax-container {
-            height: 100vh;
-            background-image: url('background-image.jpg');
+            height: 100%;
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-image: url('Image.webp');
+            position: relative;
+            overflow: hidden;
         }
         .content {
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
+            position: relative;
             text-align: center;
-            max-width: 90%;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            max-width: 900px;
             margin: 0 auto;
+            top: 50%;
+            transform: translateY(-50%);
         }
-        .content-inner {
-            max-width: 600px;
-            margin: 0 auto;
+        h1, h2 {
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
         .cta-button {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #4ecdc4;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             margin-top: 20px;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .description, .info-box {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .separator {
+            height: 2px;
+            background-color: #ff6b6b;
+            margin: 20px auto;
+            width: 50%;
         }
         .soundcloud-profiles {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             flex-wrap: wrap;
+            gap: 20px;
             margin-top: 20px;
         }
         .soundcloud-profile {
             text-align: center;
-            margin: 10px;
         }
         .soundcloud-profile img {
             width: 100px;
             height: 100px;
             border-radius: 50%;
+            box-shadow: 0 0 10px #ff6b6b;
         }
-        @media (max-width: 768px) {
-            .parallax-container {
-                background-attachment: scroll;
-            }
-            .content {
-                margin: 20px;
-                max-width: calc(100% - 40px);
-            }
-            .soundcloud-profile img {
-                width: 80px;
-                height: 80px;
-            }
+        .soundcloud-profile p {
+            color: #ff6b6b;
+            font-size: 1.1em;
+            margin-top: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        .media-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .instagram-embed {
+            max-width: 540px;
+            margin: 0 auto;
+        }
+        .instagram-embeds {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .instagram-embed {
+            background: #FFF;
+            border: 0;
+            border-radius: 3px;
+            box-shadow: 0 0 1px 0 rgba(0,0,0,0.5), 0 1px 10px 0 rgba(0,0,0,0.15);
+            margin: 1px;
+            max-width: 540px;
+            min-width: 326px;
+            padding: 0;
+            width: 99.375%;
+            width: -webkit-calc(100% - 2px);
+            width: calc(100% - 2px);
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .form-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            z-index: 1001;
+        }
+        .success-message {
+            display: none;
+            background-color: #4ecdc4;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        main {
+            padding: 50px 20px;
+            background: #121212;
+            color: #fff;
+            border-top: 1px solid #ff6b6b;
+        }
+        h2 {
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        .info-box {
+            background: #1e1e1e;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+        .info-box p {
+            color: #ddd;
+            line-height: 1.6;
+        }
+        .info-box h3 {
+            color: #ff6b6b;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            margin-top: 0;
+        }
+        .media-container {
+            margin-top: 40px;
+            text-align: center;
         }
     </style>
 </head>
@@ -81,31 +181,37 @@
                 <p>October 31st - November 3rd | Alabama Hills, CA</p>
                 <div id="countdown" aria-live="polite"></div>
                 <a href="#" class="cta-button" onclick="showForm()" aria-label="Stay informed about the event">STAY INFORMED</a>
+                
                 <div class="soundcloud-profiles">
                     <div class="soundcloud-profile">
                         <a href="https://soundcloud.com/reeguez" target="_blank" rel="noopener noreferrer">
                             <img src="Reeguez.png" alt="Reeguez">
+                            <p>Reeguez</p>
                         </a>
-                        <p>Reeguez</p>
                     </div>
                     <div class="soundcloud-profile">
                         <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
                             <img src="PrimeTime.png" alt="PrimeTime">
+                            <p>PrimeTime</p>
                         </a>
-                        <p>PrimeTime</p>
                     </div>
                     <div class="soundcloud-profile">
                         <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
                             <img src="Myskosis.png" alt="Myskosis">
+                            <p>Myskosis</p>
                         </a>
-                        <p>Myskosis</p>
                     </div>
                     <div class="soundcloud-profile">
                         <a href="https://soundcloud.com/dirtydbb" target="_blank" rel="noopener noreferrer">
                             <img src="DirtyDBB.png" alt="DirtyDBB">
+                            <p>DirtyDBB</p>
                         </a>
-                        <p>DirtyDBB</p>
                     </div>
+                </div>
+                
+                <div id="success-message" class="success-message" role="alert" aria-live="polite">
+                    <h2>Form Submitted Successfully!</h2>
+                    <p>✔ Thank you for your interest. We'll be in touch soon.</p>
                 </div>
             </div>
         </div>
