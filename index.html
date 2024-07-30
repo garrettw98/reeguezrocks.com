@@ -18,6 +18,8 @@
             background-repeat: no-repeat;
             background-size: cover;
             background-image: url('Image.webp');
+            position: relative;
+            overflow: hidden;
         }
         .overlay-bg {
             position: absolute;
@@ -48,9 +50,9 @@
             margin-top: 20px;
             box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-        .description {
+        .description, .info-box {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 0 auto 20px auto;
             padding: 20px;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 10px;
@@ -114,6 +116,18 @@
             border-radius: 5px;
             margin-top: 20px;
         }
+        main {
+            background: linear-gradient(to bottom right, #ff6b6b, #ffcc80);
+            padding: 50px 20px;
+            color: #333;
+        }
+        h2 {
+            color: #6a1b9a;
+            text-shadow: none;
+        }
+        .info-box p {
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -163,7 +177,7 @@
 
     <main role="main">
         <h2>3 Days of Impeccable Vibes</h2>
-        <div class="description">
+        <div class="info-box">
             <p>Featuring amazing artists, incredible scenery, and unforgettable experiences in the breathtaking Alabama Hills!</p>
             <p>Join us for our fourth annual Reeguez Rocks, what started as a few homies wanting to throw down among the rocks has blossomed into something magical that you have to experience to believe.</p>
             <p>Reeguez Rocks 2024 presents a diverse musical journey spanning multiple electronic genres. Attendees will experience a carefully curated lineup featuring dubstep, experimental bass, drum and bass, riddim, house, techno, and trance. Set against the stunning backdrop of the Alabama Hills, this four-day event offers a unique atmosphere that caters to the underground electronic music scene.</p>
@@ -171,7 +185,7 @@
         </div>
 
         <h2>How do I attend?</h2>
-        <div class="description">
+        <div class="info-box">
             <p>If you already have the link to this website, chances are you are a dope person that we want to attend this event! These things cost a good deal of money to put on and in order to cover everything we are asking for donations and in return you will be added to our mailing list where all the information for the event will be sent!</p>
             <p>We are purposefully not looking to make any profit from this event, 100% of the donations will go towards all services and amenities provided, such as audio/visual rentals, bathrooms, communal food/drinks, decorations, and anything else to set the vibe right!</p>
             <p>In following this ideal we strive to provide the best microfestival possible for all of our friends and family here at Reeguez Rocks!</p>
@@ -184,7 +198,7 @@
                 <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/Cr9zPq_gOJK/" data-instgrm-version="14">
                     <div style="padding:16px;">
                         <a href="https://www.instagram.com/reel/Cr9zPq_gOJK/" style="background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
-                            View this post on Instagram
+                                                        View this post on Instagram
                         </a>
                     </div>
                 </blockquote>
@@ -196,7 +210,7 @@
     <div id="overlay" class="overlay" onclick="hideForm()"></div>
 
     <div id="form-container" class="form-container">
-                <form id="contact-form" action="https://formspree.io/f/xaygbdpp" method="POST">
+        <form id="contact-form" action="https://formspree.io/f/xaygbdpp" method="POST">
             <input type="text" name="name" placeholder="Name" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="tel" name="phone" placeholder="Phone Number">
@@ -271,3 +285,4 @@
     </script>
 </body>
 </html>
+                       
