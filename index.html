@@ -10,7 +10,8 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            color: #333;
+            color: #fff;
+            background-color: #1a1a1a;
         }
         .parallax-container {
             background-image: url('Image.webp');
@@ -30,9 +31,8 @@
             padding: 2rem;
             border-radius: 10px;
         }
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        h1, h2 {
+            color: #FF6600;
         }
         .separator {
             width: 50%;
@@ -45,7 +45,7 @@
             text-align: center;
         }
         .lineup {
-            background-color: #f4f4f4;
+            background-color: #2a2a2a;
         }
         .soundcloud-profiles {
             display: flex;
@@ -72,8 +72,8 @@
             color: #FF6600;
         }
         .info-box {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
             border-radius: 5px;
             padding: 2rem;
             margin: 2rem 0;
@@ -92,7 +92,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: white;
+            background-color: #2a2a2a;
             padding: 2rem;
             border-radius: 10px;
             z-index: 1000;
@@ -103,8 +103,29 @@
         }
         .legal-warnings {
             font-size: 0.8em;
-            color: #666;
+            color: #aaa;
             margin-top: 1rem;
+        }
+        button {
+            background-color: #FF6600;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #FF8533;
+        }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
         }
     </style>
 </head>
