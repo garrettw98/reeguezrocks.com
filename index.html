@@ -13,7 +13,7 @@
 
         .parallax-container {
             height: 100vh;
-            background-image: url('Image.webp');
+            background-image: url('reeguez_rocks_background.jpeg');
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
@@ -275,7 +275,7 @@
     <div id="form-container" class="form-container">
         <span class="close-btn" onclick="hideForm()">×</span>
         <h2>Stay Informed</h2>
-        <form id="contact-form" onsubmit="return false;">
+        <form id="contact-form" action="https://formspree.io/f/xwkdpbpj" method="POST">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required><br><br>
             <label for="email">Email:</label>
@@ -283,7 +283,7 @@
             <label for="phone">Phone:</label>
             <input type="tel" id="phone" name="phone"><br><br>
             <div id="error-message" class="error-message"></div>
-            <button type="submit" onclick="submitForm()">Submit</button>
+            <button type="submit">Submit</button>
         </form>
         <div class="legal-warnings">
             By providing your contact information, you agree to receive communications from us about the event. Your information will be used solely for this purpose and will not be shared with third parties.
@@ -328,15 +328,41 @@
             document.getElementById("form-container").style.display = "none";
         }
 
-        function submitForm() {
-            // Here you would typically send the form data to a server
-            // For this example, we'll just show a success message
+        // Formspree submission handling
+        var form = document.getElementById("contact-form");
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            var data = new FormData(form);
+            ajax(form.method, form.action, data, success, error);
+        });
+
+        function ajax(method, url, data, success, error) {
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, url);
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState !== XMLHttpRequest.DONE) return;
+                if (xhr.status === 200) {
+                    success(xhr.response, xhr.responseType);
+                } else {
+                    error(xhr.status, xhr.response, xhr.responseType);
+                }
+            };
+            xhr.send(data);
+        }
+
+        function success() {
+            form.reset();
             document.getElementById("form-container").style.display = "none";
             document.getElementById("success-message").style.display = "block";
             setTimeout(() => {
                 document.getElementById("success-message").style.display = "none";
                 document.getElementById("overlay").style.display = "none";
             }, 3000);
+        }
+
+        function error() {
+            document.getElementById("error-message").innerHTML = "Oops! There was a problem submitting your form";
         }
     </script>
 </body>
