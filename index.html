@@ -5,79 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REEGUEZ ROCKS 2024</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+        body, html {
+            height: 100%;
             margin: 0;
-            padding: 0;
-            color: #fff;
-            background-color: #1a1a1a;
+            font-family: Arial, sans-serif;
         }
+
         .parallax-container {
-            background-image: url('Image.webp');
+            height: 100vh;
+            background-image: url('background-image.jpg');
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
-            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         .content {
-            text-align: center;
-            color: white;
             background-color: rgba(0, 0, 0, 0.7);
+            color: white;
             padding: 2rem;
-            border-radius: 10px;
+            text-align: center;
+            max-width: 80%;
+            width: 100%;
         }
-        h1, h2 {
-            color: #FF6600;
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
+
+        #countdown {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            font-size: 1.2rem;
+            padding: 0.8rem 1.5rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
         .separator {
-            width: 50%;
-            height: 2px;
-            background-color: #FF6600;
-            margin: 1rem auto;
+            border-top: 1px solid #ccc;
+            margin: 2rem 0;
         }
+
         .section {
             padding: 2rem;
-            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
         }
+
         .lineup {
-            background-color: #2a2a2a;
+            background-color: #f5f5f5;
         }
+
         .soundcloud-profiles {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            gap: 2rem;
         }
+
         .soundcloud-profile {
             text-align: center;
-            margin: 1rem;
         }
+
         .soundcloud-profile img {
             width: 150px;
             height: 150px;
             border-radius: 50%;
         }
-        .soundcloud-profile a {
-            text-decoration: none;
-            color: inherit;
-        }
+
         .artist-name {
+            margin-top: 0.5rem;
             font-weight: bold;
-            font-size: 1.2em;
-            margin-top: 0.5em;
-            color: #FF6600;
         }
+
         .info-box {
-            background-color: #2a2a2a;
-            border: 1px solid #444;
-            border-radius: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
             padding: 2rem;
-            margin: 2rem 0;
+            margin-bottom: 2rem;
         }
+
         .overlay {
             display: none;
             position: fixed;
@@ -85,76 +107,76 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 999;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
         }
+
         .form-container {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #2a2a2a;
+            background-color: white;
             padding: 2rem;
-            border-radius: 10px;
-            z-index: 1000;
-            max-width: 400px;
+            z-index: 1001;
+            max-width: 500px;
             width: 90%;
         }
-        .form-container h2 {
-            margin-top: 0;
-        }
+
         .close-btn {
             position: absolute;
             top: 10px;
             right: 10px;
-            font-size: 1.5em;
+            font-size: 1.5rem;
             cursor: pointer;
-            color: #FF6600;
         }
+
         .success-message {
             display: none;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #4CAF50;
-            color: white;
-            padding: 1rem;
-            border-radius: 5px;
-            z-index: 1001;
-            text-align: center;
+            z-index: 1002;
         }
-        .legal-warnings {
-            font-size: 0.8em;
-            color: #aaa;
-            margin-top: 1rem;
-        }
-        button {
-            background-color: #FF6600;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #FF8533;
-        }
-        input[type="text"], input[type="email"], input[type="tel"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #444;
-            border-radius: 5px;
-            background-color: #333;
-            color: #fff;
-        }
-        .error-message {
-            color: #FF6600;
-            font-size: 0.9em;
-            margin-top: 5px;
+
+        @media (max-width: 768px) {
+            .parallax-container {
+                background-attachment: scroll;
+                background-position: center center;
+            }
+
+            .content {
+                padding: 1.5rem;
+                max-width: 90%;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            #countdown {
+                font-size: 1.2rem;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 0.6rem 1.2rem;
+            }
+
+            .section {
+                padding: 1rem;
+            }
+
+            .soundcloud-profile img {
+                width: 100px;
+                height: 100px;
+            }
         }
     </style>
 </head>
@@ -164,10 +186,11 @@
             <h1>REEGUEZ ROCKS 2024</h1>
             <p>October 31st - November 3rd | Alabama Hills, CA</p>
             <div id="countdown" aria-live="polite"></div>
-            <div class="separator"></div>
             <button onclick="showForm()">STAY INFORMED</button>
         </div>
     </div>
+
+    <div class="separator"></div>
 
     <div class="section lineup">
         <h2>Lineup</h2>
@@ -175,63 +198,63 @@
             <div class="soundcloud-profile">
                 <a href="https://soundcloud.com/reeguez" target="_blank" rel="noopener noreferrer">
                     <img src="Reeguez.png" alt="Reeguez">
-                    <div class="artist-name">Reeguez</div>
                 </a>
+                <div class="artist-name">Reeguez</div>
             </div>
             <div class="soundcloud-profile">
                 <a href="https://soundcloud.com/mindtake_music" target="_blank" rel="noopener noreferrer">
                     <img src="Mindtake.png" alt="Mindtake">
-                    <div class="artist-name">Mindtake</div>
                 </a>
+                <div class="artist-name">Mindtake</div>
             </div>
             <div class="soundcloud-profile">
                 <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
                     <img src="PrimeTime.png" alt="PrimeTime">
-                    <div class="artist-name">PrimeTime</div>
                 </a>
+                <div class="artist-name">PrimeTime</div>
             </div>
             <div class="soundcloud-profile">
                 <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
                     <img src="Myskosis.png" alt="Myskosis">
-                    <div class="artist-name">Myskosis</div>
                 </a>
+                <div class="artist-name">Myskosis</div>
             </div>
             <div class="soundcloud-profile">
                 <a href="https://soundcloud.com/dirtydbb" target="_blank" rel="noopener noreferrer">
-                    <img src="DirtyDBB.png" alt="DirtyDBB">
-                    <div class="artist-name">DirtyD</div>
+                    <img src="DirtyDBB.png" alt="DirtyD">
                 </a>
+                <div class="artist-name">DirtyD</div>
             </div>
             <div class="soundcloud-profile">
                 <a href="https://www.instagram.com/elicast94/" target="_blank" rel="noopener noreferrer">
                     <img src="DICE-E.png" alt="DICE-E">
-                    <div class="artist-name">DICE-E</div>
                 </a>
+                <div class="artist-name">DICE-E</div>
             </div>
             <div class="soundcloud-profile">
                 <a href="https://www.instagram.com/jvgger_/" target="_blank" rel="noopener noreferrer">
                     <img src="JVGGER.png" alt="JVGGER">
-                    <div class="artist-name">JVGGER</div>
                 </a>
+                <div class="artist-name">JVGGER</div>
             </div>
             <div class="soundcloud-profile">
                 <a href="https://soundcloud.com/cptkook" target="_blank" rel="noopener noreferrer">
-                    <img src="CPTKOOK.png" alt="CPTKOOK">
-                    <div class="artist-name">CPTKook</div>
+                    <img src="CPTKOOK.png" alt="CPTKook">
                 </a>
+                <div class="artist-name">CPTKook</div>
             </div>
             <div class="soundcloud-profile">
                 <a href="https://soundcloud.com/therourie" target="_blank" rel="noopener noreferrer">
                     <img src="Rourie.png" alt="Rourie">
-                    <div class="artist-name">Rourie</div>
                 </a>
+                <div class="artist-name">Rourie</div>
             </div>
         </div>
     </div>
-    
+
     <div class="separator"></div>
 
-    <div role="main">
+    <div class="section" role="main">
         <div class="info-box">
             <h2>3 Days of Impeccable Underground Vibes</h2>
             <p>Welcome to Reeguez Rocks 2024 - where amazing artists, incredible scenery, and unforgettable experiences converge in the breathtaking Alabama Hills!</p>
@@ -264,21 +287,17 @@
     <div id="overlay" class="overlay"></div>
 
     <div id="form-container" class="form-container">
-        <span class="close-btn" onclick="hideForm()">&times;</span>
+        <span class="close-btn" onclick="hideForm()">×</span>
         <h2>Stay Informed</h2>
-        <form id="contact-form" onsubmit="submitForm(event)">
+        <form id="contact-form" onsubmit="return false;">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            
+            <input type="text" id="name" name="name" required><br><br>
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email">
-            
+            <input type="email" id="email" name="email" required><br><br>
             <label for="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone">
-            
+            <input type="tel" id="phone" name="phone"><br><br>
             <div id="error-message" class="error-message"></div>
-            
-            <button type="submit">Submit</button>
+            <button type="submit" onclick="submitForm()">Submit</button>
         </form>
         <div class="legal-warnings">
             By providing your contact information, you agree to receive communications from us about the event. Your information will be used solely for this purpose and will not be shared with third parties.
@@ -286,60 +305,53 @@
     </div>
 
     <div id="success-message" class="success-message">
-        <p>✔ Thank you for your interest. We'll be in touch soon!</p>
+        ✔ Thank you for your interest. We'll be in touch soon!
     </div>
 
     <script>
+        // Countdown timer script
+        function updateCountdown() {
+            const eventDate = new Date("2024-10-31T00:00:00").getTime();
+            const now = new Date().getTime();
+            const timeLeft = eventDate - now;
+
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+            if (timeLeft < 0) {
+                clearInterval(countdownTimer);
+                document.getElementById("countdown").innerHTML = "Event has started!";
+            }
+        }
+
+        const countdownTimer = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Form display functions
         function showForm() {
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('form-container').style.display = 'block';
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("form-container").style.display = "block";
         }
 
         function hideForm() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('form-container').style.display = 'none';
-            document.getElementById('error-message').textContent = '';
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("form-container").style.display = "none";
         }
 
-        function submitForm(event) {
-            event.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const errorMessage = document.getElementById('error-message');
-
-            if (name && (email || phone)) {
-                document.getElementById('form-container').style.display = 'none';
-                document.getElementById('success-message').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('overlay').style.display = 'none';
-                    document.getElementById('success-message').style.display = 'none';
-                }, 3000);
-            } else {
-                errorMessage.textContent = 'Please provide your name and either email or phone number.';
-            }
+        function submitForm() {
+            // Here you would typically send the form data to a server
+            // For this example, we'll just show a success message
+            document.getElementById("form-container").style.display = "none";
+            document.getElementById("success-message").style.display = "block";
+            setTimeout(() => {
+                document.getElementById("success-message").style.display = "none";
+                document.getElementById("overlay").style.display = "none";
+            }, 3000);
         }
-
-        // Countdown timer
-        const countdownDate = new Date("Oct 31, 2024 00:00:00").getTime();
-        const countdownElement = document.getElementById("countdown");
-
-        const countdownTimer = setInterval(function() {
-            const now = new Date().getTime();
-            const distance = countdownDate - now;
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            countdownElement.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
-            if (distance < 0) {
-                clearInterval(countdownTimer);
-                countdownElement.innerHTML = "EVENT HAS STARTED";
-            }
-        }, 1000);
     </script>
 </body>
 </html>
