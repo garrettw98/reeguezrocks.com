@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REEGUEZ ROCKS 2024</title>
     <style>
-        body, html {
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            color: #fff;
-            background-color: #000;
+            color: #333;
         }
 
         .parallax-container {
-            background-image: url('Image.webp');
-            height: 100vh;
+            background-image: url('background.jpg');
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -27,6 +27,7 @@
 
         .content {
             text-align: center;
+            color: white;
             background-color: rgba(0, 0, 0, 0.7);
             padding: 2rem;
             border-radius: 10px;
@@ -37,70 +38,56 @@
             margin-bottom: 1rem;
         }
 
-        .cta-button {
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        .separator {
+            width: 50%;
+            height: 2px;
+            background-color: #FF6600;
+            margin: 1rem auto;
         }
 
-        .cta-button:hover {
-            background-color: #ff8787;
+        .section {
+            padding: 2rem;
+            text-align: center;
         }
 
         .lineup {
-            padding: 2rem;
-            background-color: #1a1a1a;
-        }
-
-        .lineup h2 {
-            text-align: center;
-            margin-bottom: 2rem;
+            background-color: #f4f4f4;
         }
 
         .soundcloud-profiles {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 2rem;
         }
 
         .soundcloud-profile {
             text-align: center;
+            margin: 1rem;
         }
 
         .soundcloud-profile img {
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            transition: transform 0.3s;
         }
 
-        .soundcloud-profile img:hover {
-            transform: scale(1.1);
+        .soundcloud-profile a {
+            text-decoration: none;
+            color: inherit;
         }
 
-        .soundcloud-profile p {
-            margin-top: 0.5rem;
-        }
-
-        main {
-            padding: 2rem;
+        .artist-name {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 0.5em;
+            color: #FF6600;
         }
 
         .info-box {
-            background-color: #1a1a1a;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             padding: 2rem;
-            margin-bottom: 2rem;
-            border-radius: 10px;
-        }
-
-        .separator {
-            height: 2px;
-            background-color: #ff6b6b;
             margin: 2rem 0;
         }
 
@@ -112,7 +99,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
+            z-index: 999;
         }
 
         .form-container {
@@ -121,55 +108,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #1a1a1a;
+            background-color: white;
             padding: 2rem;
             border-radius: 10px;
-            z-index: 1001;
-            color: #fff;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .form-container h2 {
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .form-container form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-container label {
-            margin-top: 1rem;
-        }
-
-        .form-container input {
-            padding: 0.5rem;
-            margin-top: 0.25rem;
-            border: 1px solid #ff6b6b;
-            background-color: #2a2a2a;
-            color: #fff;
-        }
-
-        .form-container button {
-            margin-top: 1rem;
-            padding: 0.5rem;
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .form-container button:hover {
-            background-color: #ff8787;
-        }
-
-        .legal-warnings {
-            font-size: 0.8rem;
-            margin-top: 1rem;
-            color: #ccc;
+            z-index: 1000;
         }
 
         .success-message {
@@ -182,8 +124,13 @@
             color: white;
             padding: 2rem;
             border-radius: 10px;
-            z-index: 1002;
-            text-align: center;
+            z-index: 1000;
+        }
+
+        .legal-warnings {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 1rem;
         }
     </style>
 </head>
@@ -194,41 +141,41 @@
             <p>October 31st - November 3rd | Alabama Hills, CA</p>
             <div id="countdown" aria-live="polite"></div>
             <div class="separator"></div>
-            <button class="cta-button" onclick="showForm()" aria-label="Stay informed about the event">STAY INFORMED</button>
+            <button onclick="showForm()">STAY INFORMED</button>
         </div>
     </div>
 
-    <section class="lineup">
+    <div class="section lineup">
         <h2>Lineup</h2>
         <div class="soundcloud-profiles">
             <div class="soundcloud-profile">
                 <a href="https://soundcloud.com/reeguez" target="_blank" rel="noopener noreferrer">
                     <img src="Reeguez.png" alt="Reeguez">
-                    <p>Reeguez</p>
+                    <div class="artist-name">Reeguez</div>
                 </a>
             </div>
             <div class="soundcloud-profile">
                 <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
                     <img src="PrimeTime.png" alt="PrimeTime">
-                    <p>PrimeTime</p>
+                    <div class="artist-name">PrimeTime</div>
                 </a>
             </div>
             <div class="soundcloud-profile">
                 <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
                     <img src="Myskosis.png" alt="Myskosis">
-                    <p>Myskosis</p>
+                    <div class="artist-name">Myskosis</div>
                 </a>
             </div>
             <div class="soundcloud-profile">
                 <a href="https://soundcloud.com/dirtydbb" target="_blank" rel="noopener noreferrer">
                     <img src="DirtyDBB.png" alt="DirtyDBB">
-                    <p>DirtyDBB</p>
+                    <div class="artist-name">DirtyDBB</div>
                 </a>
             </div>
         </div>
-    </section>
+    </div>
 
-    <main role="main">
+    <div role="main">
         <div class="info-box">
             <h2>3 Days Of Impeccable Vibes</h2>
             <p>Featuring amazing artists, incredible scenery, and unforgettable experiences in the breathtaking Alabama Hills!</p>
@@ -245,22 +192,22 @@
             <p>We are purposefully not looking to make any profit from this event, 100% of the donations will go towards all services and amenities provided, such as audio/visual rentals, bathrooms, communal food/drinks, decorations, and anything else to set the vibe right!</p>
             <p>In following this ideal we strive to provide the best microfestival possible for all of our friends and family here at Reeguez Rocks!</p>
         </div>
-    </main>
+    </div>
 
     <div id="overlay" class="overlay" onclick="hideForm()"></div>
 
     <div id="form-container" class="form-container">
-        <form id="contact-form" action="https://formspree.io/f/xjkbyznp" method="POST">
-            <h2>Stay Informed</h2>
+        <h2>Stay Informed</h2>
+        <form id="contact-form" onsubmit="submitForm(event)">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
-            <div class="legal-warnings">
-                By providing your contact information, you agree to receive communications from us about the event. Your information will be used solely for this purpose and will not be shared with third parties.
-            </div>
             <button type="submit">Submit</button>
         </form>
+        <div class="legal-warnings">
+            By providing your contact information, you agree to receive communications from us about the event. Your information will be used solely for this purpose and will not be shared with third parties.
+        </div>
     </div>
 
     <div id="success-message" class="success-message" role="alert" aria-live="polite">
@@ -269,57 +216,48 @@
     </div>
 
     <script>
-        // Countdown timer
-        function updateCountdown() {
-            const eventDate = new Date("October 31, 2024 00:00:00").getTime();
-            const now = new Date().getTime();
-            const timeLeft = eventDate - now;
-
-            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-            document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-            if (timeLeft < 0) {
-                clearInterval(countdownTimer);
-                document.getElementById("countdown").innerHTML = "Event has started!";
-            }
-        }
-
-        const countdownTimer = setInterval(updateCountdown, 1000);
-
-        // Form functions
         function showForm() {
-            document.getElementById("overlay").style.display = "block";
-            document.getElementById("form-container").style.display = "block";
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('form-container').style.display = 'block';
         }
 
         function hideForm() {
-            document.getElementById("overlay").style.display = "none";
-            document.getElementById("form-container").style.display = "none";
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('form-container').style.display = 'none';
         }
 
-        // Formspree form submission
-        const form = document.getElementById("contact-form");
-        form.addEventListener("submit", function(e) {
-            e.preventDefault();
-            const data = new FormData(form);
-            const action = e.target.action;
-            fetch(action, {
-                method: 'POST',
-                body: data,
-            })
-            .then(() => {
-                document.getElementById("form-container").style.display = "none";
-                document.getElementById("success-message").style.display = "block";
-                setTimeout(() => {
-                    document.getElementById("success-message").style.display = "none";
-                    document.getElementById("overlay").style.display = "none";
-                }, 3000);
-            })
-        });
+        function submitForm(event) {
+            event.preventDefault();
+            // Here you would typically send the form data to a server
+            // For this example, we'll just show the success message
+            document.getElementById('form-container').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('success-message').style.display = 'none';
+            }, 3000);
+        }
+
+        // Countdown timer
+        const countdownDate = new Date("Oct 31, 2024 00:00:00").getTime();
+        const countdownElement = document.getElementById("countdown");
+
+        const countdownTimer = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            countdownElement.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+            if (distance < 0) {
+                clearInterval(countdownTimer);
+                countdownElement.innerHTML = "EVENT HAS STARTED";
+            }
+        }, 1000);
     </script>
 </body>
 </html>
