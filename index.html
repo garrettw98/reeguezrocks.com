@@ -12,7 +12,6 @@
             padding: 0;
             color: #333;
         }
-
         .parallax-container {
             background-image: url('Image.webp');
             background-attachment: fixed;
@@ -24,7 +23,6 @@
             align-items: center;
             justify-content: center;
         }
-
         .content {
             text-align: center;
             color: white;
@@ -32,57 +30,47 @@
             padding: 2rem;
             border-radius: 10px;
         }
-
         h1 {
             font-size: 3rem;
             margin-bottom: 1rem;
         }
-
         .separator {
             width: 50%;
             height: 2px;
             background-color: #FF6600;
             margin: 1rem auto;
         }
-
         .section {
             padding: 2rem;
             text-align: center;
         }
-
         .lineup {
             background-color: #f4f4f4;
         }
-
         .soundcloud-profiles {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
         }
-
         .soundcloud-profile {
             text-align: center;
             margin: 1rem;
         }
-
         .soundcloud-profile img {
             width: 150px;
             height: 150px;
             border-radius: 50%;
         }
-
         .soundcloud-profile a {
             text-decoration: none;
             color: inherit;
         }
-
         .artist-name {
             font-weight: bold;
             font-size: 1.2em;
             margin-top: 0.5em;
             color: #FF6600;
         }
-
         .info-box {
             background-color: #f9f9f9;
             border: 1px solid #ddd;
@@ -90,8 +78,7 @@
             padding: 2rem;
             margin: 2rem 0;
         }
-
-        .overlay {
+        .overlay, .form-container, .success-message {
             display: none;
             position: fixed;
             top: 0;
@@ -101,10 +88,7 @@
             background-color: rgba(0, 0, 0, 0.7);
             z-index: 999;
         }
-
-        .form-container {
-            display: none;
-            position: fixed;
+        .form-container, .success-message {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -113,20 +97,10 @@
             border-radius: 10px;
             z-index: 1000;
         }
-
         .success-message {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             background-color: #4CAF50;
             color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            z-index: 1000;
         }
-
         .legal-warnings {
             font-size: 0.8em;
             color: #666;
@@ -228,8 +202,6 @@
 
         function submitForm(event) {
             event.preventDefault();
-            // Here you would typically send the form data to a server
-            // For this example, we'll just show the success message
             document.getElementById('form-container').style.display = 'none';
             document.getElementById('success-message').style.display = 'block';
             setTimeout(() => {
