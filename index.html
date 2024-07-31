@@ -26,34 +26,29 @@
         .content {
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 2rem;
+            padding: 2rem; /* Increased padding */
             text-align: center;
-            max-width: 80%;
+            max-width: 90%; /* Increased max-width */
             width: 100%;
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: 3rem; /* Increased font size */
             margin-bottom: 1rem;
         }
 
         #countdown {
-            font-size: 1.5rem;
+            font-size: 1.5rem; /* Increased font size */
             margin-bottom: 1rem;
         }
 
         button {
-            font-size: 1.2rem;
-            padding: 0.8rem 1.5rem;
+            font-size: 1.2rem; /* Increased font size */
+            padding: 0.8rem 1.5rem; /* Increased padding */
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #45a049;
         }
 
         .separator {
@@ -147,35 +142,26 @@
 
         @media (max-width: 768px) {
             .parallax-container {
-                background-attachment: scroll;
-                background-position: center center;
+                background-attachment: fixed; /* Kept fixed for parallax effect */
+                background-position: center;
+                background-size: 200% auto; /* Increased background size for more noticeable parallax */
             }
 
             .content {
                 padding: 1.5rem;
-                max-width: 90%;
             }
 
             h1 {
-                font-size: 2rem;
+                font-size: 2.5rem; /* Adjusted for mobile */
             }
 
             #countdown {
-                font-size: 1.2rem;
+                font-size: 1.3rem; /* Adjusted for mobile */
             }
 
             button {
-                font-size: 1rem;
-                padding: 0.6rem 1.2rem;
-            }
-
-            .section {
-                padding: 1rem;
-            }
-
-            .soundcloud-profile img {
-                width: 100px;
-                height: 100px;
+                font-size: 1.1rem; /* Adjusted for mobile */
+                padding: 0.7rem 1.3rem;
             }
         }
     </style>
