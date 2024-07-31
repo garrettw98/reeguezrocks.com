@@ -78,7 +78,7 @@
             padding: 2rem;
             margin: 2rem 0;
         }
-        .overlay, .form-container, .success-message {
+        .overlay {
             display: none;
             position: fixed;
             top: 0;
@@ -88,7 +88,9 @@
             background-color: rgba(0, 0, 0, 0.7);
             z-index: 999;
         }
-        .form-container, .success-message {
+        .form-container {
+            display: none;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -96,10 +98,32 @@
             padding: 2rem;
             border-radius: 10px;
             z-index: 1000;
+            max-width: 400px;
+            width: 90%;
+        }
+        .form-container h2 {
+            margin-top: 0;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #FF6600;
         }
         .success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background-color: #4CAF50;
             color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            z-index: 1001;
+            text-align: center;
         }
         .legal-warnings {
             font-size: 0.8em;
@@ -118,7 +142,7 @@
         button:hover {
             background-color: #FF8533;
         }
-        input[type="text"], input[type="email"] {
+        input[type="text"], input[type="email"], input[type="tel"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -126,6 +150,11 @@
             border-radius: 5px;
             background-color: #333;
             color: #fff;
+        }
+        .error-message {
+            color: #FF6600;
+            font-size: 0.9em;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -206,15 +235,23 @@
         </div>
     </div>
 
-    <div id="overlay" class="overlay" onclick="hideForm()"></div>
+    <div id="overlay" class="overlay"></div>
 
     <div id="form-container" class="form-container">
+        <span class="close-btn" onclick="hideForm()">&times;</span>
         <h2>Stay Informed</h2>
         <form id="contact-form" onsubmit="submitForm(event)">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
+            
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email">
+            
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone">
+            
+            <div id="error-message" class="error-message"></div>
+            
             <button type="submit">Submit</button>
         </form>
         <div class="legal-warnings">
@@ -222,9 +259,8 @@
         </div>
     </div>
 
-    <div id="success-message" class="success-message" role="alert" aria-live="polite">
-        <h2>Form Submitted Successfully!</h2>
-        <p>✔ Thank you for your interest. We'll be in touch soon.</p>
+    <div id="success-message" class="success-message">
+        <p>✔ Thank you for your interest. We'll be in touch soon!</p>
     </div>
 
     <script>
@@ -236,16 +272,26 @@
         function hideForm() {
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('form-container').style.display = 'none';
+            document.getElementById('error-message').textContent = '';
         }
 
         function submitForm(event) {
             event.preventDefault();
-            document.getElementById('form-container').style.display = 'none';
-            document.getElementById('success-message').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('overlay').style.display = 'none';
-                document.getElementById('success-message').style.display = 'none';
-            }, 3000);
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (name && (email || phone)) {
+                document.getElementById('form-container').style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('overlay').style.display = 'none';
+                    document.getElementById('success-message').style.display = 'none';
+                }, 3000);
+            } else {
+                errorMessage.textContent = 'Please provide your name and either email or phone number.';
+            }
         }
 
         // Countdown timer
