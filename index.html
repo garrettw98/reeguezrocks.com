@@ -15,7 +15,7 @@
 
         .parallax-container {
             height: 100vh;
-            background-image: url('Image.webp');
+            background-image: url('reeguez_rocks_background.jpeg');
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
@@ -37,11 +37,6 @@
         h1 {
             font-size: 3rem;
             margin-bottom: 1rem;
-            color: orange;
-        }
-        
-        h2 {
-        	color: orange;
         }
 
         #countdown {
@@ -52,7 +47,7 @@
         button {
             font-size: 1.2rem;
             padding: 0.8rem 1.5rem;
-            background-color: #8a2be2; /* Bright purple to match theme */
+            background-color: #8a2be2;
             color: white;
             border: none;
             cursor: pointer;
@@ -60,13 +55,12 @@
         }
 
         button:hover {
-            background-color: #9b30ff; /* Lighter purple on hover */
+            background-color: #9b30ff;
         }
 
         .separator {
             border-top: 1px solid #ccc;
             margin: 2rem 0;
-            color: orange;
         }
 
         .section {
@@ -76,8 +70,7 @@
         }
 
         .lineup {
-            background-color: #2a2a2a; /* Darker background */
-            text-align: center;
+            background-color: #2a2a2a;
         }
 
         .soundcloud-profiles {
@@ -100,11 +93,10 @@
         .artist-name {
             margin-top: 0.5rem;
             font-weight: bold;
-            color: orange;
         }
 
         .info-box {
-            background-color: #2a2a2a; /* Darker background */
+            background-color: #2a2a2a;
             border: 1px solid #444;
             padding: 2rem;
             margin-bottom: 2rem;
@@ -131,8 +123,49 @@
             color: white;
             padding: 2rem;
             z-index: 1001;
-            max-width: 500px;
+            max-width: 400px;
             width: 90%;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: #8a2be2;
+        }
+
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-container label {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-container input {
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            background-color: #3a3a3a;
+            border: 1px solid #4a4a4a;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .form-container button {
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .form-container button:hover {
+            background-color: #9b30ff;
         }
 
         .close-btn {
@@ -142,6 +175,20 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: white;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+        }
+
+        .legal-warnings {
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            color: #aaa;
         }
 
         .success-message {
@@ -155,6 +202,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 1002;
+            border-radius: 4px;
         }
 
         @media (max-width: 768px) {
@@ -290,15 +338,18 @@
     <div id="overlay" class="overlay"></div>
 
     <div id="form-container" class="form-container">
-        <span class="close-btn" onclick="hideForm()">×</span>
+        <button class="close-btn" onclick="hideForm()">&times;</button>
         <h2>Stay Informed</h2>
         <form id="contact-form" action="https://formspree.io/f/xwkdpbpj" method="POST">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required><br><br>
+            <input type="text" id="name" name="name" autocomplete="name" required>
+            
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required><br><br>
+            <input type="email" id="email" name="email" autocomplete="email">
+            
             <label for="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone"><br><br>
+            <input type="tel" id="phone" name="phone" autocomplete="tel">
+            
             <div id="error-message" class="error-message"></div>
             <button type="submit">Submit</button>
         </form>
@@ -349,9 +400,26 @@
         var form = document.getElementById("contact-form");
         form.addEventListener("submit", function(e) {
             e.preventDefault();
-            var data = new FormData(form);
-            ajax(form.method, form.action, data, success, error);
+            if (validateForm()) {
+                var data = new FormData(form);
+                ajax(form.method, form.action, data, success, error);
+            }
         });
+
+        function validateForm() {
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var phone = document.getElementById("phone").value;
+            var errorMessage = document.getElementById("error-message");
+
+            if (!name || (!email && !phone)) {
+                errorMessage.textContent = "Please provide your name and either email or phone number.";
+                return false;
+            }
+
+            errorMessage.textContent = "";
+            return true;
+        }
 
         function ajax(method, url, data, success, error) {
             var xhr = new XMLHttpRequest();
@@ -379,7 +447,7 @@
         }
 
         function error() {
-            document.getElementById("error-message").innerHTML = "Oops! There was a problem submitting your form";
+            document.getElementById("error-message").textContent = "Oops! There was a problem submitting your form";
         }
     </script>
 </body>
