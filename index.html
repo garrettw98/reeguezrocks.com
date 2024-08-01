@@ -10,6 +10,7 @@
             padding: 0;
             height: 100%;
             font-family: Arial, sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
         
         body {
@@ -18,7 +19,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-attachment: scroll; /* Ensure the background scrolls with the content */
+            background-attachment: fixed; /* Fixed background */
             color: #fff;
         }
 
@@ -279,13 +280,13 @@
             </div>
             <div class="soundcloud-profile" tabindex="0">
                 <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
-                    <img src="Myskosis.png" alt="Myskosis">
+                                        <img src="Myskosis.png" alt="Myskosis">
                 </a>
                 <div class="artist-name">Myskosis</div>
             </div>
             <div class="soundcloud-profile" tabindex="0">
                 <a href="https://soundcloud.com/dirtydbb" target="_blank" rel="noopener noreferrer">
-                                        <img src="DirtyDBB.png" alt="DirtyD">
+                    <img src="DirtyDBB.png" alt="DirtyD">
                 </a>
                 <div class="artist-name">DirtyD</div>
             </div>
