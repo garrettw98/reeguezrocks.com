@@ -222,6 +222,10 @@
                 width: 120px;
             }
         }
+        #countdown {
+    font-size: 1.5em;
+    margin: 20px 0;
+}
     </style>
 </head>
 <body>
@@ -350,26 +354,30 @@
     </div>
 
     <script>
-        // Countdown timer
-        function updateCountdown() {
-            const eventDate = new Date("2024-10-31T00:00:00").getTime();
-            const now = new Date().getTime();
-            const timeLeft = eventDate - now;
+// Countdown timer
+function updateCountdown() {
+    const eventDate = new Date("2024-10-31T00:00:00").getTime();
+    const now = new Date().getTime();
+    const timeLeft = eventDate - now;
 
-            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-            document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-            if (timeLeft < 0) {
-                clearInterval(countdownTimer);
-                document.getElementById("countdown").innerHTML = "Event has started!";
-            }
-        }
+    if (timeLeft < 0) {
+        clearInterval(countdownTimer);
+        document.getElementById("countdown").innerHTML = "Event has started!";
+    }
+}
 
-        const countdownTimer = setInterval(updateCountdown, 1000);
+// Initialize the countdown when the page loads
+updateCountdown();
+
+// Set up the interval to update the countdown every second
+const countdownTimer = setInterval(updateCountdown, 1000);
 
         // Form handling
         function showForm() {
