@@ -1,3 +1,10 @@
+Here are the changes to address the issues:
+
+1. **Countdown Timer**: Ensure it loads correctly.
+2. **Stay Informed Button**: Ensure the form opens when clicked.
+3. **Background Image**: Ensure it is not zoomed in on mobile devices.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -202,8 +209,8 @@
         /* Mobile Optimization */
         @media (max-width: 768px) {
             body {
-                background-size: cover;
-                background-position: center top;
+                background-size: contain;
+                background-position: top center;
             }
 
             .content {
@@ -224,9 +231,9 @@
             }
         }
         #countdown {
-    font-size: 1.5em;
-    margin: 20px 0;
-}
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -293,6 +300,7 @@
                 <div class="artist-name">CPTKook</div>
             </div>
             <div class="soundcloud-profile">
+                ```html
                 <a href="https://soundcloud.com/therourie" target="_blank" rel="noopener noreferrer">
                     <img src="Rourie.png" alt="Rourie">
                 </a>
@@ -355,41 +363,41 @@
     </div>
 
     <script>
-// Countdown timer
-function updateCountdown() {
-    const eventDate = new Date("2024-10-31T00:00:00").getTime();
-    const now = new Date().getTime();
-    const timeLeft = eventDate - now;
+        // Countdown timer
+        function updateCountdown() {
+            const eventDate = new Date("2024-10-31T00:00:00").getTime();
+            const now = new Date().getTime();
+            const timeLeft = eventDate - now;
 
-    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-    document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-    if (timeLeft < 0) {
-        clearInterval(countdownTimer);
-        document.getElementById("countdown").innerHTML = "Event has started!";
-    }
-}
+            if (timeLeft < 0) {
+                clearInterval(countdownTimer);
+                document.getElementById("countdown").innerHTML = "Event has started!";
+            }
+        }
 
-// Initialize the countdown when the page loads
-updateCountdown();
+        // Initialize the countdown when the page loads
+        updateCountdown();
 
-// Set up the interval to update the countdown every second
-const countdownTimer = setInterval(updateCountdown, 1000);
+        // Set up the interval to update the countdown every second
+        const countdownTimer = setInterval(updateCountdown, 1000);
 
         // Form handling
         function showForm() {
-    document.getElementById("overlay").style.display = "block";
-    document.getElementById("form-container").style.display = "block";
-}
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("form-container").style.display = "block";
+        }
 
-function closeForm() {
-    document.getElementById("overlay").style.display = "none";
-    document.getElementById("form-container").style.display = "none";
-}
+        function closeForm() {
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("form-container").style.display = "none";
+        }
 
         document.getElementById("contact-form").addEventListener("submit", function(e) {
             e.preventDefault();
@@ -409,9 +417,6 @@ function closeForm() {
                     setTimeout(() => {
                         document.getElementById("overlay").style.display = "none";
                         document.getElementById("success-message").style.display = "none";
-                    },setTimeout(() => {
-                        document.getElementById("overlay").style.display = "none";
-                        document.getElementById("success-message").style.display = "none";
                     }, 3000);
                 } else {
                     response.json().then(data => {
@@ -429,3 +434,4 @@ function closeForm() {
     </script>
 </body>
 </html>
+```
