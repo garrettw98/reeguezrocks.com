@@ -5,77 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REEGUEZ ROCKS 2024</title>
     <style>
-        body, html {
-            height: 100%;
+        body {
             margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: white;
+            background-color: #000; /* Fallback color */
+            background-image: url('Image.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                background-size: cover;
+                background-position: center top;
+            }
         }
 
         .parallax-container {
             height: 100vh;
-            background-image: url('Image.webp');
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
+            position: relative;
         }
 
         .content {
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 2rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-            max-width: 90%;
-            width: 100%;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: orange;
-        }
-        
-        h2 {
-        color: orange;
-        }
-
-        #countdown {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        button {
-            font-size: 1.2rem;
-            padding: 0.8rem 1.5rem;
-            background-color: #8a2be2;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #9b30ff;
+            color: #fff;
         }
 
         .separator {
-            border-top: 1px solid #ccc;
-            margin: 2rem 0;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
         .section {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 50px;
+            background-color: rgba(0, 0, 0, 0.7);
         }
 
         .lineup {
-            background-color: #2a2a2a;
             text-align: center;
         }
 
@@ -83,30 +58,27 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 2rem;
+            gap: 20px;
         }
 
         .soundcloud-profile {
-            text-align: center;
+            width: 150px;
         }
 
         .soundcloud-profile img {
-            width: 150px;
-            height: 150px;
+            width: 100%;
             border-radius: 50%;
         }
 
         .artist-name {
-            margin-top: 0.5rem;
+            margin-top: 10px;
             font-weight: bold;
-            color: orange;
         }
 
         .info-box {
-            background-color: #2a2a2a;
-            border: 1px solid #444;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
         .overlay {
@@ -126,115 +98,53 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #2a2a2a;
-            color: white;
-            padding: 2rem;
+            background-color: #fff;
+            padding: 20px;
             z-index: 1001;
             max-width: 400px;
             width: 90%;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .form-container h2 {
             margin-top: 0;
-            margin-bottom: 1.5rem;
-            color: #8a2be2;
-        }
-
-        .form-container form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-container label {
-            margin-bottom: 0.5rem;
         }
 
         .form-container input {
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            background-color: #3a3a3a;
-            border: 1px solid #4a4a4a;
-            color: white;
-            border-radius: 4px;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
         }
 
         .form-container button {
-            background-color: #8a2be2;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 0.75rem;
-            font-size: 1rem;
             cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        .form-container button:hover {
-            background-color: #9b30ff;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: white;
-            background: none;
-            border: none;
-            padding: 0;
         }
 
         .error-message {
-            color: #ff6b6b;
-            margin-bottom: 1rem;
+            color: red;
+            margin-bottom: 10px;
         }
 
         .legal-warnings {
-            font-size: 0.8rem;
-            margin-top: 1rem;
-            color: #aaa;
+            font-size: 12px;
+            margin-top: 10px;
         }
 
         .success-message {
             display: none;
-            background-color: #8a2be2;
-            color: white;
-            text-align: center;
-            padding: 1rem;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
             z-index: 1002;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .parallax-container {
-                background-attachment: fixed;
-                background-position: center;
-                background-size: 200% auto;
-            }
-
-            .content {
-                padding: 1.5rem;
-            }
-
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            #countdown {
-                font-size: 1.3rem;
-            }
-
-            button {
-                font-size: 1.1rem;
-                padding: 0.7rem 1.3rem;
-            }
+            text-align: center;
         }
     </style>
 </head>
@@ -345,32 +255,26 @@
     <div id="overlay" class="overlay"></div>
 
     <div id="form-container" class="form-container">
-        <button class="close-btn" onclick="hideForm()">&times;</button>
+        <button onclick="closeForm()">×</button>
         <h2>Stay Informed</h2>
-        <form id="contact-form" action="https://formspree.io/f/xwkdpbpj" method="POST">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" autocomplete="name" required>
-            
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" autocomplete="email">
-            
-            <label for="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone" autocomplete="tel">
-            
+        <form id="contact-form" action="https://formspree.io/f/xqkvnvjg" method="POST">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="tel" name="phone" placeholder="Phone">
             <div id="error-message" class="error-message"></div>
             <button type="submit">Submit</button>
         </form>
         <div class="legal-warnings">
-            By providing your contact information, you agree to receive communications from us about the event. Your information will be used solely for this purpose and will not be shared with third parties.
+            <p>By providing your contact information, you agree to receive communications from us about the event. Your information will be used solely for this purpose and will not be shared with third parties.</p>
         </div>
     </div>
 
     <div id="success-message" class="success-message">
-        ✔ Thank you for your interest. We'll be in touch soon!
+        <p>✔ Thank you for your interest. We'll be in touch soon!</p>
     </div>
 
     <script>
-        // Countdown timer script
+        // Countdown timer
         function updateCountdown() {
             const eventDate = new Date("2024-10-31T00:00:00").getTime();
             const now = new Date().getTime();
@@ -390,72 +294,50 @@
         }
 
         const countdownTimer = setInterval(updateCountdown, 1000);
-        updateCountdown();
 
-        // Form display functions
+        // Form handling
         function showForm() {
             document.getElementById("overlay").style.display = "block";
             document.getElementById("form-container").style.display = "block";
         }
 
-        function hideForm() {
+        function closeForm() {
             document.getElementById("overlay").style.display = "none";
             document.getElementById("form-container").style.display = "none";
         }
 
-        // Formspree submission handling
-        var form = document.getElementById("contact-form");
-        form.addEventListener("submit", function(e) {
+        document.getElementById("contact-form").addEventListener("submit", function(e) {
             e.preventDefault();
-            if (validateForm()) {
-                var data = new FormData(form);
-                ajax(form.method, form.action, data, success, error);
-            }
-        });
+            const form = e.target;
+            const formData = new FormData(form);
 
-        function validateForm() {
-            var name = document.getElementById("name").value;
-            var email = document.getElementById("email").value;
-            var phone = document.getElementById("phone").value;
-            var errorMessage = document.getElementById("error-message");
-
-            if (!name || (!email && !phone)) {
-                errorMessage.textContent = "Please provide your name and either email or phone number.";
-                return false;
-            }
-
-            errorMessage.textContent = "";
-            return true;
-        }
-
-        function ajax(method, url, data, success, error) {
-            var xhr = new XMLHttpRequest();
-            xhr.open(method, url);
-            xhr.setRequestHeader("Accept", "application/json");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState !== XMLHttpRequest.DONE) return;
-                if (xhr.status === 200) {
-                    success(xhr.response, xhr.responseType);
-                } else {
-                    error(xhr.status, xhr.response, xhr.responseType);
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
                 }
-            };
-            xhr.send(data);
-        }
-
-        function success() {
-            form.reset();
-            document.getElementById("form-container").style.display = "none";
-            document.getElementById("success-message").style.display = "block";
-            setTimeout(() => {
-                document.getElementById("success-message").style.display = "none";
-                document.getElementById("overlay").style.display = "none";
-            }, 3000);
-        }
-
-        function error() {
-            document.getElementById("error-message").textContent = "Oops! There was a problem submitting your form";
-        }
+            }).then(response => {
+                if (response.ok) {
+                    document.getElementById("form-container").style.display = "none";
+                    document.getElementById("success-message").style.display = "block";
+                    setTimeout(() => {
+                        document.getElementById("overlay").style.display = "none";
+                        document.getElementById("success-message").style.display = "none";
+                    }, 3000);
+                } else {
+                    response.json().then(data => {
+                        if (Object.hasOwn(data, 'errors')) {
+                            document.getElementById("error-message").textContent = data["errors"].map(error => error["message"]).join(", ");
+                        } else {
+                            document.getElementById("error-message").textContent = "Oops! There was a problem submitting your form";
+                        }
+                    });
+                }
+            }).catch(error => {
+                document.getElementById("error-message").textContent = "Oops! There was a problem submitting your form";
+            });
+        });
     </script>
 </body>
 </html>
