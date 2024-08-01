@@ -1,4 +1,6 @@
+Here is the updated HTML code with optimizations for different devices and added accessibility features:
 
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +51,7 @@
         }
         
         h2 {
-        color: orange;
+            color: orange;
         }
         
         .separator {
@@ -229,6 +231,16 @@
                 width: 120px;
             }
         }
+        
+        /* Accessibility */
+        .content, .info-box, .form-container, .success-message, .legal-warnings {
+            outline: 2px solid transparent;
+        }
+
+        .content:focus, .info-box:focus, .form-container:focus, .success-message:focus, .legal-warnings:focus {
+            outline: 2px solid orange;
+        }
+
         #countdown {
             font-size: 1.5em;
             margin: 20px 0;
@@ -237,7 +249,7 @@
 </head>
 <body>
     <div class="parallax-container">
-        <div class="content">
+        <div class="content" tabindex="0">
             <h1>REEGUEZ ROCKS 2024</h1>
             <p>October 31st - November 3rd | Alabama Hills, CA</p>
             <div id="countdown" aria-live="polite"></div>
@@ -250,56 +262,55 @@
     <div class="section lineup">
         <h2>Lineup</h2>
         <div class="soundcloud-profiles">
-            <div class="soundcloud-profile">
+            <div class="soundcloud-profile" tabindex="0">
                 <a href="https://soundcloud.com/reeguez" target="_blank" rel="noopener noreferrer">
                     <img src="Reeguez.png" alt="Reeguez">
                 </a>
                 <div class="artist-name">Reeguez</div>
             </div>
-            <div class="soundcloud-profile">
+            <div class="soundcloud-profile" tabindex="0">
                 <a href="https://soundcloud.com/mindtake_music" target="_blank" rel="noopener noreferrer">
                     <img src="Mindtake.png" alt="Mindtake">
                 </a>
                 <div class="artist-name">Mindtake</div>
             </div>
-            <div class="soundcloud-profile">
+            <div class="soundcloud-profile" tabindex="0">
                 <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
                     <img src="PrimeTime.png" alt="PrimeTime">
                 </a>
                 <div class="artist-name">PrimeTime</div>
             </div>
-            <div class="soundcloud-profile">
+            <div class="soundcloud-profile" tabindex="0">
                 <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
                     <img src="Myskosis.png" alt="Myskosis">
                 </a>
                 <div class="artist-name">Myskosis</div>
             </div>
-            <div class="soundcloud-profile">
+            <div class="soundcloud-profile" tabindex="0">
                 <a href="https://soundcloud.com/dirtydbb" target="_blank" rel="noopener noreferrer">
                     <img src="DirtyDBB.png" alt="DirtyD">
                 </a>
                 <div class="artist-name">DirtyD</div>
             </div>
-            <div class="soundcloud-profile">
+                        <div class="soundcloud-profile" tabindex="0">
                 <a href="https://www.instagram.com/elicast94/" target="_blank" rel="noopener noreferrer">
                     <img src="DICE-E.png" alt="DICE-E">
                 </a>
                 <div class="artist-name">DICE-E</div>
             </div>
-            <div class="soundcloud-profile">
+            <div class="soundcloud-profile" tabindex="0">
                 <a href="https://www.instagram.com/jvgger_/" target="_blank" rel="noopener noreferrer">
-                    ```html
                     <img src="JVGGER.png" alt="JVGGER">
                 </a>
                 <div class="artist-name">JVGGER</div>
             </div>
-            <div class="soundcloud-profile">
+            <div class="soundcloud-profile" tabindex="0">
                 <a href="https://soundcloud.com/cptkook" target="_blank" rel="noopener noreferrer">
                     <img src="CPTKOOK.png" alt="CPTKook">
                 </a>
                 <div class="artist-name">CPTKook</div>
             </div>
-            <div class="soundcloud-profile">
+            <div class="soundcloud-profile" tabindex="0">
                 <a href="https://soundcloud.com/therourie" target="_blank" rel="noopener noreferrer">
                     <img src="Rourie.png" alt="Rourie">
                 </a>
@@ -311,7 +322,7 @@
     <div class="separator"></div>
 
     <div class="section" role="main">
-        <div class="info-box">
+        <div class="info-box" tabindex="0">
             <h2>3 Days of Impeccable Underground Vibes</h2>
             <p>Welcome to Reeguez Rocks 2024 - where amazing artists, incredible scenery, and unforgettable experiences converge in the breathtaking Alabama Hills!</p>
             <p>What began as a few friends throwing down among the rocks has blossomed into something truly magical. Our fourth annual gathering offers:</p>
@@ -326,7 +337,7 @@
 
         <div class="separator"></div>
 
-        <div class="info-box">
+        <div class="info-box" tabindex="0">
             <h2>How to Join the Experience</h2>
             <p>Reeguez Rocks is an exclusive, community-focused event. Here's what you need to know:</p>
             <ul>
@@ -340,16 +351,19 @@
         </div>
     </div>
 
-    <div id="overlay" class="overlay"></div>
+    <div id="overlay" class="overlay" aria-hidden="true"></div>
 
-    <div id="form-container" class="form-container">
-        <button onclick="closeForm()">×</button>
-        <h2>Stay Informed</h2>
+    <div id="form-container" class="form-container" aria-labelledby="form-title" role="dialog">
+        <button onclick="closeForm()" aria-label="Close form">×</button>
+        <h2 id="form-title">Stay Informed</h2>
         <form id="contact-form" action="https://formspree.io/f/xqkvnvjg" method="POST">
-            <input type="text" name="name" placeholder="Name" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="tel" name="phone" placeholder="Phone">
-            <div id="error-message" class="error-message"></div>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Name" required aria-required="true">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Email" required aria-required="true">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" placeholder="Phone">
+            <div id="error-message" class="error-message" aria-live="polite"></div>
             <button type="submit">Submit</button>
         </form>
         <div class="legal-warnings">
@@ -357,7 +371,7 @@
         </div>
     </div>
 
-    <div id="success-message" class="success-message">
+    <div id="success-message" class="success-message" role="alert" aria-live="polite">
         <p>✔ Thank you for your interest. We'll be in touch soon!</p>
     </div>
 
@@ -390,11 +404,14 @@
         // Form handling
         function showForm() {
             document.getElementById("overlay").style.display = "block";
+            document.getElementById("overlay").setAttribute("aria-hidden", "false");
             document.getElementById("form-container").style.display = "block";
+            document.getElementById("form-container").focus();
         }
 
         function closeForm() {
             document.getElementById("overlay").style.display = "none";
+            document.getElementById("overlay").setAttribute("aria-hidden", "true");
             document.getElementById("form-container").style.display = "none";
         }
 
@@ -433,4 +450,3 @@
     </script>
 </body>
 </html>
-```
