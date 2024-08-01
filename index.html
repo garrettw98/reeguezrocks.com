@@ -150,6 +150,10 @@
             background-color: #45a049;
         }
         
+        .overlay, .form-container {
+    		display: none;
+		}
+        
         .error-message {
             color: red;
             margin-bottom: 10px;
@@ -191,7 +195,7 @@
         }
         
         button:hover {
-            background-color: #45a049;
+            background-color: #9254e3;
         }
 
         /* Mobile Optimization */
@@ -369,14 +373,14 @@
 
         // Form handling
         function showForm() {
-            document.getElementById("overlay").style.display = "block";
-            document.getElementById("form-container").style.display = "block";
-        }
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("form-container").style.display = "block";
+}
 
-        function closeForm() {
-            document.getElementById("overlay").style.display = "none";
-            document.getElementById("form-container").style.display = "none";
-        }
+function closeForm() {
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("form-container").style.display = "none";
+}
 
         document.getElementById("contact-form").addEventListener("submit", function(e) {
             e.preventDefault();
