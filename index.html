@@ -117,17 +117,18 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 15px;
             z-index: 1001;
-            max-width: 800px;
+            max-width: 900px;
             width: 90%;
             color: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            flex-wrap: wrap;
+            box-shadow: 0 0 15px rgba(0,0,0,0.7);
+            display: flex;
             justify-content: space-around;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .form-container.active {
@@ -136,32 +137,33 @@
 
         .close-button {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: orange;
-            color: black;
+            top: 15px;
+            right: 15px;
+            background-color: #ff6347;
+            color: #fff;
             border: none;
-            padding: 5px 10px;
+            padding: 10px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 50%;
             font-weight: bold;
+            font-size: 18px;
         }
 
         .ticket-option {
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 20px;
-            width: 220px;
-            cursor: pointer;
+            width: 250px;
             text-align: center;
             transition: background-color 0.3s ease;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
 
         .ticket-option img {
             width: 100%;
             height: auto;
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .ticket-option h3 {
@@ -172,6 +174,7 @@
         .ticket-option p {
             font-size: 14px;
             margin-bottom: 15px;
+            line-height: 1.4;
         }
 
         .ticket-option.selected {
@@ -272,7 +275,7 @@
         }
     </style>
     <!-- Include the PayPal JavaScript SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
+        <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
 </head>
 <body>
     <div class="parallax-container">
@@ -309,7 +312,7 @@
             </div>
             <div class="soundcloud-profile" tabindex="0">
                 <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
-                                        <img src="Myskosis.png" alt="Myskosis">
+                    <img src="Myskosis.png" alt="Myskosis">
                 </a>
                 <div class="artist-name">Myskosis</div>
             </div>
@@ -404,20 +407,20 @@
     <div id="overlay" class="overlay" aria-hidden="true"></div>
 
     <div id="form-container" class="form-container" aria-labelledby="form-title" role="dialog">
-        <button class="close-button" onclick="closeForm()">Close</button>
+        <button class="close-button" onclick="closeForm()">×</button>
         <h2 id="form-title">Buy Tickets</h2>
         <div class="ticket-option" data-type="GA" data-price="75.00">
-            <img src="ga-placeholder.png" alt="General Admission">
+            <img src="TICKET.webp" alt="General Admission">
             <h3>GA - $75</h3>
             <p>General Admission ticket providing access to all days of the event.</p>
         </div>
         <div class="ticket-option" data-type="GA+Merch" data-price="100.00">
-            <img src="ga-merch-placeholder.png" alt="GA + Merch Shirt">
+            <img src="SHIRT/TICKET.webp" alt="GA + Merch Shirt">
             <h3>GA + Merch - $100</h3>
             <p>Includes General Admission plus an exclusive event T-shirt.</p>
         </div>
         <div class="ticket-option" data-type="GA+Merch+Donation" data-price="100.00">
-            <img src="ga-merch-donation-placeholder.png" alt="GA + Merch Shirt + Donation">
+            <img src="DONATION.webp" alt="GA + Merch Shirt + Donation">
             <h3>GA + Merch + Donation - $100 + Donation</h3>
             <p>Includes General Admission, T-shirt, and an option to donate to the event.</p>
             <div id="donation-field" style="display: none;">
@@ -430,7 +433,7 @@
         <div id="paypal-button-container"></div>
     </div>
 
-    <div id="success-message" class="success-message" role="alert" aria-live="polite">
+        <div id="success-message" class="success-message" role="alert" aria-live="polite">
         <p>✔ Thank you for your purchase. We look forward to seeing you at the event!</p>
     </div>
 
@@ -470,7 +473,7 @@
 
         function closeForm() {
             document.getElementById("overlay").style.display = "none";
-                        document.getElementById("overlay").setAttribute("aria-hidden", "true");
+            document.getElementById("overlay").setAttribute("aria-hidden", "true");
             document.getElementById("form-container").classList.remove('active');
         }
 
