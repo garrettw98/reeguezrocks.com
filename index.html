@@ -101,7 +101,7 @@
         }
         
         .overlay {
-            display: none;
+            display: none; /* Hidden by default */
             position: fixed;
             top: 0;
             left: 0;
@@ -277,11 +277,11 @@
             margin: 20px 0;
         }
     </style>
-	    <!-- Include the PayPal JavaScript SDK -->
+    <!-- Include the PayPal JavaScript SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
 </head>
 <body>
-    <div class="parallax-container">
+        <div class="parallax-container">
         <div class="content" tabindex="0">
             <h1>REEGUEZ ROCKS 2024</h1>
             <p>October 31st - November 3rd | Alabama Hills, CA</p>
@@ -418,7 +418,7 @@
             <p>General Admission ticket providing access to all days of the event.</p>
         </div>
         <div class="ticket-option" data-type="GA+Merch" data-price="100.00">
-            <img src="SHIRT/TICKET.webp" alt="GA + Merch Shirt">
+            <img src="SHIRTANDTICKET.webp" alt="GA + Merch Shirt">
             <h3>GA + Merch - $100</h3>
             <p>Includes General Admission plus an exclusive event T-shirt.</p>
         </div>
@@ -433,11 +433,11 @@
         </div>
 
         <div id="error-message" class="error-message" aria-live="polite"></div>
-                <div id="paypal-button-container"></div>
+        <div id="paypal-button-container"></div>
     </div>
 
     <div id="success-message" class="success-message" role="alert" aria-live="polite">
-        <p>✔ Thank you for your purchase. We look forward to seeing you at the event!</p>
+                <p>✔ Thank you for your purchase. We look forward to seeing you at the event!</p>
     </div>
 
     <script>
