@@ -121,54 +121,53 @@
             padding: 20px;
             border-radius: 10px;
             z-index: 1001;
-            max-width: 400px;
+            max-width: 800px;
             width: 90%;
             color: #fff;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
         }
         
-        .form-container h2 {
-            margin-top: 0;
-            color: orange;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        
-        .form-container input, .form-container select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+        .ticket-option {
             background-color: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
-        }
-        
-        .form-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #6632a8;
-            color: white;
-            border: none;
-            border-radius: 5px;
+            border-radius: 10px;
+            padding: 20px;
+            width: 220px;
             cursor: pointer;
+            text-align: center;
             transition: background-color 0.3s ease;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
-        
-        .form-container button:hover {
-            background-color: #9254e3;
+
+        .ticket-option img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .ticket-option h3 {
+            margin-bottom: 10px;
+            color: orange;
+        }
+
+        .ticket-option p {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .ticket-option.selected {
+            background-color: orange;
+            color: black;
         }
         
         .error-message {
             color: red;
             margin-bottom: 10px;
-        }
-        
-        .legal-warnings {
-            font-size: 12px;
-            margin-top: 10px;
-            color: #bbb;
+            width: 100%;
+            text-align: center;
         }
         
         .success-message {
@@ -185,7 +184,13 @@
             text-align: center;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-        
+
+        #paypal-button-container {
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
+
         button {
             background-color: #6632a8;
             border: none;
@@ -225,8 +230,14 @@
                 padding: 30px;
             }
 
-            .soundcloud-profile {
-                width: 120px;
+            .form-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .ticket-option {
+                width: 100%;
+                max-width: 400px;
             }
         }
         
@@ -260,7 +271,7 @@
     <div class="separator"></div>
 
     <div class="section lineup">
-        <h2>Lineup</h2>
+                <h2>Lineup</h2>
         <div class="soundcloud-profiles">
             <!-- Artist profiles remain the same -->
         </div>
@@ -268,7 +279,7 @@
 
     <div class="separator"></div>
 
-        <div class="section" role="main">
+    <div class="section" role="main">
         <div class="info-box" tabindex="0">
             <h2>3 Days of Impeccable Underground Vibes</h2>
             <p>Welcome to Reeguez Rocks 2024 - where amazing artists, incredible scenery, and unforgettable experiences converge in the breathtaking Alabama Hills!</p>
@@ -302,32 +313,28 @@
     <div id="form-container" class="form-container" aria-labelledby="form-title" role="dialog">
         <button onclick="closeForm()" aria-label="Close form">×</button>
         <h2 id="form-title">Buy Tickets</h2>
-        <form id="ticket-form">
-            <label for="ticket-type">Select Ticket Type</label>
-            <select id="ticket-type" name="ticket-type" required aria-required="true">
-                <option value="GA" data-price="75.00">GA - $75</option>
-                <option value="GA+Merch" data-price="100.00">GA + Merch Shirt - $100</option>
-                <option value="GA+Merch+Donation" data-price="100.00">GA + Merch Shirt + Donation - $100 + Donation</option>
-            </select>
-
+        <div class="ticket-option" data-type="GA" data-price="75.00">
+            <img src="ga-placeholder.png" alt="General Admission">
+            <h3>GA - $75</h3>
+            <p>General Admission ticket providing access to all days of the event.</p>
+        </div>
+        <div class="ticket-option" data-type="GA+Merch" data-price="100.00">
+            <img src="ga-merch-placeholder.png" alt="GA + Merch Shirt">
+            <h3>GA + Merch - $100</h3>
+            <p>Includes General Admission plus an exclusive event T-shirt.</p>
+        </div>
+        <div class="ticket-option" data-type="GA+Merch+Donation" data-price="100.00">
+            <img src="ga-merch-donation-placeholder.png" alt="GA + Merch Shirt + Donation">
+            <h3>GA + Merch + Donation - $100 + Donation</h3>
+            <p>Includes General Admission, T-shirt, and an option to donate to the event.</p>
             <div id="donation-field" style="display: none;">
                 <label for="donation-amount">Donation Amount</label>
                 <input type="number" id="donation-amount" name="donation-amount" placeholder="Enter donation amount">
             </div>
-
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Name" required aria-required="true">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Email" required aria-required="true">
-            <label for="phone">Phone</label>
-            <input type="tel" id="phone" name="phone" placeholder="Phone">
-
-            <div id="paypal-button-container"></div>
-            <div id="error-message" class="error-message" aria-live="polite"></div>
-        </form>
-        <div class="legal-warnings">
-            <p>By providing your contact information and purchasing a ticket, you agree to our terms and conditions. Your information will be used solely for event-related communications and will not be shared with third parties.</p>
         </div>
+
+        <div id="error-message" class="error-message" aria-live="polite"></div>
+        <div id="paypal-button-container"></div>
     </div>
 
     <div id="success-message" class="success-message" role="alert" aria-live="polite">
@@ -364,7 +371,7 @@
         function showForm() {
             document.getElementById("overlay").style.display = "block";
             document.getElementById("overlay").setAttribute("aria-hidden", "false");
-            document.getElementById("form-container").style.display = "block";
+            document.getElementById("form-container").style.display = "flex";
             document.getElementById("form-container").focus();
         }
 
@@ -374,19 +381,26 @@
             document.getElementById("form-container").style.display = "none";
         }
 
-        // Show/hide donation field based on ticket type
-        document.getElementById('ticket-type').addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const ticketPrice = parseFloat(selectedOption.getAttribute('data-price'));
-            const donationField = document.getElementById('donation-field');
-            
-            if (this.value === 'GA+Merch+Donation') {
-                donationField.style.display = 'block';
-            } else {
-                donationField.style.display = 'none';
-            }
+        // Handle ticket selection and PayPal button rendering
+        document.querySelectorAll('.ticket-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Deselect all other options
+                document.querySelectorAll('.ticket-option').forEach(opt => opt.classList.remove('selected'));
+                // Select the clicked option
+                this.classList.add('selected');
 
-            renderPayPalButton(ticketPrice);
+                const ticketType = this.getAttribute('data-type');
+                const ticketPrice = parseFloat(this.getAttribute('data-price'));
+                const donationField = document.getElementById('donation-field');
+
+                if (ticketType === 'GA+Merch+Donation') {
+                    donationField.style.display = 'block';
+                } else {
+                    donationField.style.display = 'none';
+                }
+
+                renderPayPalButton(ticketPrice);
+            });
         });
 
         function renderPayPalButton(ticketPrice) {
@@ -425,10 +439,11 @@
 
         // Render the PayPal button for the default ticket type on page load
         window.onload = function() {
-            const ticketTypeSelect = document.getElementById('ticket-type');
-            const selectedOption = ticketTypeSelect.options[ticketTypeSelect.selectedIndex];
-            const ticketPrice = parseFloat(selectedOption.getAttribute('data-price'));
-            renderPayPalButton(ticketPrice);
+            const selectedOption = document.querySelector('.ticket-option.selected');
+            if (selectedOption) {
+                const ticketPrice = parseFloat(selectedOption.getAttribute('data-price'));
+                renderPayPalButton(ticketPrice);
+            }
         };
     </script>
 </body>
