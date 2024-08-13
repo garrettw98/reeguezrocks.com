@@ -109,6 +109,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
             z-index: 1000;
+            overflow: hidden; /* Prevent scrolling on the main page when overlay is active */
         }
         
         .form-container {
@@ -129,6 +130,8 @@
             justify-content: space-around;
             gap: 20px;
             flex-wrap: wrap;
+            max-height: 80vh; /* Ensure it fits within the viewport */
+            overflow-y: auto; /* Enable scrolling if content exceeds max height */
         }
 
         .form-container.active {
@@ -274,13 +277,13 @@
             margin: 20px 0;
         }
     </style>
-    <!-- Include the PayPal JavaScript SDK -->
+	    <!-- Include the PayPal JavaScript SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
 </head>
 <body>
     <div class="parallax-container">
         <div class="content" tabindex="0">
-                        <h1>REEGUEZ ROCKS 2024</h1>
+            <h1>REEGUEZ ROCKS 2024</h1>
             <p>October 31st - November 3rd | Alabama Hills, CA</p>
             <div id="countdown" aria-live="polite"></div>
             <button onclick="showForm()">BUY TICKETS</button>
@@ -415,7 +418,7 @@
             <p>General Admission ticket providing access to all days of the event.</p>
         </div>
         <div class="ticket-option" data-type="GA+Merch" data-price="100.00">
-            <img src="SHIRT:TICKET.webp" alt="GA + Merch Shirt">
+            <img src="SHIRT/TICKET.webp" alt="GA + Merch Shirt">
             <h3>GA + Merch - $100</h3>
             <p>Includes General Admission plus an exclusive event T-shirt.</p>
         </div>
@@ -430,14 +433,14 @@
         </div>
 
         <div id="error-message" class="error-message" aria-live="polite"></div>
-        <div id="paypal-button-container"></div>
+                <div id="paypal-button-container"></div>
     </div>
 
     <div id="success-message" class="success-message" role="alert" aria-live="polite">
         <p>✔ Thank you for your purchase. We look forward to seeing you at the event!</p>
     </div>
 
-        <script>
+    <script>
         // Countdown timer
         function updateCountdown() {
             const eventDate = new Date("2024-10-31T00:00:00").getTime();
