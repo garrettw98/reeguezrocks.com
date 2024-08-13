@@ -125,12 +125,28 @@
             width: 90%;
             color: #fff;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
             gap: 20px;
         }
-        
+
+        .form-container.active {
+            display: flex;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: orange;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
         .ticket-option {
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
@@ -271,9 +287,86 @@
     <div class="separator"></div>
 
     <div class="section lineup">
-                <h2>Lineup</h2>
+        <h2>Lineup</h2>
         <div class="soundcloud-profiles">
-            <!-- Artist profiles remain the same -->
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://soundcloud.com/reeguez" target="_blank" rel="noopener noreferrer">
+                    <img src="Reeguez.png" alt="Reeguez">
+                </a>
+                <div class="artist-name">Reeguez</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://soundcloud.com/mindtake_music" target="_blank" rel="noopener noreferrer">
+                    <img src="Mindtake.png" alt="Mindtake">
+                </a>
+                <div class="artist-name">Mindtake</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
+                    <img src="PrimeTime.png" alt="PrimeTime">
+                </a>
+                <div class="artist-name">PrimeTime</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
+                                        <img src="Myskosis.png" alt="Myskosis">
+                </a>
+                <div class="artist-name">Myskosis</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://soundcloud.com/dirtydbb" target="_blank" rel="noopener noreferrer">
+                    <img src="DirtyDBB.png" alt="DirtyD">
+                </a>
+                <div class="artist-name">DirtyD</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://soundcloud.com/handzzzzz" target="_blank" rel="noopener noreferrer">
+                    <img src="HANDZ.png" alt="HANDZ">
+                </a>
+                <div class="artist-name">HANDZ</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://www.instagram.com/djminihandz/" target="_blank" rel="noopener noreferrer">
+                    <img src="DJMiniHandz.png" alt="DJ Minihandz">
+                </a>
+                <div class="artist-name">DJ Minihandz</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://www.instagram.com/jvgger_/" target="_blank" rel="noopener noreferrer">
+                    <img src="JVGGER.png" alt="JVGGER">
+                </a>
+                <div class="artist-name">JVGGER</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://www.instagram.com/duhvoodoo/" target="_blank" rel="noopener noreferrer">
+                    <img src="VooDoo.png" alt="VooDoo">
+                </a>
+                <div class="artist-name">VooDoo</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://soundcloud.com/cptkook" target="_blank" rel="noopener noreferrer">
+                    <img src="CPTKOOK.png" alt="CPTKook">
+                </a>
+                <div class="artist-name">CPTKook</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://www.instagram.com/elicast94/" target="_blank" rel="noopener noreferrer">
+                    <img src="DICE-E.png" alt="DICE-E">
+                </a>
+                <div class="artist-name">DICE-E</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://soundcloud.com/therourie" target="_blank" rel="noopener noreferrer">
+                    <img src="Rourie.png" alt="Rourie">
+                </a>
+                <div class="artist-name">Rourie</div>
+            </div>
+            <div class="soundcloud-profile" tabindex="0">
+                <a href="https://www.instagram.com/whoisramo/" target="_blank" rel="noopener noreferrer">
+                    <img src="RAMO.png" alt="RAMO">
+                </a>
+                <div class="artist-name">RAMO</div>
+            </div>
         </div>
     </div>
 
@@ -311,7 +404,7 @@
     <div id="overlay" class="overlay" aria-hidden="true"></div>
 
     <div id="form-container" class="form-container" aria-labelledby="form-title" role="dialog">
-        <button onclick="closeForm()" aria-label="Close form">×</button>
+        <button class="close-button" onclick="closeForm()">Close</button>
         <h2 id="form-title">Buy Tickets</h2>
         <div class="ticket-option" data-type="GA" data-price="75.00">
             <img src="ga-placeholder.png" alt="General Admission">
@@ -371,14 +464,14 @@
         function showForm() {
             document.getElementById("overlay").style.display = "block";
             document.getElementById("overlay").setAttribute("aria-hidden", "false");
-            document.getElementById("form-container").style.display = "flex";
+            document.getElementById("form-container").classList.add('active');
             document.getElementById("form-container").focus();
         }
 
         function closeForm() {
             document.getElementById("overlay").style.display = "none";
-            document.getElementById("overlay").setAttribute("aria-hidden", "true");
-            document.getElementById("form-container").style.display = "none";
+                        document.getElementById("overlay").setAttribute("aria-hidden", "true");
+            document.getElementById("form-container").classList.remove('active');
         }
 
         // Handle ticket selection and PayPal button rendering
@@ -423,7 +516,7 @@
                 },
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
-                        document.getElementById("form-container").style.display = "none";
+                        document.getElementById("form-container").classList.remove('active');
                         document.getElementById("success-message").style.display = "block";
                         setTimeout(() => {
                             document.getElementById("overlay").style.display = "none";
