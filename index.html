@@ -8,184 +8,89 @@
         body, html {
             margin: 0;
             padding: 0;
-            height: 100%;
             font-family: Arial, sans-serif;
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            scroll-behavior: smooth;
         }
-        
-        body {
-            background-color: #000; /* Fallback color */
-            background-image: url('Image.webp');
-            background-size: cover;
+        .parallax-container {
+            background-image: url('background.jpg');
+            height: 100vh;
+            background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
-            background-attachment: fixed; /* Fixed background */
-            color: #fff;
-        }
-
-        .parallax-container {
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
+            background-size: cover;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        
         .content {
             text-align: center;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
             padding: 20px;
             border-radius: 10px;
-            max-width: 80%;
         }
-        
-        h1 {
-            font-size: 4em;
-            margin-bottom: 0.2em;
-            color: orange;
-        }
-        
-        h2 {
-            color: orange;
-        }
-        
         .separator {
             height: 50px;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: #f0f0f0;
         }
-        
         .section {
-            padding: 50px;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-        
-        .lineup {
+            padding: 50px 20px;
             text-align: center;
         }
-        
+        .lineup {
+            background-color: #f9f9f9;
+        }
         .soundcloud-profiles {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
         }
-        
         .soundcloud-profile {
             width: 150px;
+            text-align: center;
         }
-        
         .soundcloud-profile img {
             width: 100%;
             border-radius: 50%;
-            transition: transform 0.3s ease;
         }
-        
-        .soundcloud-profile img:hover {
-            transform: scale(1.1);
-        }
-        
         .artist-name {
             margin-top: 10px;
             font-weight: bold;
-            color: orange;
         }
-        
         .info-box {
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            margin-bottom: 20px;
+            background-color: #f0f0f0;
             border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        
         .overlay {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
-            overflow: hidden; /* Prevent scrolling on the main page when overlay is active */
         }
-        
         .form-container {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.9);
-            padding: 30px;
-            border-radius: 15px;
-            z-index: 1001;
-            max-width: 900px;
-            width: 90%;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(0,0,0,0.7);
-            display: flex;
-            justify-content: space-around;
-            gap: 20px;
-            flex-wrap: wrap;
-            max-height: 80vh; /* Ensure it fits within the viewport */
-            overflow-y: auto; /* Enable scrolling if content exceeds max height */
-        }
-
-        .form-container.active {
-            display: flex; /* Shown when active */
-        }
-
-        .close-button {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #ff6347;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 50%;
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .ticket-option {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            background-color: white;
             padding: 20px;
-            width: 250px;
-            text-align: center;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            border-radius: 10px;
+            z-index: 1001;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
         }
-
-        /* Removed the images from the ticket options */
-        .ticket-option h3 {
-            margin-bottom: 10px;
-            color: orange;
-        }
-
-        .ticket-option p {
-            font-size: 14px;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .ticket-option.selected {
-            background-color: orange;
-            color: black;
-        }
-        
-        .error-message {
-            color: red;
-            margin-bottom: 10px;
-            width: 100%;
-            text-align: center;
-        }
-        
         .success-message {
             display: none;
             position: fixed;
@@ -197,21 +102,40 @@
             padding: 20px;
             border-radius: 10px;
             z-index: 1002;
-            text-align: center;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-
-        #paypal-button-container {
-            width: 100%;
-            text-align: center;
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        /* New styles for ticket options */
+        .ticket-options-container {
+            display: none;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
             margin-top: 20px;
         }
-
-        button {
-            background-color: #6632a8;
+        .ticket-option {
+            flex: 1 1 calc(33.333% - 20px);
+            min-width: 200px;
+            max-width: 300px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .ticket-option h3 {
+            margin-top: 0;
+        }
+        .ticket-option p {
+            margin-bottom: 10px;
+        }
+        .ticket-option button {
+            background-color: #4CAF50;
             border: none;
             color: white;
-            padding: 15px 32px;
+            padding: 10px 20px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
@@ -219,60 +143,13 @@
             margin: 4px 2px;
             cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s ease;
         }
-        
-        button:hover {
-            background-color: #9254e3;
-        }
-
-        /* Mobile Optimization */
         @media (max-width: 768px) {
-            body {
-                background-size: cover;
-                background-position: center center;
-            }
-
-            .content {
-                padding: 15px;
-                max-width: 90%;
-            }
-
-            h1 {
-                font-size: 2.5em;
-            }
-
-            .section {
-                padding: 30px;
-            }
-
-            .form-container {
-                flex-direction: column;
-                align-items: center;
-            }
-
             .ticket-option {
-                width: 100%;
-                max-width: 400px;
+                flex: 1 1 100%;
             }
-        }
-        
-        /* Accessibility */
-        .content, .info-box, .form-container, .success-message, .legal-warnings {
-            outline: 2px solid transparent;
-        }
-
-        .content:focus, .info-box:focus, .form-container:focus, .success-message:focus, .legal-warnings:focus {
-            outline: 2px solid orange;
-        }
-
-        #countdown {
-            font-size: 1.5em;
-            margin: 20px 0;
         }
     </style>
-    <!-- Include the PayPal JavaScript SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
 </head>
 <body>
     <div class="parallax-container">
@@ -280,7 +157,7 @@
             <h1>REEGUEZ ROCKS 2024</h1>
             <p>October 31st - November 3rd | Alabama Hills, CA</p>
             <div id="countdown" aria-live="polite"></div>
-            <button onclick="showForm()">BUY TICKETS</button>
+            <button id="buy-tickets-btn">BUY TICKETS</button>
         </div>
     </div>
 
@@ -301,7 +178,7 @@
                 </a>
                 <div class="artist-name">Mindtake</div>
             </div>
-                        <div class="soundcloud-profile" tabindex="0">
+            <div class="soundcloud-profile" tabindex="0">
                 <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
                     <img src="PrimeTime.png" alt="PrimeTime">
                 </a>
@@ -404,22 +281,30 @@
     <div id="overlay" class="overlay" aria-hidden="true"></div>
 
     <div id="form-container" class="form-container" aria-labelledby="form-title" role="dialog">
-        <button class="close-button" onclick="closeForm()">×</button>
+        <button id="close-form" aria-label="Close ticket form">×</button>
         <h2 id="form-title">Buy Tickets</h2>
-        <div class="ticket-option" data-type="GA" data-price="75.00">
-            <h3>GA - $75</h3>
-            <p>General Admission ticket providing access to all days of the event.</p>
-        </div>
-        <div class="ticket-option" data-type="GA+Merch" data-price="100.00">
-            <h3>GA + Merch - $100</h3>
-            <p>Includes General Admission plus an exclusive event T-shirt.</p>
-        </div>
-        <div class="ticket-option" data-type="GA+Merch+Donation" data-price="100.00">
-            <h3>GA + Merch + Donation - $100 + Donation</h3>
-            <p>Includes General Admission, T-shirt, and an option to donate to the event.</p>
-            <div id="donation-field" style="display: none;">
-                <label for="donation-amount">Donation Amount</label>
-                <input type="number" id="donation-amount" name="donation-amount" placeholder="Enter donation amount">
+
+        <div id="ticket-options-container" class="ticket-options-container">
+            <div class="ticket-option" data-type="GA" data-price="75.00">
+                <h3>GA - $75</h3>
+                <p>General Admission ticket providing access to all days of the event.</p>
+                <button class="select-ticket">Select</button>
+            </div>
+
+            <div class="ticket-option" data-type="GA+Merch" data-price="100.00">
+                <h3>GA + Merch - $100</h3>
+                <p>Includes General Admission plus an exclusive event T-shirt.</p>
+                <button class="select-ticket">Select</button>
+            </div>
+
+            <div class="ticket-option" data-type="GA+Merch+Donation" data-price="100.00">
+                <h3>GA + Merch + Donation - $100 + Donation</h3>
+                <p>Includes General Admission, T-shirt, and an option to donate to the event.</p>
+                <div id="donation-field" style="display: none;">
+                    <label for="donation-amount">Donation Amount:</label>
+                    <input type="number" id="donation-amount" min="0" step="1">
+                </div>
+                <button class="select-ticket">Select</button>
             </div>
         </div>
 
@@ -428,13 +313,13 @@
     </div>
 
     <div id="success-message" class="success-message" role="alert" aria-live="polite">
-        <p>✔ Thank you for your purchase. We look forward to seeing you at the event!</p>
+        ✔ Thank you for your purchase. We look forward to seeing you at the event!
     </div>
 
     <script>
         // Countdown timer
         function updateCountdown() {
-            const eventDate = new Date("2024-10-31T00:00:00").getTime();
+            const eventDate = new Date("2024-10-31T00:00:00-07:00").getTime();
             const now = new Date().getTime();
             const timeLeft = eventDate - now;
 
@@ -447,94 +332,48 @@
 
             if (timeLeft < 0) {
                 clearInterval(countdownTimer);
-                document.getElementById("countdown").innerHTML = "Event has started!";
+                document.getElementById("countdown").innerHTML = "The event has started!";
             }
         }
 
-        // Initialize the countdown when the page loads
-        updateCountdown();
-
-        // Set up the interval to update the countdown every second
         const countdownTimer = setInterval(updateCountdown, 1000);
 
-        // Form handling
-        function showForm() {
-            document.getElementById("overlay").style.display = "block";
-            document.getElementById("overlay").setAttribute("aria-hidden", "false");
-                        document.getElementById("form-container").classList.add('active');
-            document.getElementById("form-container").focus();
-        }
+        // New JavaScript for ticket options
+        document.addEventListener('DOMContentLoaded', function() {
+            const buyTicketsBtn = document.getElementById('buy-tickets-btn');
+            const formContainer = document.getElementById('form-container');
+            const overlay = document.getElementById('overlay');
+            const closeFormBtn = document.getElementById('close-form');
+            const ticketOptionsContainer = document.getElementById('ticket-options-container');
 
-        function closeForm() {
-            document.getElementById("overlay").style.display = "none";
-            document.getElementById("overlay").setAttribute("aria-hidden", "true");
-            document.getElementById("form-container").classList.remove('active');
-        }
+            buyTicketsBtn.addEventListener('click', function() {
+                formContainer.style.display = 'block';
+                overlay.style.display = 'block';
+                ticketOptionsContainer.style.display = 'flex';
+            });
 
-        // Handle ticket selection and PayPal button rendering
-        document.querySelectorAll('.ticket-option').forEach(option => {
-            option.addEventListener('click', function() {
-                // Deselect all other options
-                document.querySelectorAll('.ticket-option').forEach(opt => opt.classList.remove('selected'));
-                // Select the clicked option
-                this.classList.add('selected');
+            closeFormBtn.addEventListener('click', function() {
+                formContainer.style.display = 'none';
+                overlay.style.display = 'none';
+            });
 
-                const ticketType = this.getAttribute('data-type');
-                const ticketPrice = parseFloat(this.getAttribute('data-price'));
-                const donationField = document.getElementById('donation-field');
+            const selectTicketBtns = document.querySelectorAll('.select-ticket');
+            selectTicketBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const ticketType = this.closest('.ticket-option').dataset.type;
+                    const ticketPrice = this.closest('.ticket-option').dataset.price;
+                    // Here you can add logic to handle the selected ticket
+                    console.log(`Selected ticket: ${ticketType}, Price: $${ticketPrice}`);
+                    // You might want to show a payment form or update the PayPal button here
+                });
+            });
 
-                if (ticketType === 'GA+Merch+Donation') {
-                    donationField.style.display = 'block';
-                } else {
-                    donationField.style.display = 'none';
-                }
-
-                renderPayPalButton(ticketPrice);
+            const gaMerchDonationOption = document.querySelector('.ticket-option[data-type="GA+Merch+Donation"]');
+            const donationField = document.getElementById('donation-field');
+            gaMerchDonationOption.querySelector('.select-ticket').addEventListener('click', function() {
+                donationField.style.display = 'block';
             });
         });
-
-        function renderPayPalButton(ticketPrice) {
-            // Remove existing PayPal button (if any) before rendering a new one
-            const paypalContainer = document.getElementById('paypal-button-container');
-            paypalContainer.innerHTML = '';
-
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                    const donationAmount = parseFloat(document.getElementById('donation-amount').value) || 0;
-                    const totalAmount = ticketPrice + donationAmount;
-
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: totalAmount.toFixed(2)
-                            }
-                        }]
-                    });
-                },
-                onApprove: function(data, actions) {
-                    return actions.order.capture().then(function(details) {
-                        document.getElementById("form-container").classList.remove('active');
-                        document.getElementById("success-message").style.display = "block";
-                        setTimeout(() => {
-                            document.getElementById("overlay").style.display = "none";
-                            document.getElementById("success-message").style.display = "none";
-                        }, 3000);
-                    });
-                },
-                onError: function(err) {
-                    document.getElementById("error-message").textContent = "Oops! There was a problem processing your payment. Please try again.";
-                }
-            }).render('#paypal-button-container');
-        }
-
-        // Render the PayPal button for the default ticket type on page load
-        window.onload = function() {
-            const selectedOption = document.querySelector('.ticket-option.selected');
-            if (selectedOption) {
-                const ticketPrice = parseFloat(selectedOption.getAttribute('data-price'));
-                renderPayPalButton(ticketPrice);
-            }
-        };
     </script>
 </body>
 </html>
