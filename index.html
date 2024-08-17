@@ -225,9 +225,6 @@
             padding: 20px;
             margin-top: 20px;
         }
-        .lineup-content h2 {
-            color: #f7a602;
-        }
         #countdown {
             font-size: 2em;
             margin-top: 20px;
@@ -304,9 +301,9 @@
                 </div>
                 <div class="soundcloud-profile" tabindex="0">
                     <a href="https://www.instagram.com/djminihandz/" target="_blank" rel="noopener noreferrer">
-                        <img src="DJMiniHandz.png" alt="Minihandz">
+                        <img src="DJMiniHandz.png" alt="DJ Minihandz">
                     </a>
-                    <div class="artist-name">Mini Handz</div>
+                    <div class="artist-name">DJ Minihandz</div>
                 </div>
                 <div class="soundcloud-profile" tabindex="0">
                     <a href="https://www.instagram.com/jvgger_/" target="_blank" rel="noopener noreferrer">
@@ -528,7 +525,7 @@
             }, 0);
         }
 
-        document.getElementById('checkout-button').addEventListener('click', function() {
+        document.getElementById('checkout-button').addEventListener('click', async function() {
             console.log('Checkout button clicked');
             const donationAmount = parseFloat(document.getElementById('donation').value) || 0;
             const totalAmount = calculateTotal() + donationAmount;
@@ -536,39 +533,33 @@
             console.log('Total amount:', totalAmount);
             console.log('Selected tickets:', selectedTickets);
 
-            // Create an object with the necessary data
-            const checkoutData = {
-                selectedTickets: selectedTickets,
-                donationAmount: donationAmount
-            };
+            try {
+                const response = await fetch('http://144.126.214.219:3000/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        selectedTickets,
+                        donationAmount,
+                    }),
+                });
 
-            // Make an AJAX call to the server to create a Stripe checkout session
-            fetch('/create-checkout-session', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(checkoutData),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.sessionId) {
-                    // Redirect to Stripe Checkout
-                    return stripe.redirectToCheckout({ sessionId: data.sessionId });
-                } else {
-                    throw new Error('Failed to create checkout session');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            })
-            .then(result => {
+
+                const { sessionId } = await response.json();
+                const result = await stripe.redirectToCheckout({ sessionId });
+
                 if (result.error) {
-                    console.error('Checkout error:', result.error);
+                    console.error(result.error.message);
                     showError(result.error.message);
                 }
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error:', error);
                 showError('An error occurred. Please try again.');
-            });
+            }
         });
 
         // Function to show error message
