@@ -32,17 +32,48 @@
             padding: 20px;
             border-radius: 10px;
         }
+        .content p {
+            color: white;
+        }
         .separator {
-            height: 50px;
-            background-color: rgba(240, 240, 240, 0.5);
+            display: none;
+        }
+        .stylish-separator {
+            height: 2px;
+            background-color: transparent;
+            position: relative;
+            margin: 40px auto;
+            width: 80%;
+            max-width: 800px;
+        }
+        .stylish-separator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #f7a602;
+            transform: translateY(-50%);
+        }
+        .stylish-separator::after {
+            content: '◆';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #f7a602;
+            font-size: 12px;
+            background-color: black;
+            padding: 0 10px;
         }
         .section {
             padding: 50px 20px;
             text-align: center;
-            background-color: rgba(249, 249, 249, 0.8);
+            background-color: transparent;
         }
         .lineup {
-            background-color: rgba(249, 249, 249, 0.8);
+            background-color: transparent;
         }
         .soundcloud-profiles {
             display: flex;
@@ -61,15 +92,25 @@
         .artist-name {
             margin-top: 10px;
             font-weight: bold;
+            color: #f7a602;
         }
         .info-box {
-            background-color: rgba(240, 240, 240, 0.8);
+            background-color: rgba(0, 0, 0, 0.5);
             border-radius: 10px;
             padding: 20px;
             margin: 20px 0;
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+        }
+        .info-box h2 {
+            color: #f7a602;
+            text-align: center;
+        }
+        .info-box p, .info-box ul {
+            color: white;
+            text-align: left;
+            padding-left: 20px;
         }
         .overlay {
             display: none;
@@ -78,7 +119,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.8);
             z-index: 1000;
         }
         .form-container {
@@ -87,7 +128,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            border: 2px solid #f7a602;
+            box-shadow: 0 0 20px rgba(247, 166, 2, 0.3);
             padding: 20px;
             border-radius: 10px;
             z-index: 1001;
@@ -95,7 +139,7 @@
             max-height: 80%;
             overflow-y: auto;
         }
-        .success-message {
+        .success-message, .error-message {
             display: none;
             position: fixed;
             top: 50%;
@@ -105,11 +149,10 @@
             color: white;
             padding: 20px;
             border-radius: 10px;
-            z-index: 1002;
+            z-index: 1001;
         }
         .error-message {
-            color: red;
-            margin-top: 10px;
+            background-color: #f44336;
         }
         .ticket-options-container {
             display: none;
@@ -123,7 +166,8 @@
             min-width: 200px;
             max-width: 300px;
             background-color: rgba(0, 0, 0, 0.7);
-            color: #f7a602;
+            border: 1px solid #f7a602;
+            color: white;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -132,6 +176,7 @@
         .ticket-option h3 {
             margin-top: 0;
             font-size: 1.2em;
+            color: #f7a602;
         }
         .ticket-option p {
             margin-bottom: 10px;
@@ -140,7 +185,7 @@
         .ticket-option button, #buy-tickets-btn {
             background-color: #f7a602;
             border: none;
-            color: red;
+            color: black;
             padding: 10px 20px;
             text-align: center;
             text-decoration: none;
@@ -149,10 +194,11 @@
             margin: 4px 2px;
             cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
         }
         .ticket-option button:hover, #buy-tickets-btn:hover {
-            background-color: #333333;
+            background-color: #ffd700;
+            color: black;
         }
         #close-form {
             position: absolute;
@@ -162,14 +208,44 @@
             cursor: pointer;
             background: none;
             border: none;
-            color: #333;
+            color: #f7a602;
+        }
+        #close-form:hover {
+            color: #ffd700;
         }
         @media (max-width: 768px) {
             .ticket-option {
                 flex: 1 1 100%;
             }
         }
+        .lineup-content {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        #countdown {
+            font-size: 2em;
+            margin-top: 20px;
+            color: white;
+        }
+        #form-title {
+            color: #f7a602;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #donation-field label {
+            color: white;
+        }
+        #donation-field input {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid #f7a602;
+            color: white;
+            padding: 5px;
+        }
     </style>
+    <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
     <div class="parallax-container">
@@ -181,93 +257,95 @@
         </div>
     </div>
 
-    <div class="separator"></div>
+    <div class="stylish-separator"></div>
 
     <div class="section lineup">
-        <h2>Lineup</h2>
-        <div class="soundcloud-profiles">
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://soundcloud.com/reeguez" target="_blank" rel="noopener noreferrer">
-                    <img src="Reeguez.png" alt="Reeguez">
-                </a>
-                <div class="artist-name">Reeguez</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://soundcloud.com/mindtake_music" target="_blank" rel="noopener noreferrer">
-                    <img src="Mindtake.png" alt="Mindtake">
-                </a>
-                <div class="artist-name">Mindtake</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
-                    <img src="PrimeTime.png" alt="PrimeTime">
-                </a>
-                <div class="artist-name">PrimeTime</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
-                    <img src="Myskosis.png" alt="Myskosis">
-                </a>
-                <div class="artist-name">Myskosis</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://soundcloud.com/dirtydbb" target="_blank" rel="noopener noreferrer">
-                    <img src="DirtyDBB.png" alt="DirtyD">
-                </a>
-                <div class="artist-name">DirtyD</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://soundcloud.com/handzzzzz" target="_blank" rel="noopener noreferrer">
-                    <img src="HANDZ.png" alt="HANDZ">
-                </a>
-                <div class="artist-name">HANDZ</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://www.instagram.com/djminihandz/" target="_blank" rel="noopener noreferrer">
-                    <img src="DJMiniHandz.png" alt="DJ Minihandz">
-                </a>
-                <div class="artist-name">DJ Minihandz</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://www.instagram.com/jvgger_/" target="_blank" rel="noopener noreferrer">
-                    <img src="JVGGER.png" alt="JVGGER">
-                </a>
-                <div class="artist-name">JVGGER</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://www.instagram.com/duhvoodoo/" target="_blank" rel="noopener noreferrer">
-                    <img src="VooDoo.png" alt="VooDoo">
-                </a>
-                <div class="artist-name">VooDoo</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://soundcloud.com/cptkook" target="_blank" rel="noopener noreferrer">
-                    <img src="CPTKOOK.png" alt="CPTKook">
-                </a>
-                <div class="artist-name">CPTKook</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://www.instagram.com/elicast94/" target="_blank" rel="noopener noreferrer">
-                    <img src="DICE-E.png" alt="DICE-E">
-                </a>
-                <div class="artist-name">DICE-E</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://soundcloud.com/therourie" target="_blank" rel="noopener noreferrer">
-                    <img src="Rourie.png" alt="Rourie">
-                </a>
-                <div class="artist-name">Rourie</div>
-            </div>
-            <div class="soundcloud-profile" tabindex="0">
-                <a href="https://www.instagram.com/whoisramo/" target="_blank" rel="noopener noreferrer">
-                    <img src="RAMO.png" alt="RAMO">
-                </a>
-                <div class="artist-name">RAMO</div>
+        <div class="lineup-content">
+            <h2>Lineup</h2>
+            <div class="soundcloud-profiles">
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://soundcloud.com/reeguez" target="_blank" rel="noopener noreferrer">
+                        <img src="Reeguez.png" alt="Reeguez">
+                    </a>
+                    <div class="artist-name">Reeguez</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://soundcloud.com/mindtake_music" target="_blank" rel="noopener noreferrer">
+                        <img src="Mindtake.png" alt="Mindtake">
+                    </a>
+                    <div class="artist-name">Mindtake</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
+                        <img src="PrimeTime.png" alt="PrimeTime">
+                    </a>
+                    <div class="artist-name">PrimeTime</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
+                        <img src="Myskosis.png" alt="Myskosis">
+                    </a>
+                    <div class="artist-name">Myskosis</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://soundcloud.com/dirtydbb" target="_blank" rel="noopener noreferrer">
+                        <img src="DirtyDBB.png" alt="DirtyD">
+                    </a>
+                    <div class="artist-name">DirtyD</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://soundcloud.com/handzzzzz" target="_blank" rel="noopener noreferrer">
+                        <img src="HANDZ.png" alt="HANDZ">
+                    </a>
+                    <div class="artist-name">HANDZ</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://www.instagram.com/djminihandz/" target="_blank" rel="noopener noreferrer">
+                        <img src="DJMiniHandz.png" alt="DJ Minihandz">
+                    </a>
+                    <div class="artist-name">DJ Minihandz</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://www.instagram.com/jvgger_/" target="_blank" rel="noopener noreferrer">
+                        <img src="JVGGER.png" alt="JVGGER">
+                    </a>
+                    <div class="artist-name">JVGGER</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://www.instagram.com/duhvoodoo/" target="_blank" rel="noopener noreferrer">
+                        <img src="VooDoo.png" alt="VooDoo">
+                    </a>
+                    <div class="artist-name">VooDoo</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://soundcloud.com/cptkook" target="_blank" rel="noopener noreferrer">
+                        <img src="CPTKOOK.png" alt="CPTKook">
+                    </a>
+                    <div class="artist-name">CPTKook</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://www.instagram.com/elicast94/" target="_blank" rel="noopener noreferrer">
+                        <img src="DICE-E.png" alt="DICE-E">
+                    </a>
+                    <div class="artist-name">DICE-E</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://soundcloud.com/therourie" target="_blank" rel="noopener noreferrer">
+                        <img src="Rourie.png" alt="Rourie">
+                    </a>
+                    <div class="artist-name">Rourie</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://www.instagram.com/whoisramo/" target="_blank" rel="noopener noreferrer">
+                        <img src="RAMO.png" alt="RAMO">
+                    </a>
+                    <div class="artist-name">RAMO</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="separator"></div>
+    <div class="stylish-separator"></div>
 
     <div class="section" role="main">
         <div class="info-box" tabindex="0">
@@ -283,7 +361,7 @@
             <p>Reeguez Rocks isn't just an event; it's a gathering of like-minded individuals who appreciate underground electronic music in its purest form. From the carefully curated lineup to the awe-inspiring scenery, every aspect is designed to resonate with true music enthusiasts and adventure seekers alike.</p>
         </div>
 
-        <div class="separator"></div>
+        <div class="stylish-separator"></div>
 
         <div class="info-box" tabindex="0">
             <h2>How to Join the Experience</h2>
@@ -305,36 +383,27 @@
         <h2 id="form-title">Buy Tickets</h2>
 
         <div id="ticket-options-container" class="ticket-options-container">
-            <div class="ticket-option" data-type="GA" data-price="75.00">
-                <h3>GA - $75</h3>
-                <p>General Admission ticket providing access to all days of the event.</p>
-                <button class="select-ticket">Select</button>
-            </div>
-
-            <div class="ticket-option" data-type="GA+Merch" data-price="100.00">
-                <h3>GA + Merch - $100</h3>
-                <p>Includes General Admission plus an exclusive event T-shirt.</p>
-                <button class="select-ticket">Select</button>
-            </div>
-
-            <div class="ticket-option" data-type="GA+Merch+Donation" data-price="100.00">
-                <h3>GA + Merch + Donation - $100 + Donation</h3>
-                <p>Includes General Admission, T-shirt, and an option to donate to the event.</p>
-                <div id="donation-field" style="display: none;">
-                    <label for="donation-amount">Donation Amount:</label>
-                    <input type="number" id="donation-amount" min="0" step="1">
-                </div>
-                <button class="select-ticket">Select</button>
-            </div>
+            <!-- Ticket options will be dynamically added here -->
         </div>
 
+        <div id="selected-tickets"></div>
+        <div id="total-amount"></div>
+
+        <div id="donation-field">
+            <label for="donation">Donation Amount (optional):</label>
+            <input type="number" id="donation" name="donation" min="0" step="0.01">
+        </div>
+
+        <button id="checkout-button">Proceed to Checkout</button>
+
         <div id="error-message" class="error-message" aria-live="polite"></div>
-        <div id="paypal-button-container"></div>
     </div>
 
     <div id="success-message" class="success-message" role="alert" aria-live="polite">
         ✔ Thank you for your purchase. We look forward to seeing you at the event!
     </div>
+
+    <div id="error-message" class="error-message" role="alert" aria-live="polite"></div>
 
     <script>
         // Countdown timer
@@ -394,6 +463,164 @@
                 donationField.style.display = 'block';
             });
         });
+
+        const ticketTypes = [
+            { id: 'general', name: 'General Admission', price: 75 },
+            { id: 'ga+merch', name: 'GA + Merch', price: 100 },
+            { id: 'ga+merch+donation', name: 'GA + Merch + Donation', price: 100 },
+        ];
+
+        let selectedTickets = {};
+
+        function renderTicketOptions() {
+            const container = document.getElementById('ticket-options-container');
+            ticketTypes.forEach(ticket => {
+                const option = document.createElement('div');
+                option.className = 'ticket-option';
+                option.innerHTML = `
+                    <h3>${ticket.name}</h3>
+                    <p>$${ticket.price}</p>
+                    <button onclick="addTicket('${ticket.id}')">Add</button>
+                    <span id="${ticket.id}-count">0</span>
+                    <button onclick="removeTicket('${ticket.id}')">Remove</button>
+                `;
+                container.appendChild(option);
+            });
+        }
+
+        function addTicket(id) {
+            selectedTickets[id] = (selectedTickets[id] || 0) + 1;
+            updateTicketDisplay();
+        }
+
+        function removeTicket(id) {
+            if (selectedTickets[id] > 0) {
+                selectedTickets[id]--;
+                updateTicketDisplay();
+            }
+        }
+
+        function updateTicketDisplay() {
+            ticketTypes.forEach(ticket => {
+                document.getElementById(`${ticket.id}-count`).textContent = selectedTickets[ticket.id] || 0;
+            });
+            
+            const totalAmount = calculateTotal();
+            document.getElementById('total-amount').textContent = `Total: $${totalAmount}`;
+            
+            renderPayPalButton(totalAmount);
+        }
+
+        function calculateTotal() {
+            return ticketTypes.reduce((total, ticket) => {
+                return total + (selectedTickets[ticket.id] || 0) * ticket.price;
+            }, 0);
+        }
+
+        const stripe = Stripe('pk_live_51PobHG13IXBbtg2Ms4wprFzOYuXejBV5GuyDbLdagcYhEluocIfDRoXS8KQ4OG2b1eQLGB8RZq6Tt9yFRfxdpQUL00dUhie8Ia');
+
+        document.getElementById('checkout-button').addEventListener('click', function() {
+            const donationAmount = parseFloat(document.getElementById('donation').value) || 0;
+            const totalAmount = calculateTotal() + donationAmount;
+
+            const lineItems = Object.entries(selectedTickets).map(([id, quantity]) => {
+                const ticket = ticketTypes.find(t => t.id === id);
+                return {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: ticket.name,
+                        },
+                        unit_amount: ticket.price * 100, // Stripe uses cents
+                    },
+                    quantity: quantity,
+                };
+            });
+
+            if (donationAmount > 0) {
+                lineItems.push({
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: 'Donation',
+                        },
+                        unit_amount: donationAmount * 100, // Stripe uses cents
+                    },
+                    quantity: 1,
+                });
+            }
+
+            stripe.checkout.sessions.create({
+                payment_method_types: ['card'],
+                line_items: lineItems,
+                mode: 'payment',
+                success_url: window.location.href + '?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url: window.location.href + '?canceled=true',
+            })
+            .then(function(session) {
+                return stripe.redirectToCheckout({ sessionId: session.id });
+            })
+            .then(function(result) {
+                if (result.error) {
+                    showError(result.error.message);
+                }
+            })
+            .catch(function(error) {
+                showError('An error occurred. Please try again.');
+            });
+        });
+
+        // Function to show error message
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            }, 5000);
+        }
+
+        // Function to show success message
+        function showSuccess() {
+            document.getElementById('success-message').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('success-message').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            }, 5000);
+        }
+
+        // Check for successful payment or cancellation on page load
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('session_id');
+            const canceled = urlParams.get('canceled');
+
+            if (sessionId) {
+                // Verify the session status with Stripe
+                stripe.checkout.sessions.retrieve(sessionId)
+                    .then(function(session) {
+                        if (session.payment_status === 'paid') {
+                            showSuccess();
+                        } else {
+                            showError('Payment was not successful. Please try again.');
+                        }
+                    })
+                    .catch(function(error) {
+                        showError('An error occurred while verifying your payment. Please contact support.');
+                    });
+            } else if (canceled) {
+                showError('Payment was canceled. You have not been charged.');
+            }
+
+            // Clear the URL parameters
+            window.history.replaceState({}, document.title, window.location.pathname);
+        });
+
+        // Call this function when the form is opened
+        renderTicketOptions();
     </script>
 </body>
 </html>
