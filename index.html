@@ -225,6 +225,9 @@
             padding: 20px;
             margin-top: 20px;
         }
+        .lineup-content h2 {
+            color: #f7a602;
+        }
         #countdown {
             font-size: 2em;
             margin-top: 20px;
@@ -340,6 +343,12 @@
                         <img src="RAMO.png" alt="RAMO">
                     </a>
                     <div class="artist-name">RAMO</div>
+                </div>
+                <div class="soundcloud-profile" tabindex="0">
+                    <a href="https://soundcloud.com/user-123744987" target="_blank" rel="noopener noreferrer">
+                        <img src="XOXO.png" alt="XOXO">
+                    </a>
+                    <div class="artist-name">XOXO</div>
                 </div>
             </div>
         </div>
@@ -527,55 +536,38 @@
             console.log('Total amount:', totalAmount);
             console.log('Selected tickets:', selectedTickets);
 
-            const lineItems = Object.entries(selectedTickets).map(([id, quantity]) => {
-                const ticket = ticketTypes.find(t => t.id === id);
-                return {
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: ticket.name,
-                        },
-                        unit_amount: ticket.price * 100, // Stripe uses cents
-                    },
-                    quantity: quantity,
-                };
-            });
+            // Create an object with the necessary data
+            const checkoutData = {
+                selectedTickets: selectedTickets,
+                donationAmount: donationAmount
+            };
 
-            console.log('Line items:', lineItems);
-
-            if (donationAmount > 0) {
-                lineItems.push({
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: 'Donation',
-                        },
-                        unit_amount: donationAmount * 100, // Stripe uses cents
-                    },
-                    quantity: 1,
-                });
-            }
-
-            stripe.checkout.sessions.create({
-                payment_method_types: ['card'],
-                line_items: lineItems,
-                mode: 'payment',
-                success_url: window.location.href + '?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url: window.location.href + '?canceled=true',
-            }, function(error, session) {
-                if (error) {
-                    console.error('Error creating checkout session:', error);
-                    showError('An error occurred. Please try again.');
+            // Make an AJAX call to the server to create a Stripe checkout session
+            fetch('/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(checkoutData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sessionId) {
+                    // Redirect to Stripe Checkout
+                    return stripe.redirectToCheckout({ sessionId: data.sessionId });
                 } else {
-                    console.log('Session created:', session);
-                    stripe.redirectToCheckout({ sessionId: session.id })
-                        .then(function(result) {
-                            if (result.error) {
-                                console.error('Checkout error:', result.error);
-                                showError(result.error.message);
-                            }
-                        });
+                    throw new Error('Failed to create checkout session');
                 }
+            })
+            .then(result => {
+                if (result.error) {
+                    console.error('Checkout error:', result.error);
+                    showError(result.error.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError('An error occurred. Please try again.');
             });
         });
 
