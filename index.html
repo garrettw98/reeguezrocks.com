@@ -464,6 +464,8 @@
             });
         });
 
+        const stripe = Stripe('pk_test_51PobHG13IXBbtg2Mx66nfWpyKYIFBuQpNkyrEEw3RteWR1WRxv8kMk3v7f5bEhw4oOsnAQHdsS1YAji6ejLlHg6f00TdBW9w0y');
+
         const ticketTypes = [
             { id: 'general', name: 'General Admission', price: 75 },
             { id: 'ga+merch', name: 'GA + Merch', price: 100 },
@@ -516,8 +518,6 @@
                 return total + (selectedTickets[ticket.id] || 0) * ticket.price;
             }, 0);
         }
-
-        const stripe = Stripe('pk_live_51PobHG13IXBbtg2Ms4wprFzOYuXejBV5GuyDbLdagcYhEluocIfDRoXS8KQ4OG2b1eQLGB8RZq6Tt9yFRfxdpQUL00dUhie8Ia');
 
         document.getElementById('checkout-button').addEventListener('click', function() {
             const donationAmount = parseFloat(document.getElementById('donation').value) || 0;
