@@ -15,15 +15,29 @@
         body {
             background-image: url('Image.webp');
             background-attachment: fixed;
-            background-position: center;
             background-repeat: no-repeat;
-            background-size: auto 100%; /* Changed from cover to auto 100% */
+            background-size: auto 100vh; /* Set height to 100% of viewport height */
+            background-position: center top; /* Align to the top */
         }
 
-        /* Add a media query for larger screens */
+        /* Add media queries for different screen sizes */
         @media (min-width: 768px) {
             body {
-                background-size: cover; /* Use cover for larger screens */
+                background-size: cover;
+            }
+        }
+
+        @media (max-width: 767px) and (orientation: portrait) {
+            body {
+                background-size: auto 100%;
+                background-position: 35% top; /* Adjust horizontal position */
+            }
+        }
+
+        @media (max-width: 767px) and (orientation: landscape) {
+            body {
+                background-size: 100% auto;
+                background-position: center 20%; /* Adjust vertical position */
             }
         }
         
