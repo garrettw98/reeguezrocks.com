@@ -17,8 +17,16 @@
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
-            background-size: cover;
+            background-size: auto 100%; /* Changed from cover to auto 100% */
         }
+
+        /* Add a media query for larger screens */
+        @media (min-width: 768px) {
+            body {
+                background-size: cover; /* Use cover for larger screens */
+            }
+        }
+        
         .parallax-container {
             height: 100vh;
             display: flex;
