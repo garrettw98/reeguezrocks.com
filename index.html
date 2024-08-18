@@ -344,6 +344,7 @@
             align-items: center;
             opacity: 1;
             transition: opacity 0.3s ease-out;
+            z-index: 2; /* Ensure it's above other content */
         }
         .chevron {
             width: 30px;
@@ -391,12 +392,13 @@
                 <div id="countdown" aria-live="polite"></div>
                 <button id="buy-tickets-btn">BUY TICKETS</button>
             </div>
-        </div>
-
-        <div class="scroll-indicator">
-            <div class="chevron"></div>
-            <div class="chevron"></div>
-            <div class="chevron"></div>
+            
+            <!-- Move the scroll indicator inside the parallax-container -->
+            <div class="scroll-indicator">
+                <div class="chevron"></div>
+                <div class="chevron"></div>
+                <div class="chevron"></div>
+            </div>
         </div>
 
         <div class="stylish-separator"></div>
@@ -602,13 +604,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             const scrollIndicator = document.querySelector('.scroll-indicator');
             
-            window.addEventListener('scroll', function() {
+            function handleScroll() {
                 if (window.scrollY > 100) { // Adjust this value as needed
                     scrollIndicator.style.opacity = '0';
                 } else {
                     scrollIndicator.style.opacity = '1';
                 }
-            });
+            }
+
+            window.addEventListener('scroll', handleScroll);
+
+            // Trigger the handleScroll function once on page load
+            handleScroll();
         });
 
         window.addEventListener('scroll', function() {
