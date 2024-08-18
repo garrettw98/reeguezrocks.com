@@ -87,7 +87,13 @@
         }
         .soundcloud-profile img {
             width: 100%;
+            height: 150px; /* Set a fixed height */
+            object-fit: cover; /* This will ensure the image covers the area without distortion */
             border-radius: 50%;
+        }
+        /* Specific fix for XOXO's image if needed */
+        .soundcloud-profile img[alt="XOXO"] {
+            object-position: center; /* Adjust this value if needed to center the image properly */
         }
         .artist-name {
             margin-top: 10px;
