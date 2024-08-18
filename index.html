@@ -182,7 +182,7 @@
             color: white;
             border: 2px solid #f7a602;
             box-shadow: 0 0 20px rgba(247, 166, 2, 0.3);
-            padding: 40px 20px 20px;
+            padding: 60px 20px 20px;
             border-radius: 10px;
             z-index: 1001;
             max-width: 80%;
@@ -267,25 +267,28 @@
                 overflow-x: hidden;
                 overflow-y: auto;
                 max-height: 90vh;
-                padding-top: 60px;
+                padding-top: 80px;
             }
             #close-form {
-                top: 20px;
+                top: 40px;
                 right: 20px;
                 font-size: 28px;
                 z-index: 1002;
             }
         }
         #close-form {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            font-size: 24px;
+            position: fixed;
+            right: 20px;
+            top: 40px;
+            font-size: 28px;
             cursor: pointer;
             background: none;
             border: none;
             color: #f7a602;
-            padding: 5px;
+            padding: 10px;
+            z-index: 1002;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
         }
         #close-form:hover {
             color: #ffd700;
@@ -420,6 +423,16 @@
             .scroll-indicator {
                 transform: scale(0.8);
                 margin-bottom: 40px;
+            }
+        }
+
+        /* Add a safe area for devices with notches */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .form-container {
+                padding-top: calc(80px + env(safe-area-inset-top));
+            }
+            #close-form {
+                top: calc(40px + env(safe-area-inset-top));
             }
         }
     </style>
