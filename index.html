@@ -11,22 +11,34 @@
             font-family: Arial, sans-serif;
             scroll-behavior: smooth;
             height: 100%;
+            overflow-x: hidden;
         }
-        body {
+
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-image: url('Image.webp');
-            background-attachment: fixed;
-            background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
+            z-index: -1;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
         }
 
         /* Media query for mobile devices */
         @media (max-width: 767px) {
-            body {
+            .parallax-bg {
                 background-image: url('mobile_image.webp');
                 background-size: 100% auto;
                 background-position: center top;
-                background-attachment: scroll; /* Allow scrolling on mobile */
             }
         }
         
@@ -356,175 +368,178 @@
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
-    <div class="parallax-container">
-        <div class="content" tabindex="0">
-            <h1>REEGUEZ ROCKS 2024</h1>
-            <p>October 31st - November 3rd | Alabama Hills, CA</p>
-            <div id="countdown" aria-live="polite"></div>
-            <button id="buy-tickets-btn">BUY TICKETS</button>
-        </div>
-    </div>
-
-    <div class="scroll-indicator">
-        <div class="chevron"></div>
-        <div class="chevron"></div>
-        <div class="chevron"></div>
-    </div>
-
-    <div class="stylish-separator"></div>
-
-    <div class="section lineup">
-        <div class="lineup-content">
-            <h2 class="section-header">Lineup</h2>
-            <div class="soundcloud-profiles">
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://soundcloud.com/reeguez" target="_blank" rel="noopener noreferrer">
-                        <img src="Reeguez.png" alt="Reeguez">
-                    </a>
-                    <div class="artist-name">Reeguez</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://soundcloud.com/mindtake_music" target="_blank" rel="noopener noreferrer">
-                        <img src="Mindtake.png" alt="Mindtake">
-                    </a>
-                    <div class="artist-name">Mindtake</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
-                        <img src="PrimeTime.png" alt="PrimeTime">
-                    </a>
-                    <div class="artist-name">PrimeTime</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://soundcloud.com/pandommade" target="_blank" rel="noopener noreferrer">
-                        <img src="PANDO.png" alt="Pando!">
-                    </a>
-                    <div class="artist-name">Pando!</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://www.instagram.com/djminihandz/" target="_blank" rel="noopener noreferrer">
-                        <img src="DJMiniHandz.png" alt="Mini Handz">
-                    </a>
-                    <div class="artist-name">Mini Handz</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://soundcloud.com/dirtydbb" target="_blank" rel="noopener noreferrer">
-                        <img src="DirtyDBB.png" alt="DirtyD">
-                    </a>
-                    <div class="artist-name">DirtyD</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
-                        <img src="Myskosis.png" alt="Myskosis">
-                    </a>
-                    <div class="artist-name">Myskosis</div>
-                </div>
-                
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://soundcloud.com/handzzzzz" target="_blank" rel="noopener noreferrer">
-                        <img src="HANDZ.png" alt="HANDZ">
-                    </a>
-                    <div class="artist-name">HANDZ</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://www.instagram.com/jvgger_/" target="_blank" rel="noopener noreferrer">
-                        <img src="JVGGER.png" alt="JVGGER">
-                    </a>
-                    <div class="artist-name">JVGGER</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://www.instagram.com/duhvoodoo/" target="_blank" rel="noopener noreferrer">
-                        <img src="VooDoo.png" alt="VooDoo">
-                    </a>
-                    <div class="artist-name">VooDoo</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://soundcloud.com/cptkook" target="_blank" rel="noopener noreferrer">
-                        <img src="CPTKOOK.png" alt="CPTKook">
-                    </a>
-                    <div class="artist-name">CPTKook</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://www.instagram.com/elicast94/" target="_blank" rel="noopener noreferrer">
-                        <img src="DICE-E.png" alt="DICE-E">
-                    </a>
-                    <div class="artist-name">DICE-E</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://soundcloud.com/therourie" target="_blank" rel="noopener noreferrer">
-                        <img src="Rourie.png" alt="Rourie">
-                    </a>
-                    <div class="artist-name">Rourie</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://www.instagram.com/whoisramo/" target="_blank" rel="noopener noreferrer">
-                        <img src="RAMO.png" alt="RAMO">
-                    </a>
-                    <div class="artist-name">RAMO</div>
-                </div>
-                <div class="soundcloud-profile" tabindex="0">
-                    <a href="https://soundcloud.com/user-123744987" target="_blank" rel="noopener noreferrer">
-                        <img src="XOXO.png" alt="XOXO">
-                    </a>
-                    <div class="artist-name">XOXO</div>
-                </div>
+    <div class="parallax-bg"></div>
+    <div class="content-wrapper">
+        <div class="parallax-container">
+            <div class="content" tabindex="0">
+                <h1>REEGUEZ ROCKS 2024</h1>
+                <p>October 31st - November 3rd | Alabama Hills, CA</p>
+                <div id="countdown" aria-live="polite"></div>
+                <button id="buy-tickets-btn">BUY TICKETS</button>
             </div>
         </div>
-    </div>
 
-    <div class="stylish-separator"></div>
-
-    <div class="section" role="main">
-        <div class="info-box" tabindex="0">
-            <h2>3 Days of Impeccable Vibes</h2>
-            <p>Welcome to Reeguez Rocks 2024, a three-day electronic music experience set in the stunning Alabama Hills. Now in its fourth year, this event has grown from an intimate gathering into a celebration of underground music culture.</p>
-            <p>Immerse yourself in a diverse soundscape spanning multiple genres, with each beat resonating against the backdrop of natural rock formations. Our carefully curated lineup features artists who embody the true spirit of electronic music, offering everything from introspective rhythms to high-energy dance beats.</p>
-            <p>As night falls, the landscape transforms into a canvas of light and sound. Experience the magic of dancing under the stars, explore captivating art installations, and connect with a community that shares your passion for authentic, creative expression.</p>
+        <div class="scroll-indicator">
+            <div class="chevron"></div>
+            <div class="chevron"></div>
+            <div class="chevron"></div>
         </div>
 
         <div class="stylish-separator"></div>
 
-        <div class="info-box" tabindex="0">
-            <h2>Join the Reeguez Rocks Family</h2>
-            <p>Your ticket to Reeguez Rocks 2024 is more than just entry – it's an investment in an unforgettable adventure. By participating, you're supporting our mission to create a unique, high-quality event that pushes the boundaries of electronic music experiences.</p>
-            <p>Your contribution helps us secure top-notch audio and visual equipment, ensure comfortable amenities, and maintain the intimate atmosphere that sets Reeguez Rocks apart. In return, you'll gain access to a world where music, nature, and community converge in spectacular harmony.</p>
-            <p>Choose your ticket option above and prepare for a transformative journey. Dance to beats echoing off ancient rocks, forge new friendships, and create lasting memories. Welcome to Reeguez Rocks 2024 – where every moment is an opportunity for magic in the heart of the Alabama Hills.</p>
-        </div>
-    </div>
-
-    <div id="overlay" class="overlay" aria-hidden="true"></div>
-
-    <div id="form-container" class="form-container" aria-labelledby="form-title" role="dialog">
-        <button id="close-form" aria-label="Close ticket form">×</button>
-        <h2 id="form-title">Choose Your Ticket</h2>
-
-        <div class="ticket-options-container">
-            <div class="ticket-option">
-                <h3>GA</h3>
-                <p class="price">$75</p>
-                <p class="description">General Admission Ticket to Reeguez Rocks 2024</p>
-                <a href="https://donate.stripe.com/8wMdR9fJG9Nt1ZScMN" class="ticket-button">Buy GA Ticket</a>
+        <div class="section lineup">
+            <div class="lineup-content">
+                <h2 class="section-header">Lineup</h2>
+                <div class="soundcloud-profiles">
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://soundcloud.com/reeguez" target="_blank" rel="noopener noreferrer">
+                            <img src="Reeguez.png" alt="Reeguez">
+                        </a>
+                        <div class="artist-name">Reeguez</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://soundcloud.com/mindtake_music" target="_blank" rel="noopener noreferrer">
+                            <img src="Mindtake.png" alt="Mindtake">
+                        </a>
+                        <div class="artist-name">Mindtake</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
+                            <img src="PrimeTime.png" alt="PrimeTime">
+                        </a>
+                        <div class="artist-name">PrimeTime</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://soundcloud.com/pandommade" target="_blank" rel="noopener noreferrer">
+                            <img src="PANDO.png" alt="Pando!">
+                        </a>
+                        <div class="artist-name">Pando!</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://www.instagram.com/djminihandz/" target="_blank" rel="noopener noreferrer">
+                            <img src="DJMiniHandz.png" alt="Mini Handz">
+                        </a>
+                        <div class="artist-name">Mini Handz</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://soundcloud.com/dirtydbb" target="_blank" rel="noopener noreferrer">
+                            <img src="DirtyDBB.png" alt="DirtyD">
+                        </a>
+                        <div class="artist-name">DirtyD</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
+                            <img src="Myskosis.png" alt="Myskosis">
+                        </a>
+                        <div class="artist-name">Myskosis</div>
+                    </div>
+                    
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://soundcloud.com/handzzzzz" target="_blank" rel="noopener noreferrer">
+                            <img src="HANDZ.png" alt="HANDZ">
+                        </a>
+                        <div class="artist-name">HANDZ</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://www.instagram.com/jvgger_/" target="_blank" rel="noopener noreferrer">
+                            <img src="JVGGER.png" alt="JVGGER">
+                        </a>
+                        <div class="artist-name">JVGGER</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://www.instagram.com/duhvoodoo/" target="_blank" rel="noopener noreferrer">
+                            <img src="VooDoo.png" alt="VooDoo">
+                        </a>
+                        <div class="artist-name">VooDoo</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://soundcloud.com/cptkook" target="_blank" rel="noopener noreferrer">
+                            <img src="CPTKOOK.png" alt="CPTKook">
+                        </a>
+                        <div class="artist-name">CPTKook</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://www.instagram.com/elicast94/" target="_blank" rel="noopener noreferrer">
+                            <img src="DICE-E.png" alt="DICE-E">
+                        </a>
+                        <div class="artist-name">DICE-E</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://soundcloud.com/therourie" target="_blank" rel="noopener noreferrer">
+                            <img src="Rourie.png" alt="Rourie">
+                        </a>
+                        <div class="artist-name">Rourie</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://www.instagram.com/whoisramo/" target="_blank" rel="noopener noreferrer">
+                            <img src="RAMO.png" alt="RAMO">
+                        </a>
+                        <div class="artist-name">RAMO</div>
+                    </div>
+                    <div class="soundcloud-profile" tabindex="0">
+                        <a href="https://soundcloud.com/user-123744987" target="_blank" rel="noopener noreferrer">
+                            <img src="XOXO.png" alt="XOXO">
+                        </a>
+                        <div class="artist-name">XOXO</div>
+                    </div>
+                </div>
             </div>
-            <div class="ticket-option">
-                <h3>GA + Merch Shirt</h3>
-                <p class="price">$100</p>
-                <p class="description">General Admission Ticket to Reeguez Rocks 2024 plus a special merch T-Shirt</p>
-                <a href="https://donate.stripe.com/5kA4gzfJG6Bh5c4aEG" class="ticket-button">Buy GA + Merch Ticket</a>
+        </div>
+
+        <div class="stylish-separator"></div>
+
+        <div class="section" role="main">
+            <div class="info-box" tabindex="0">
+                <h2>3 Days of Impeccable Vibes</h2>
+                <p>Welcome to Reeguez Rocks 2024, a three-day electronic music experience set in the stunning Alabama Hills. Now in its fourth year, this event has grown from an intimate gathering into a celebration of underground music culture.</p>
+                <p>Immerse yourself in a diverse soundscape spanning multiple genres, with each beat resonating against the backdrop of natural rock formations. Our carefully curated lineup features artists who embody the true spirit of electronic music, offering everything from introspective rhythms to high-energy dance beats.</p>
+                <p>As night falls, the landscape transforms into a canvas of light and sound. Experience the magic of dancing under the stars, explore captivating art installations, and connect with a community that shares your passion for authentic, creative expression.</p>
+            </div>
+
+            <div class="stylish-separator"></div>
+
+            <div class="info-box" tabindex="0">
+                <h2>Join the Reeguez Rocks Family</h2>
+                <p>Your ticket to Reeguez Rocks 2024 is more than just entry – it's an investment in an unforgettable adventure. By participating, you're supporting our mission to create a unique, high-quality event that pushes the boundaries of electronic music experiences.</p>
+                <p>Your contribution helps us secure top-notch audio and visual equipment, ensure comfortable amenities, and maintain the intimate atmosphere that sets Reeguez Rocks apart. In return, you'll gain access to a world where music, nature, and community converge in spectacular harmony.</p>
+                <p>Choose your ticket option above and prepare for a transformative journey. Dance to beats echoing off ancient rocks, forge new friendships, and create lasting memories. Welcome to Reeguez Rocks 2024 – where every moment is an opportunity for magic in the heart of the Alabama Hills.</p>
             </div>
         </div>
 
-        <div class="donation-option">
-            <h3>Additional Donation</h3>
-            <p class="description">Support Reeguez Rocks 2024 with an extra donation</p>
-            <a href="https://donate.stripe.com/3cs00j1SQ8JpbAsdQT" class="ticket-button">Make a Donation</a>
+        <div id="overlay" class="overlay" aria-hidden="true"></div>
+
+        <div id="form-container" class="form-container" aria-labelledby="form-title" role="dialog">
+            <button id="close-form" aria-label="Close ticket form">×</button>
+            <h2 id="form-title">Choose Your Ticket</h2>
+
+            <div class="ticket-options-container">
+                <div class="ticket-option">
+                    <h3>GA</h3>
+                    <p class="price">$75</p>
+                    <p class="description">General Admission Ticket to Reeguez Rocks 2024</p>
+                    <a href="https://donate.stripe.com/8wMdR9fJG9Nt1ZScMN" class="ticket-button">Buy GA Ticket</a>
+                </div>
+                <div class="ticket-option">
+                    <h3>GA + Merch Shirt</h3>
+                    <p class="price">$100</p>
+                    <p class="description">General Admission Ticket to Reeguez Rocks 2024 plus a special merch T-Shirt</p>
+                    <a href="https://donate.stripe.com/5kA4gzfJG6Bh5c4aEG" class="ticket-button">Buy GA + Merch Ticket</a>
+                </div>
+            </div>
+
+            <div class="donation-option">
+                <h3>Additional Donation</h3>
+                <p class="description">Support Reeguez Rocks 2024 with an extra donation</p>
+                <a href="https://donate.stripe.com/3cs00j1SQ8JpbAsdQT" class="ticket-button">Make a Donation</a>
+            </div>
         </div>
-    </div>
 
-    <div id="success-message" class="success-message" role="alert" aria-live="polite">
-        ✔ Thank you for your purchase. We look forward to seeing you at the event!
-    </div>
+        <div id="success-message" class="success-message" role="alert" aria-live="polite">
+            ✔ Thank you for your purchase. We look forward to seeing you at the event!
+        </div>
 
-    <div id="error-message" class="error-message" role="alert" aria-live="polite"></div>
+        <div id="error-message" class="error-message" role="alert" aria-live="polite"></div>
+    </div>
 
     <script>
         // Countdown timer
@@ -580,6 +595,11 @@
                     scrollIndicator.style.opacity = '1';
                 }
             });
+        });
+
+        window.addEventListener('scroll', function() {
+            var scrolled = window.pageYOffset;
+            document.querySelector('.parallax-bg').style.transform = 'translateY(' + (scrolled * 0.5) + 'px)';
         });
     </script>
 </body>
