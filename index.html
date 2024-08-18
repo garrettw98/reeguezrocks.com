@@ -342,9 +342,11 @@
             transition: opacity 0.3s ease-out;
         }
         .chevron {
-            width: 40px;
-            height: 8px;
-            margin: 4px 0;
+            width: 30px;
+            height: 6px;
+            margin: 2px 0;
+            position: relative;
+            overflow: hidden;
         }
         .chevron:before,
         .chevron:after {
@@ -353,7 +355,7 @@
             top: 0;
             height: 100%;
             width: 50%;
-            background: rgba(128, 128, 128, 0.7);
+            background: rgba(255, 255, 255, 0.7);
         }
         .chevron:before {
             left: 0;
@@ -364,6 +366,14 @@
             width: 50%;
             transform: skewY(-30deg);
         }
+        @keyframes chevronAnimation {
+            0% { opacity: 0; transform: translateY(-10px); }
+            50% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(10px); }
+        }
+        .chevron:nth-child(1) { animation: chevronAnimation 2s infinite 0s; }
+        .chevron:nth-child(2) { animation: chevronAnimation 2s infinite 0.3s; }
+        .chevron:nth-child(3) { animation: chevronAnimation 2s infinite 0.6s; }
     </style>
     <script src="https://js.stripe.com/v3/"></script>
 </head>
