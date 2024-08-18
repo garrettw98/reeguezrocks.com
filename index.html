@@ -16,28 +16,16 @@
             background-image: url('Image.webp');
             background-attachment: fixed;
             background-repeat: no-repeat;
-            background-size: auto 100vh; /* Set height to 100% of viewport height */
-            background-position: center top; /* Align to the top */
+            background-size: cover;
+            background-position: center;
         }
 
-        /* Add media queries for different screen sizes */
-        @media (min-width: 768px) {
+        /* Media query for mobile devices */
+        @media (max-width: 767px) {
             body {
-                background-size: cover;
-            }
-        }
-
-        @media (max-width: 767px) and (orientation: portrait) {
-            body {
-                background-size: auto 100%;
-                background-position: 35% top; /* Adjust horizontal position */
-            }
-        }
-
-        @media (max-width: 767px) and (orientation: landscape) {
-            body {
+                background-image: url('mobile_image.webp');
                 background-size: 100% auto;
-                background-position: center 20%; /* Adjust vertical position */
+                background-position: center top;
             }
         }
         
