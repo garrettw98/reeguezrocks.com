@@ -96,6 +96,8 @@
         }
         .info-box {
             background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* For Safari support */
             border-radius: 10px;
             padding: 20px;
             margin: 20px 0;
@@ -291,6 +293,10 @@
             font-size: 0.9em;
             margin-bottom: 20px;
         }
+        .section, .main-content {
+            position: relative;
+            z-index: 1;
+        }
     </style>
     <script src="https://js.stripe.com/v3/"></script>
 </head>
@@ -407,7 +413,7 @@
             <p>Welcome to Reeguez Rocks 2024 - where amazing artists, incredible scenery, and unforgettable experiences converge in the breathtaking Alabama Hills!</p>
             <p>What began as a few friends throwing down among the rocks has blossomed into something truly magical. Our fourth annual gathering offers:</p>
             <ul>
-                <li>A diverse musical journey spanning dubstep, experimental bass, drum and bass, riddim, house, techno, and trance</li>
+                <li>A diverse musical journey spanning multiple genres.</li>
                 <li>An intimate, community-driven atmosphere that values the raw, unfiltered essence of electronic music culture</li>
                 <li>A unique blend of stunning natural backdrops and cutting-edge sounds</li>
                 <li>A platform for various forms of artistic expression, creating an immersive experience</li>
