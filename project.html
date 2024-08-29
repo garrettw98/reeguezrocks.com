@@ -358,6 +358,7 @@
         .input-group {
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
 
         .input-group label {
@@ -371,20 +372,69 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .input-group input[type="range"] {
-            width: 100%;
+            -webkit-appearance: none;
+            width: calc(100% - 16px); /* Subtract padding from width */
+            height: 8px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+            margin: 15px 8px; /* Add margin to create space around the slider */
         }
 
         #ticketSalesValue {
-            margin-top: 5px;
             text-align: center;
             font-weight: bold;
+            margin-top: 5px;
         }
 
-        .chart-container {
-            margin-top: 20px;
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        input[type="number"] {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            height: 38px;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .profitability-inputs {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -567,15 +617,11 @@
 
         function calculateBreakevens(fixedCosts, variableCost, ticketPrice, totalInvestment, eventLength) {
             const dailyVenueCost = 10; // per ticket per day
-            const operationalBreakeven = Math.ceil(
-                (fixedCosts.artistCost + fixedCosts.equipmentCost + fixedCosts.miscCost) / 
-                (ticketPrice - variableCost - (dailyVenueCost * eventLength))
-            );
             const fullBreakeven = Math.ceil(
                 (fixedCosts.artistCost + fixedCosts.equipmentCost + fixedCosts.miscCost + totalInvestment) / 
                 (ticketPrice - variableCost - (dailyVenueCost * eventLength))
             );
-            return { operationalBreakeven, fullBreakeven };
+            return { fullBreakeven };
         }
 
         function updateChart() {
@@ -639,7 +685,7 @@
             const eventLength = parseInt(document.getElementById('eventLength').value);
             
             const fixedCosts = calculateFixedCosts(ticketSales, eventLength, artistCost, equipmentCost, miscCost);
-            const { operationalBreakeven, fullBreakeven } = calculateBreakevens(fixedCosts, variableCost, ticketPrice, totalInvestment, eventLength);
+            const { fullBreakeven } = calculateBreakevens(fixedCosts, variableCost, ticketPrice, totalInvestment, eventLength);
             
             const ticketRevenue = ticketSales * ticketPrice;
             const totalRevenue = ticketRevenue + totalInvestment;
@@ -675,11 +721,6 @@
                     </tr>
                     <tr class="section-header">
                         <td colspan="3">Key Metrics</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>Operational Breakeven</td>
-                        <td>${operationalBreakeven.toLocaleString()} tickets</td>
                     </tr>
                     <tr>
                         <td></td>
