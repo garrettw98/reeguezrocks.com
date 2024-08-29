@@ -171,8 +171,8 @@
             position: relative;
             border-radius: 8px;
             overflow: hidden;
-            margin-top: 20px; /* Space for the ribbon */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Keep this if you want a subtle shadow */
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .event-ribbon {
@@ -186,7 +186,7 @@
             color: white;
             text-align: left;
             padding-left: 20px;
-            padding-top: 5px; /* Add padding above the text */
+            padding-top: 5px;
             font-weight: bold;
             font-size: 0.9rem;
             text-transform: uppercase;
@@ -215,9 +215,12 @@
             border-right-color: var(--primary-color);
         }
 
+        .event-content {
+            position: relative;
+        }
+
         .event-image-container {
             position: relative;
-            margin-top: 20px; /* Adjust the top margin to accommodate the ribbon */
         }
 
         .event-image {
@@ -254,14 +257,17 @@
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
+        .invest-button-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+            background-color: white;
+        }
+
         .invest-button {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            top: calc(300px - 25px); /* Adjust this value to fine-tune button position */
             background-color: var(--primary-color);
             color: white;
-            border: 2px solid white;
+            border: none;
             padding: 12px 24px;
             font-size: 1.2rem;
             font-weight: bold;
@@ -273,21 +279,67 @@
         }
 
         .invest-button:hover {
-            background-color: white;
-            color: var(--primary-color);
+            background-color: var(--secondary-color);
         }
 
         .event-details {
-            padding: 40px 20px 20px; /* Increased top padding to accommodate button */
+            background-color: white;
+            padding: 20px;
         }
 
-        .event-details ul {
-            list-style-type: none;
-            padding-left: 0;
+        .event-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
         }
 
-        .event-details li {
-            margin-bottom: 10px;
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .event-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
         }
 
         #profitability {
@@ -362,21 +414,42 @@
         <section id="example-event" class="card">
             <div class="event-card">
                 <div class="event-ribbon">Next Event</div>
-                <div class="event-image-container">
-                    <img src="BMEC-Photo.webp" alt="Blue Mountain Event Center" class="event-image">
-                    <div class="event-overlay">
-                        <h2 class="event-title">Among Wooks Festival 2025</h2>
+                <div class="event-content">
+                    <div class="event-image-container">
+                        <img src="BMEC-Photo.webp" alt="Blue Mountain Event Center" class="event-image">
+                        <div class="event-overlay">
+                            <h2 class="event-title">Among Wooks Festival 2025</h2>
+                        </div>
                     </div>
-                </div>
-                <button class="invest-button" onclick="showInvestmentForm()">Invest</button>
-                <div class="event-details">
-                    <p><strong>Date:</strong> April 25-27, 2025</p>
-                    <p><strong>Location:</strong> Blue Mountain Event Center, Wilseyville, California</p>
-                    <ul>
-                        <li><strong>Investment Goal:</strong> $20,000</li>
-                        <li><strong>Ticket Price:</strong> $200</li>
-                        <li><strong>Target Attendance:</strong> 550 people</li>
-                    </ul>
+                    <div class="invest-button-container">
+                        <button class="invest-button" onclick="showInvestmentForm()">Invest Now</button>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-info">
+                            <div class="info-item">
+                                <span class="info-label">Date</span>
+                                <span class="info-value">April 25-27, 2025</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Location</span>
+                                <span class="info-value">Blue Mountain Event Center, Wilseyville, California</span>
+                            </div>
+                        </div>
+                        <div class="event-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Investment Goal</span>
+                                <span class="stat-value">$20,000</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Ticket Price</span>
+                                <span class="stat-value">$200</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Target Attendance</span>
+                                <span class="stat-value">550 people</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
