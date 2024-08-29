@@ -7,84 +7,163 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
             background-color: #f0f0f0;
-        }
-        .controls, #stageControls, #budgets, #graph {
-            background-color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-            margin-bottom: 10px;
-        }
-        .control-group {
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            margin-bottom: 5px;
         }
-        input {
-            margin-top: 2px;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        .day {
-            border: 1px solid #ddd;
-            padding: 5px;
-            margin-bottom: 20px;
-        }
-        .calendar-view {
+        .container {
             display: flex;
-            gap: 10px;
-        }
-        .stage {
             flex: 1;
-            min-width: 200px;
+            overflow: hidden;
         }
-        .time-slot {
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            padding: 5px;
-            margin-bottom: 5px;
-            font-size: 12px;
+        .inputs {
+            flex: 0 0 300px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            overflow-y: auto;
+            height: 100%;
         }
-        h1, h2, h3 {
-            margin: 0 0 5px 0;
-            color: #333;
+        .graph-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
         #weightSliderContainer {
-            margin-top: 10px;
-            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            z-index: 10;
         }
         #weightSlider {
             width: 100%;
             margin: 10px 0;
         }
+        .graph-container {
+            flex: 1;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            overflow-y: auto;
+        }
+        .controls, #stageControls, #budgets {
+            margin-bottom: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+        input {
+            margin-top: 5px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .day {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        h1, h2, h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+        .timeline {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .stage-column {
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+        }
+        .stage-title {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .time-slot-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .time-slot {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 10px;
+            font-size: 12px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .inputs, .graph-section {
+                flex: none;
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        /* New styles for single-stage layout */
+        .single-stage-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .single-stage-layout .day {
+            flex: 1 1 calc(50% - 10px);
+            min-width: 300px;
+        }
+
+        .single-stage-layout .timeline {
+            flex-direction: column;
+        }
+
+        .single-stage-layout .stage-column {
+            max-width: none;
+        }
     </style>
 </head>
 <body>
-    <h1>Music Festival Budget Tool with Improved Weight Distribution</h1>
-    <div class="controls">
-        <div class="control-group">
-            <label for="days">Number of Days:</label>
-            <input type="number" id="days" value="2" min="1" max="7" onchange="updateControls()">
+    <div class="container">
+        <div class="inputs">
+            <h1>Music Festival Budget Tool</h1>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="days">Number of Days:</label>
+                    <input type="number" id="days" value="2" min="1" max="7" onchange="updateControls()">
+                </div>
+                <div class="control-group">
+                    <label for="stages">Number of Stages:</label>
+                    <input type="number" id="stages" value="2" min="1" max="5" onchange="updateControls()">
+                </div>
+            </div>
+            <div id="stageControls"></div>
+            <div id="budgets"></div>
         </div>
-        <div class="control-group">
-            <label for="stages">Number of Stages:</label>
-            <input type="number" id="stages" value="2" min="1" max="5" onchange="updateControls()">
+        <div class="graph-section">
+            <div id="weightSliderContainer">
+                <label for="weightSlider">Payout Weight (Left: Even, Right: Headliner Heavy):</label>
+                <input type="range" id="weightSlider" min="0" max="100" value="50" onchange="generateBudgetAllocation()">
+            </div>
+            <div class="graph-container">
+                <div id="graph"></div>
+            </div>
         </div>
     </div>
-    <div id="stageControls"></div>
-    <div id="budgets"></div>
-    <div id="weightSliderContainer">
-        <label for="weightSlider">Payout Weight (Left: Even, Right: Headliner Heavy):</label>
-        <input type="range" id="weightSlider" min="0" max="100" value="50">
-    </div>
-    <div id="graph"></div>
-
+    
     <script>
         function updateControls() {
             const days = parseInt(document.getElementById('days').value);
@@ -149,18 +228,30 @@
             const graphElement = document.getElementById('graph');
             graphElement.innerHTML = '';
 
+            // Create a container for all days
+            const daysContainer = document.createElement('div');
+            daysContainer.className = stages === 1 ? 'single-stage-layout' : '';
+            graphElement.appendChild(daysContainer);
+
             for (let day = 1; day <= days; day++) {
                 const dayElement = document.createElement('div');
                 dayElement.className = 'day';
                 dayElement.innerHTML = `<h2>Day ${day}</h2>`;
 
-                const calendarView = document.createElement('div');
-                calendarView.className = 'calendar-view';
+                const timeline = document.createElement('div');
+                timeline.className = 'timeline';
 
                 for (let stage = 1; stage <= stages; stage++) {
-                    const stageElement = document.createElement('div');
-                    stageElement.className = 'stage';
-                    stageElement.innerHTML = `<h3>Stage ${stage}</h3>`;
+                    const stageColumn = document.createElement('div');
+                    stageColumn.className = 'stage-column';
+
+                    const stageTitle = document.createElement('div');
+                    stageTitle.className = 'stage-title';
+                    stageTitle.textContent = `Stage ${stage}`;
+                    stageColumn.appendChild(stageTitle);
+
+                    const timeSlotContainer = document.createElement('div');
+                    timeSlotContainer.className = 'time-slot-container';
 
                     const startTime = document.getElementById(`start-time-stage${stage}`).value;
                     const endTime = document.getElementById(`end-time-stage${stage}`).value;
@@ -174,37 +265,52 @@
                     const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
 
                     let totalAllocated = 0;
+                    let previousFee = 0;
+
+                    // Calculate fees for all slots first
+                    const fees = slots.map((slot, index) => {
+                        let fee;
+                        if (index === slots.length - 1) { // Headliner
+                            fee = Math.max(budget - totalAllocated, previousFee + 1, 150);
+                        } else {
+                            fee = Math.max(
+                                Math.round(budget * (weights[index] / totalWeight)),
+                                previousFee + 1,
+                                150
+                            );
+                        }
+                        totalAllocated += fee;
+                        previousFee = fee;
+                        return fee;
+                    });
+
+                    // Reverse the order of slots and fees
+                    slots.reverse();
+                    fees.reverse();
+
                     slots.forEach((slot, index) => {
                         const slotElement = document.createElement('div');
                         slotElement.className = 'time-slot';
 
-                        let fee;
-                        if (index === 0) {
-                            // For the first slot, ensure a minimum of $150
-                            fee = Math.max(150, Math.round(budget * (weights[index] / totalWeight)));
-                        } else if (index === slots.length - 1) {
-                            // For the last slot (headliner), allocate the remaining budget
-                            fee = budget - totalAllocated;
-                        } else {
-                            fee = Math.round(budget * (weights[index] / totalWeight));
-                        }
-                        totalAllocated += fee;
-
                         slotElement.innerHTML = `
                             <strong>${slot.start} - ${slot.end}</strong><br>
                             Duration: ${slot.duration} min<br>
-                            Fee: $${fee.toLocaleString()}
+                            Fee: $${fees[index].toLocaleString()}
                         `;
 
-                        stageElement.appendChild(slotElement);
+                        timeSlotContainer.appendChild(slotElement);
                     });
 
-                    calendarView.appendChild(stageElement);
+                    stageColumn.appendChild(timeSlotContainer);
+                    timeline.appendChild(stageColumn);
                 }
 
-                dayElement.appendChild(calendarView);
-                graphElement.appendChild(dayElement);
+                dayElement.appendChild(timeline);
+                daysContainer.appendChild(dayElement);
             }
+
+            // Scroll to the top of the graph container after generating the budget allocation
+            document.querySelector('.graph-container').scrollTop = 0;
         }
 
         function generateTimeSlots(startTime, endTime, initialSlotLength, changeTime, laterSlotLength) {
@@ -240,30 +346,23 @@
             const weights = new Array(numberOfSlots).fill(1);
             
             // Calculate the weight for the headliner (last slot)
-            const headlinerWeight = 0.2 + 0.7 * weightValue; // Ranges from 0.2 to 0.9
+            const headlinerWeight = 1/numberOfSlots + (0.9 - 1/numberOfSlots) * weightValue;
             weights[numberOfSlots - 1] = headlinerWeight;
             
-            // Distribute the remaining weight among other slots with a progressive curve
+            // Distribute the remaining weight among other slots with an exponential increase
             const remainingWeight = 1 - headlinerWeight;
-            const curve = 1.5 + weightValue * 1.5; // Adjust the curve based on the weight value
-            let totalCurveValue = 0;
+            let totalExponentialWeight = 0;
             
             for (let i = 0; i < numberOfSlots - 1; i++) {
-                const normalizedIndex = (i + 1) / (numberOfSlots - 1);
-                const curveValue = Math.pow(normalizedIndex, curve);
-                totalCurveValue += curveValue;
-                weights[i] = curveValue;
+                const normalizedIndex = i / (numberOfSlots - 2);
+                const exponentialWeight = Math.pow(normalizedIndex, 2 + weightValue * 2) + 0.1;
+                totalExponentialWeight += exponentialWeight;
+                weights[i] = exponentialWeight;
             }
             
             // Normalize the weights of non-headliner slots
             for (let i = 0; i < numberOfSlots - 1; i++) {
-                weights[i] = (weights[i] / totalCurveValue) * remainingWeight;
-            }
-            
-            // Adjust weights to ensure smaller differences between earlier slots
-            const minWeight = Math.min(...weights.slice(0, -1));
-            for (let i = 0; i < numberOfSlots - 1; i++) {
-                weights[i] = minWeight + (weights[i] - minWeight) * (0.5 + weightValue * 0.5);
+                weights[i] = (weights[i] / totalExponentialWeight) * remainingWeight;
             }
             
             return weights;
@@ -280,9 +379,6 @@
             const mins = minutes % 60;
             return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
         }
-
-        // Add event listener to the weight slider
-        document.getElementById('weightSlider').addEventListener('input', generateBudgetAllocation);
 
         // Initial setup
         updateControls();
