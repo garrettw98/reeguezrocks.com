@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community-Driven Event Investment Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50e3c2;
+            --background-color: #f5f5f5;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header, main, footer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+        }
+
+        #investmentAmount {
+            width: 100px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #ticketCost {
+            width: 100px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #totalInvestment {
+            width: 100px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #eventLength {
+            width: 50px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #artistCost, #equipmentCost, #miscCost {
+            width: 100px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #profitBreakdown table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        #profitBreakdown th, #profitBreakdown td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #profitBreakdown th {
+            background-color: #f2f2f2;
+        }
+
+        #about-and-how ol, #about-and-how ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        #about-and-how li {
+            margin-bottom: 10px;
+        }
+
+        #about-and-how h3 {
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .modern-table th, .modern-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modern-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .modern-table .section-header {
+            background-color: #e6e6e6;
+            font-weight: bold;
+        }
+
+        .modern-table .total-row {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+
+        .modern-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .event-card {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px; /* Space for the ribbon */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Keep this if you want a subtle shadow */
+        }
+
+        .event-ribbon {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            height: 30px;
+            line-height: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: left;
+            padding-left: 20px;
+            padding-top: 5px; /* Add padding above the text */
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .event-ribbon::before,
+        .event-ribbon::after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-color: transparent;
+            bottom: -10px;
+        }
+
+        .event-ribbon::before {
+            left: 0;
+            border-width: 10px 0 0 10px;
+            border-left-color: var(--primary-color);
+        }
+
+        .event-ribbon::after {
+            right: 0;
+            border-width: 10px 10px 0 0;
+            border-right-color: var(--primary-color);
+        }
+
+        .event-image-container {
+            position: relative;
+            margin-top: 20px; /* Adjust the top margin to accommodate the ribbon */
+        }
+
+        .event-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .event-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.4) 100%);
+            padding: 20px;
+        }
+
+        .event-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .invest-button {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: calc(300px - 25px); /* Adjust this value to fine-tune button position */
+            background-color: var(--primary-color);
+            color: white;
+            border: 2px solid white;
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .invest-button:hover {
+            background-color: white;
+            color: var(--primary-color);
+        }
+
+        .event-details {
+            padding: 40px 20px 20px; /* Increased top padding to accommodate button */
+        }
+
+        .event-details ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .event-details li {
+            margin-bottom: 10px;
+        }
+
+        #profitability {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .profitability-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-group input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .input-group input[type="range"] {
+            width: 100%;
+        }
+
+        #ticketSalesValue {
+            margin-top: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chart-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Community-Driven Event Investment Platform</h1>
+        <p>Revolutionizing event funding: Be an investor, not just an attendee!</p>
+    </header>
+
+    <main>
+        <section id="about-and-how" class="card">
+            <h2>Revolutionizing Event Funding</h2>
+            <p>Welcome to our Community-Driven Event Investment Platform, where music lovers become event stakeholders. We're revolutionizing event funding by democratizing the investment process and empowering the community.</p>
+            
+            <h3>Investment Process</h3>
+            <ol>
+                <li><strong>Opportunity Announcement:</strong> We present a curated event investment opportunity with a specified funding target.</li>
+                <li><strong>Community Participation:</strong> Members invest in the event, securing their attendance and a stake in its success.</li>
+                <li><strong>Milestone-Based Execution:</strong> As funding thresholds are met, we collaboratively secure venues, artists, and enhance the event experience.</li>
+                <li><strong>Event Realization:</strong> Together, we bring the community-backed event to life, with investors enjoying VIP status.</li>
+                <li><strong>Returns Distribution:</strong> Post-event, profits are calculated and distributed to stakeholders proportionally, on top of the unforgettable experience.</li>
+            </ol>
+
+            <p>By participating, you're not just buying a ticket – you're investing in an experience you help create. Enjoy potential financial returns, exclusive perks, reduced corporate influence on events, and a stronger community connection. Join us in shaping the future of live events while potentially growing your investment.</p>
+        </section>
+
+        <section id="example-event" class="card">
+            <div class="event-card">
+                <div class="event-ribbon">Next Event</div>
+                <div class="event-image-container">
+                    <img src="BMEC-Photo.webp" alt="Blue Mountain Event Center" class="event-image">
+                    <div class="event-overlay">
+                        <h2 class="event-title">Among Wooks Festival 2025</h2>
+                    </div>
+                </div>
+                <button class="invest-button" onclick="showInvestmentForm()">Invest</button>
+                <div class="event-details">
+                    <p><strong>Date:</strong> April 25-27, 2025</p>
+                    <p><strong>Location:</strong> Blue Mountain Event Center, Wilseyville, California</p>
+                    <ul>
+                        <li><strong>Investment Goal:</strong> $20,000</li>
+                        <li><strong>Ticket Price:</strong> $200</li>
+                        <li><strong>Target Attendance:</strong> 550 people</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="profitability" class="card">
+            <h2>Profitability Analysis</h2>
+            <p>Adjust the inputs to see potential profits:</p>
+            <div class="profitability-inputs">
+                <div class="input-group">
+                    <label for="investmentAmount">Your Investment ($)</label>
+                    <input type="number" id="investmentAmount" min="200" max="20000" value="200" step="100">
+                </div>
+                <div class="input-group">
+                    <label for="ticketSales">Ticket Sales</label>
+                    <input type="range" id="ticketSales" min="0" max="800" value="550" step="10">
+                    <span id="ticketSalesValue">550</span>
+                </div>
+                <div class="input-group">
+                    <label for="ticketCost">Ticket Cost ($)</label>
+                    <input type="number" id="ticketCost" min="50" max="500" value="200" step="10">
+                </div>
+                <div class="input-group">
+                    <label for="totalInvestment">Total Investor Contribution ($)</label>
+                    <input type="number" id="totalInvestment" min="10000" max="100000" value="20000" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="eventLength">Event Length (days)</label>
+                    <input type="number" id="eventLength" min="1" max="14" value="3" step="1">
+                </div>
+                <div class="input-group">
+                    <label for="artistCost">Artist Cost ($)</label>
+                    <input type="number" id="artistCost" min="0" max="100000" value="20000" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="equipmentCost">Equipment Cost ($)</label>
+                    <input type="number" id="equipmentCost" min="0" max="100000" value="15000" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="miscCost">Miscellaneous Cost ($)</label>
+                    <input type="number" id="miscCost" min="0" max="100000" value="10000" step="1000">
+                </div>
+            </div>
+            <div id="profitBreakdown"></div>
+            <div class="chart-container">
+                <canvas id="profitChart"></canvas>
+            </div>
+        </section>
+
+        <section id="faq" class="card">
+            <h2>Frequently Asked Questions</h2>
+            <h3>What happens if the event doesn't make a profit?</h3>
+            <p>In the unlikely event that we don't make a profit, investors will receive a proportional share of the remaining funds after event costs are covered.</p>
+            <h3>How do I receive my share of the profits?</h3>
+            <p>Profits will be distributed electronically to the payment method you used for your initial investment within 30 days after the event.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Community-Driven Event Investment Platform. All rights reserved.</p>
+        <p>Disclaimer: Investing involves risks. Please consult with a financial advisor before making any investment decisions.</p>
+    </footer>
+
+    <script>
+        function showInvestmentForm() {
+            alert('Investment form coming soon!');
+        }
+
+        const ctx = document.getElementById('profitChart').getContext('2d');
+        let chart;
+
+        function createChart() {
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Your Profit',
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                        data: [],
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Ticket Sales'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Your Profit ($)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function calculateFixedCosts(ticketSales, eventLength, artistCost, equipmentCost, miscCost) {
+            const venueCost = 10 * ticketSales * eventLength;
+            return {
+                venueCost,
+                artistCost,
+                equipmentCost,
+                miscCost,
+                total: venueCost + artistCost + equipmentCost + miscCost
+            };
+        }
+
+        function calculateBreakevens(fixedCosts, variableCost, ticketPrice, totalInvestment, eventLength) {
+            const dailyVenueCost = 10; // per ticket per day
+            const operationalBreakeven = Math.ceil(
+                (fixedCosts.artistCost + fixedCosts.equipmentCost + fixedCosts.miscCost) / 
+                (ticketPrice - variableCost - (dailyVenueCost * eventLength))
+            );
+            const fullBreakeven = Math.ceil(
+                (fixedCosts.artistCost + fixedCosts.equipmentCost + fixedCosts.miscCost + totalInvestment) / 
+                (ticketPrice - variableCost - (dailyVenueCost * eventLength))
+            );
+            return { operationalBreakeven, fullBreakeven };
+        }
+
+        function updateChart() {
+            const investment = parseFloat(document.getElementById('investmentAmount').value);
+            const ticketPrice = parseFloat(document.getElementById('ticketCost').value);
+            const totalInvestment = parseFloat(document.getElementById('totalInvestment').value);
+            const eventLength = parseInt(document.getElementById('eventLength').value);
+            const artistCost = parseFloat(document.getElementById('artistCost').value);
+            const equipmentCost = parseFloat(document.getElementById('equipmentCost').value);
+            const miscCost = parseFloat(document.getElementById('miscCost').value);
+            const variableCost = 25;
+
+            // Ensure investment is within valid range
+            if (investment < ticketPrice || investment > totalInvestment) {
+                alert(`Investment must be between $${ticketPrice.toLocaleString()} and $${totalInvestment.toLocaleString()}`);
+                document.getElementById('investmentAmount').value = Math.min(Math.max(investment, ticketPrice), totalInvestment);
+                return;
+            }
+
+            // Ensure ticket price is within valid range
+            if (ticketPrice < 50 || ticketPrice > 500) {
+                alert('Ticket price must be between $50 and $500');
+                document.getElementById('ticketCost').value = Math.min(Math.max(ticketPrice, 50), 500);
+                return;
+            }
+
+            const labels = [];
+            const investorShareData = [];
+
+            for (let ticketSales = 0; ticketSales <= 800; ticketSales += 25) {
+                const fixedCosts = calculateFixedCosts(ticketSales, eventLength, artistCost, equipmentCost, miscCost);
+                const totalRevenue = ticketSales * ticketPrice + totalInvestment;
+                const eventCosts = fixedCosts.total + (variableCost * ticketSales);
+                let investorRepayment = 0;
+                let totalProfit = 0;
+                
+                if (totalRevenue > eventCosts) {
+                    investorRepayment = Math.min(totalInvestment, totalRevenue - eventCosts);
+                    totalProfit = Math.max(0, totalRevenue - eventCosts - investorRepayment);
+                }
+                
+                const investorTotalShare = totalProfit * 0.5;
+                const yourRepayment = (investment / totalInvestment) * investorRepayment;
+                const yourShareOfProfit = (investment / totalInvestment) * investorTotalShare;
+                const yourTotalReturn = yourRepayment + yourShareOfProfit;
+                const yourProfit = yourTotalReturn - investment;
+
+                labels.push(ticketSales);
+                investorShareData.push(yourProfit);
+            }
+
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = investorShareData;
+            chart.update();
+
+            updateProfitBreakdown(investment, totalInvestment, ticketPrice, variableCost, artistCost, equipmentCost, miscCost);
+        }
+
+        function updateProfitBreakdown(investment, totalInvestment, ticketPrice, variableCost, artistCost, equipmentCost, miscCost) {
+            const ticketSales = parseInt(document.getElementById('ticketSales').value);
+            const eventLength = parseInt(document.getElementById('eventLength').value);
+            
+            const fixedCosts = calculateFixedCosts(ticketSales, eventLength, artistCost, equipmentCost, miscCost);
+            const { operationalBreakeven, fullBreakeven } = calculateBreakevens(fixedCosts, variableCost, ticketPrice, totalInvestment, eventLength);
+            
+            const ticketRevenue = ticketSales * ticketPrice;
+            const totalRevenue = ticketRevenue + totalInvestment;
+            const eventCosts = fixedCosts.total + (variableCost * ticketSales);
+            
+            let investorRepayment = 0;
+            let totalProfit = 0;
+            let companyShare = 0;
+            let investorTotalShare = 0;
+            
+            if (totalRevenue > eventCosts) {
+                investorRepayment = Math.min(totalInvestment, totalRevenue - eventCosts);
+                totalProfit = Math.max(0, totalRevenue - eventCosts - investorRepayment);
+                companyShare = totalProfit * 0.5;
+                investorTotalShare = totalProfit * 0.5;
+            }
+            
+            const totalCosts = eventCosts + investorRepayment;
+            const yourRepayment = (investment / totalInvestment) * investorRepayment;
+            const yourShareOfProfit = (investment / totalInvestment) * investorTotalShare;
+            const yourTotalReturn = yourRepayment + yourShareOfProfit;
+            const yourProfit = yourTotalReturn - investment;
+            const yourLoss = investment - yourRepayment;
+            
+            const breakdownHTML = `
+                <h3>Financial Breakdown</h3>
+                <p>${ticketSales} tickets sold, ${eventLength} day event</p>
+                <table class="modern-table">
+                    <tr>
+                        <th>Category</th>
+                        <th>Item</th>
+                        <th>Amount</th>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Key Metrics</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Operational Breakeven</td>
+                        <td>${operationalBreakeven.toLocaleString()} tickets</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Full Breakeven (incl. investor repayment)</td>
+                        <td>${fullBreakeven.toLocaleString()} tickets</td>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Revenue</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Ticket Sales (${ticketSales} @ $${ticketPrice})</td>
+                        <td>$${ticketRevenue.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Total Investor Contribution</td>
+                        <td>$${totalInvestment.toLocaleString()}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td></td>
+                        <td>Total Revenue</td>
+                        <td>$${totalRevenue.toLocaleString()}</td>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Costs</td>
+                    </tr>
+                    <tr>
+                        <td>Fixed Costs</td>
+                        <td>Venue Cost ($10/day/ticket)</td>
+                        <td>$${fixedCosts.venueCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Artist Cost</td>
+                        <td>$${fixedCosts.artistCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Equipment Cost</td>
+                        <td>$${fixedCosts.equipmentCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Miscellaneous Cost</td>
+                        <td>$${fixedCosts.miscCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td>Variable Costs</td>
+                        <td>Per Ticket ($${variableCost} × ${ticketSales})</td>
+                        <td>$${(variableCost * ticketSales).toLocaleString()}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td></td>
+                        <td>Total Event Costs</td>
+                        <td>$${eventCosts.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Investor Repayment</td>
+                        <td>$${investorRepayment.toLocaleString()}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td></td>
+                        <td>Total Costs</td>
+                        <td>$${totalCosts.toLocaleString()}</td>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Profit/Loss</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Total Profit</td>
+                        <td>$${totalProfit.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Company Share (50%)</td>
+                        <td>$${companyShare.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Investors Total Share (50%)</td>
+                        <td>$${investorTotalShare.toLocaleString()}</td>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Your Investment</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Your Investment Amount</td>
+                        <td>$${investment.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Percentage of Total Investment</td>
+                        <td>${((investment / totalInvestment) * 100).toFixed(2)}%</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Your Repayment</td>
+                        <td>$${yourRepayment.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Your Share of Profit</td>
+                        <td>$${yourShareOfProfit.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Your Total Return</td>
+                        <td>$${yourTotalReturn.toLocaleString()}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td></td>
+                        <td>${yourProfit >= 0 ? 'Your Profit' : 'Your Loss'}</td>
+                        <td>$${(yourProfit >= 0 ? yourProfit : yourLoss).toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Your ROI</td>
+                        <td>${((yourProfit / investment) * 100).toFixed(2)}%</td>
+                    </tr>
+                </table>
+                <p>Note: This breakdown is based on the current inputs. Actual results may vary.</p>
+            `;
+
+            document.getElementById('profitBreakdown').innerHTML = breakdownHTML;
+        }
+
+        // Add this function to set initial values
+        function setInitialValues() {
+            const ticketPrice = 200;
+            const totalInvestment = 20000;
+            
+            document.getElementById('ticketSales').value = 550;
+            document.getElementById('ticketSalesValue').textContent = 550;
+            document.getElementById('ticketCost').value = ticketPrice;
+            document.getElementById('totalInvestment').value = totalInvestment;
+            document.getElementById('eventLength').value = 3;
+            
+            document.getElementById('artistCost').value = 20000;
+            document.getElementById('equipmentCost').value = 15000;
+            document.getElementById('miscCost').value = 10000;
+            
+            // Set investment input limits and initial value
+            const investmentInput = document.getElementById('investmentAmount');
+            investmentInput.min = ticketPrice;
+            investmentInput.max = totalInvestment;
+            investmentInput.value = ticketPrice;
+        }
+
+        function updateInvestmentLimits() {
+            const ticketPrice = parseFloat(document.getElementById('ticketCost').value);
+            const totalInvestment = parseFloat(document.getElementById('totalInvestment').value);
+            const investmentInput = document.getElementById('investmentAmount');
+            
+            investmentInput.min = ticketPrice;
+            investmentInput.max = totalInvestment;
+            
+            // Ensure current investment is within new limits
+            const currentInvestment = parseFloat(investmentInput.value);
+            if (currentInvestment < ticketPrice) {
+                investmentInput.value = ticketPrice;
+            } else if (currentInvestment > totalInvestment) {
+                investmentInput.value = totalInvestment;
+            }
+        }
+
+        // Call this function when the page loads
+        window.addEventListener('load', function() {
+            setInitialValues();
+            createChart();
+            updateChart();
+        });
+
+        // Update the existing event listeners
+        const investmentInput = document.getElementById('investmentAmount');
+        const ticketSalesSlider = document.getElementById('ticketSales');
+        const ticketCostInput = document.getElementById('ticketCost');
+        const totalInvestmentInput = document.getElementById('totalInvestment');
+        const eventLengthInput = document.getElementById('eventLength');
+        const artistCostInput = document.getElementById('artistCost');
+        const equipmentCostInput = document.getElementById('equipmentCost');
+        const miscCostInput = document.getElementById('miscCost');
+
+        investmentInput.addEventListener('change', function() {
+            const investment = parseFloat(this.value);
+            const ticketPrice = parseFloat(ticketCostInput.value);
+            const totalInvestment = parseFloat(totalInvestmentInput.value);
+            
+            if (investment < ticketPrice) {
+                this.value = ticketPrice;
+            } else if (investment > totalInvestment) {
+                this.value = totalInvestment;
+            }
+            updateChart();
+        });
+
+        ticketSalesSlider.addEventListener('input', function() {
+            document.getElementById('ticketSalesValue').textContent = this.value;
+        });
+        ticketSalesSlider.addEventListener('change', updateChart);
+        ticketCostInput.addEventListener('change', function() {
+            updateInvestmentLimits();
+            updateChart();
+        });
+        totalInvestmentInput.addEventListener('change', function() {
+            updateInvestmentLimits();
+            updateChart();
+        });
+        eventLengthInput.addEventListener('change', updateChart);
+        artistCostInput.addEventListener('change', updateChart);
+        equipmentCostInput.addEventListener('change', updateChart);
+        miscCostInput.addEventListener('change', updateChart);
+    </script>
+</body>
+</html>
