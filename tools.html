@@ -179,13 +179,16 @@
                         slotElement.className = 'time-slot';
 
                         let fee;
-                        if (index === slots.length - 1) {
+                        if (index === 0) {
+                            // For the first slot, ensure a minimum of $150
+                            fee = Math.max(150, Math.round(budget * (weights[index] / totalWeight)));
+                        } else if (index === slots.length - 1) {
                             // For the last slot (headliner), allocate the remaining budget
                             fee = budget - totalAllocated;
                         } else {
                             fee = Math.round(budget * (weights[index] / totalWeight));
-                            totalAllocated += fee;
                         }
+                        totalAllocated += fee;
 
                         slotElement.innerHTML = `
                             <strong>${slot.start} - ${slot.end}</strong><br>
@@ -236,27 +239,31 @@
             
             const weights = new Array(numberOfSlots).fill(1);
             
-            if (weightValue > 0) {
-                // Calculate the weight for the headliner (last slot)
-                const headlinerWeight = 0.1 + 0.8 * weightValue; // Ranges from 0.1 to 0.9
-                weights[numberOfSlots - 1] = headlinerWeight;
-                
-                // Distribute the remaining weight among other slots with a progressive curve
-                const remainingWeight = 1 - headlinerWeight;
-                const curve = 2 + weightValue * 2; // Adjust the curve based on the weight value
-                let totalCurveValue = 0;
-                
-                for (let i = 0; i < numberOfSlots - 1; i++) {
-                    const normalizedIndex = (i + 1) / (numberOfSlots - 1);
-                    const curveValue = Math.pow(normalizedIndex, curve);
-                    totalCurveValue += curveValue;
-                    weights[i] = curveValue;
-                }
-                
-                // Normalize the weights of non-headliner slots
-                for (let i = 0; i < numberOfSlots - 1; i++) {
-                    weights[i] = (weights[i] / totalCurveValue) * remainingWeight;
-                }
+            // Calculate the weight for the headliner (last slot)
+            const headlinerWeight = 0.2 + 0.7 * weightValue; // Ranges from 0.2 to 0.9
+            weights[numberOfSlots - 1] = headlinerWeight;
+            
+            // Distribute the remaining weight among other slots with a progressive curve
+            const remainingWeight = 1 - headlinerWeight;
+            const curve = 1.5 + weightValue * 1.5; // Adjust the curve based on the weight value
+            let totalCurveValue = 0;
+            
+            for (let i = 0; i < numberOfSlots - 1; i++) {
+                const normalizedIndex = (i + 1) / (numberOfSlots - 1);
+                const curveValue = Math.pow(normalizedIndex, curve);
+                totalCurveValue += curveValue;
+                weights[i] = curveValue;
+            }
+            
+            // Normalize the weights of non-headliner slots
+            for (let i = 0; i < numberOfSlots - 1; i++) {
+                weights[i] = (weights[i] / totalCurveValue) * remainingWeight;
+            }
+            
+            // Adjust weights to ensure smaller differences between earlier slots
+            const minWeight = Math.min(...weights.slice(0, -1));
+            for (let i = 0; i < numberOfSlots - 1; i++) {
+                weights[i] = minWeight + (weights[i] - minWeight) * (0.5 + weightValue * 0.5);
             }
             
             return weights;
