@@ -3,80 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basic Festival Schedule Calculator</title>
+    <title>Music Festival Budget Tool with Improved Weight Distribution</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid black; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .headliner { background-color: #ffe6e6; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .controls, #stageControls, #budgets, #graph {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            margin-bottom: 10px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 5px;
+        }
+        input {
+            margin-top: 2px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .day {
+            border: 1px solid #ddd;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+        .calendar-view {
+            display: flex;
+            gap: 10px;
+        }
+        .stage {
+            flex: 1;
+            min-width: 200px;
+        }
+        .time-slot {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 5px;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        h1, h2, h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        #weightSliderContainer {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        #weightSlider {
+            width: 100%;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
-    <h1>Basic Festival Schedule Calculator</h1>
-    <div>
-        <label for="mainStageEnd">Main Stage End Time:</label>
-        <input type="time" id="mainStageEnd" value="02:00">
-        <label for="mainStageBudget">Main Stage Budget:</label>
-        <input type="number" id="mainStageBudget" value="10000">
+    <h1>Music Festival Budget Tool with Improved Weight Distribution</h1>
+    <div class="controls">
+        <div class="control-group">
+            <label for="days">Number of Days:</label>
+            <input type="number" id="days" value="2" min="1" max="7" onchange="updateControls()">
+        </div>
+        <div class="control-group">
+            <label for="stages">Number of Stages:</label>
+            <input type="number" id="stages" value="2" min="1" max="5" onchange="updateControls()">
+        </div>
     </div>
-    <table id="scheduleTable">
-        <thead>
-            <tr>
-                <th>Time</th>
-                <th>Main Stage Fee</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <div id="stageControls"></div>
+    <div id="budgets"></div>
+    <div id="weightSliderContainer">
+        <label for="weightSlider">Payout Weight (Left: Even, Right: Headliner Heavy):</label>
+        <input type="range" id="weightSlider" min="0" max="100" value="50">
+    </div>
+    <div id="graph"></div>
 
     <script>
-        function calculateSchedule(end, budget) {
-            const endTime = new Date(`2000-01-02T${end}`);
-            const slots = [];
-            let currentTime = new Date(endTime);
+        function updateControls() {
+            const days = parseInt(document.getElementById('days').value);
+            const stages = parseInt(document.getElementById('stages').value);
+            updateStageControls(stages);
+            updateBudgetInputs(days, stages);
+            generateBudgetAllocation();
+        }
 
-            while (currentTime.getHours() > 12 || (currentTime.getHours() === 12 && currentTime.getMinutes() > 0)) {
-                const slotStart = new Date(currentTime.getTime() - 90 * 60000);
-                slots.unshift({
-                    start: slotStart.toTimeString().slice(0, 5),
-                    end: currentTime.toTimeString().slice(0, 5)
-                });
-                currentTime = slotStart;
+        function updateStageControls(stages) {
+            const stageControlsDiv = document.getElementById('stageControls');
+            stageControlsDiv.innerHTML = '';
+            for (let i = 1; i <= stages; i++) {
+                const stageControl = document.createElement('div');
+                stageControl.innerHTML = `
+                    <h3>Stage ${i} Settings</h3>
+                    <div class="control-group">
+                        <label for="start-time-stage${i}">Start Time:</label>
+                        <input type="time" id="start-time-stage${i}" value="15:00" onchange="generateBudgetAllocation()">
+                    </div>
+                    <div class="control-group">
+                        <label for="end-time-stage${i}">End Time:</label>
+                        <input type="time" id="end-time-stage${i}" value="02:00" onchange="generateBudgetAllocation()">
+                    </div>
+                    <div class="control-group">
+                        <label for="initial-slot-length-stage${i}">Initial Slot Length (minutes):</label>
+                        <input type="number" id="initial-slot-length-stage${i}" value="60" min="15" max="120" onchange="generateBudgetAllocation()">
+                    </div>
+                    <div class="control-group">
+                        <label for="change-time-stage${i}">Change Time:</label>
+                        <input type="time" id="change-time-stage${i}" value="20:00" onchange="generateBudgetAllocation()">
+                    </div>
+                    <div class="control-group">
+                        <label for="later-slot-length-stage${i}">Later Slot Length (minutes):</label>
+                        <input type="number" id="later-slot-length-stage${i}" value="90" min="15" max="120" onchange="generateBudgetAllocation()">
+                    </div>
+                `;
+                stageControlsDiv.appendChild(stageControl);
+            }
+        }
+
+        function updateBudgetInputs(days, stages) {
+            const budgetsDiv = document.getElementById('budgets');
+            budgetsDiv.innerHTML = '<h3>Budgets</h3>';
+            for (let day = 1; day <= days; day++) {
+                for (let stage = 1; stage <= stages; stage++) {
+                    const inputGroup = document.createElement('div');
+                    inputGroup.className = 'control-group';
+                    inputGroup.innerHTML = `
+                        <label for="budget-day${day}-stage${stage}">Day ${day}, Stage ${stage} Budget:</label>
+                        <input type="number" id="budget-day${day}-stage${stage}" value="10000" min="1000" step="1000" onchange="generateBudgetAllocation()">
+                    `;
+                    budgetsDiv.appendChild(inputGroup);
+                }
+            }
+        }
+
+        function generateBudgetAllocation() {
+            const days = parseInt(document.getElementById('days').value);
+            const stages = parseInt(document.getElementById('stages').value);
+            const weightValue = parseInt(document.getElementById('weightSlider').value) / 100;
+            const graphElement = document.getElementById('graph');
+            graphElement.innerHTML = '';
+
+            for (let day = 1; day <= days; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                dayElement.innerHTML = `<h2>Day ${day}</h2>`;
+
+                const calendarView = document.createElement('div');
+                calendarView.className = 'calendar-view';
+
+                for (let stage = 1; stage <= stages; stage++) {
+                    const stageElement = document.createElement('div');
+                    stageElement.className = 'stage';
+                    stageElement.innerHTML = `<h3>Stage ${stage}</h3>`;
+
+                    const startTime = document.getElementById(`start-time-stage${stage}`).value;
+                    const endTime = document.getElementById(`end-time-stage${stage}`).value;
+                    const initialSlotLength = parseInt(document.getElementById(`initial-slot-length-stage${stage}`).value);
+                    const changeTime = document.getElementById(`change-time-stage${stage}`).value;
+                    const laterSlotLength = parseInt(document.getElementById(`later-slot-length-stage${stage}`).value);
+                    const budget = parseInt(document.getElementById(`budget-day${day}-stage${stage}`).value);
+
+                    const slots = generateTimeSlots(startTime, endTime, initialSlotLength, changeTime, laterSlotLength);
+                    const weights = calculateWeights(slots.length, weightValue);
+                    const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+
+                    let totalAllocated = 0;
+                    slots.forEach((slot, index) => {
+                        const slotElement = document.createElement('div');
+                        slotElement.className = 'time-slot';
+
+                        let fee;
+                        if (index === slots.length - 1) {
+                            // For the last slot (headliner), allocate the remaining budget
+                            fee = budget - totalAllocated;
+                        } else {
+                            fee = Math.round(budget * (weights[index] / totalWeight));
+                            totalAllocated += fee;
+                        }
+
+                        slotElement.innerHTML = `
+                            <strong>${slot.start} - ${slot.end}</strong><br>
+                            Duration: ${slot.duration} min<br>
+                            Fee: $${fee.toLocaleString()}
+                        `;
+
+                        stageElement.appendChild(slotElement);
+                    });
+
+                    calendarView.appendChild(stageElement);
+                }
+
+                dayElement.appendChild(calendarView);
+                graphElement.appendChild(dayElement);
+            }
+        }
+
+        function generateTimeSlots(startTime, endTime, initialSlotLength, changeTime, laterSlotLength) {
+            let currentTime = timeToMinutes(startTime);
+            let endMinutes = timeToMinutes(endTime);
+            const changeMinutes = timeToMinutes(changeTime);
+            
+            // Adjust for times past midnight
+            if (endMinutes <= currentTime) {
+                endMinutes += 24 * 60;
+            }
+            
+            const slots = [];
+
+            while (currentTime < endMinutes) {
+                const slotLength = currentTime < changeMinutes ? initialSlotLength : laterSlotLength;
+                const start = minutesToTime(currentTime);
+                const end = minutesToTime(Math.min(currentTime + slotLength, endMinutes));
+                const duration = Math.min(slotLength, endMinutes - currentTime);
+                
+                slots.push({ start, end, duration });
+                currentTime += slotLength;
+
+                if (currentTime >= endMinutes) break;
             }
 
-            const feePerSlot = budget / slots.length;
-            return slots.map((slot, index) => ({
-                ...slot,
-                fee: Math.round(feePerSlot),
-                isHeadliner: index === slots.length - 1
-            }));
+            return slots;
         }
 
-        function updateSchedule() {
-            const mainStageEnd = document.getElementById('mainStageEnd').value;
-            const mainStageBudget = parseInt(document.getElementById('mainStageBudget').value);
-
-            const schedule = calculateSchedule(mainStageEnd, mainStageBudget);
-
-            const tableBody = document.querySelector('#scheduleTable tbody');
-            tableBody.innerHTML = '';
-
-            schedule.forEach(slot => {
-                const row = tableBody.insertRow();
-                row.insertCell().textContent = `${slot.start} - ${slot.end}`;
-                const feeCell = row.insertCell();
-                feeCell.textContent = `$${slot.fee.toLocaleString()}`;
-                if (slot.isHeadliner) {
-                    feeCell.classList.add('headliner');
+        function calculateWeights(numberOfSlots, weightValue) {
+            if (numberOfSlots === 1) return [1];
+            
+            const weights = new Array(numberOfSlots).fill(1);
+            
+            if (weightValue > 0) {
+                // Calculate the weight for the headliner (last slot)
+                const headlinerWeight = 0.1 + 0.8 * weightValue; // Ranges from 0.1 to 0.9
+                weights[numberOfSlots - 1] = headlinerWeight;
+                
+                // Distribute the remaining weight among other slots with a progressive curve
+                const remainingWeight = 1 - headlinerWeight;
+                const curve = 2 + weightValue * 2; // Adjust the curve based on the weight value
+                let totalCurveValue = 0;
+                
+                for (let i = 0; i < numberOfSlots - 1; i++) {
+                    const normalizedIndex = (i + 1) / (numberOfSlots - 1);
+                    const curveValue = Math.pow(normalizedIndex, curve);
+                    totalCurveValue += curveValue;
+                    weights[i] = curveValue;
                 }
-            });
+                
+                // Normalize the weights of non-headliner slots
+                for (let i = 0; i < numberOfSlots - 1; i++) {
+                    weights[i] = (weights[i] / totalCurveValue) * remainingWeight;
+                }
+            }
+            
+            return weights;
         }
 
-        document.getElementById('mainStageEnd').addEventListener('change', updateSchedule);
-        document.getElementById('mainStageBudget').addEventListener('change', updateSchedule);
+        function timeToMinutes(time) {
+            const [hours, minutes] = time.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
 
-        updateSchedule();
+        function minutesToTime(minutes) {
+            minutes = minutes % (24 * 60); // Ensure we wrap around after 24 hours
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+        }
+
+        // Add event listener to the weight slider
+        document.getElementById('weightSlider').addEventListener('input', generateBudgetAllocation);
+
+        // Initial setup
+        updateControls();
     </script>
 </body>
 </html>
