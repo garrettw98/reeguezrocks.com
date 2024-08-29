@@ -47,6 +47,13 @@
             margin-bottom: 20px;
         }
 
+        .chart-container-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+
         .chart-container {
             width: 100%;
             max-width: 600px;
@@ -431,10 +438,198 @@
         }
 
         /* Responsive design for smaller screens */
+        @media (max-width: 1200px) {
+            header, main, footer {
+                padding: 15px;
+            }
+        }
+
         @media (max-width: 768px) {
             .profitability-inputs {
                 grid-template-columns: 1fr;
             }
+
+            .event-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stat-item {
+                margin-bottom: 15px;
+            }
+
+            .event-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .event-title {
+                font-size: 1.5rem;
+            }
+
+            .invest-button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+        }
+
+        /* Make tables responsive */
+        .modern-table {
+            width: 100%;
+            overflow-x: auto;
+            display: block;
+        }
+
+        /* Adjust input sizes for smaller screens */
+        @media (max-width: 480px) {
+            input[type="number"],
+            input[type="range"] {
+                font-size: 14px;
+            }
+        }
+
+        /* Ensure images are responsive */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Adjust chart size for smaller screens */
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+        .financial-breakdown-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        #profitBreakdown {
+            max-width: 100%;
+        }
+
+        .modern-table {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+
+        .modern-table th, .modern-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modern-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .modern-table .section-header {
+            background-color: #e6e6e6;
+            font-weight: bold;
+        }
+
+        .modern-table .total-row {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+
+        .modern-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Responsive design improvements */
+        @media (max-width: 768px) {
+            .profitability-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .event-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stat-item {
+                margin-bottom: 15px;
+            }
+
+            .event-title {
+                font-size: 2rem;
+            }
+
+            .modern-table {
+                font-size: 14px;
+            }
+
+            .modern-table th, .modern-table td {
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .event-title {
+                font-size: 1.5rem;
+            }
+
+            .invest-button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+
+            .modern-table {
+                font-size: 12px;
+            }
+
+            .modern-table th, .modern-table td {
+                padding: 6px;
+            }
+
+            input[type="number"],
+            input[type="range"] {
+                font-size: 14px;
+            }
+        }
+
+        /* Ensure all content is responsive */
+        img, video, iframe {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Improve input responsiveness */
+        input[type="number"], 
+        input[type="text"], 
+        input[type="email"], 
+        textarea, 
+        select {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -542,9 +737,13 @@
                     <input type="number" id="miscCost" min="0" max="100000" value="10000" step="1000">
                 </div>
             </div>
-            <div id="profitBreakdown"></div>
-            <div class="chart-container">
-                <canvas id="profitChart"></canvas>
+            <div class="financial-breakdown-wrapper">
+                <div id="profitBreakdown"></div>
+            </div>
+            <div class="chart-container-wrapper">
+                <div class="chart-container">
+                    <canvas id="profitChart"></canvas>
+                </div>
             </div>
         </section>
 
@@ -585,6 +784,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         x: {
                             title: {
@@ -890,12 +1090,33 @@
             }
         }
 
+        function adjustLayout() {
+            const width = window.innerWidth;
+            const profitBreakdown = document.getElementById('profitBreakdown');
+            
+            if (width <= 768) {
+                profitBreakdown.style.fontSize = '14px';
+            } else if (width <= 480) {
+                profitBreakdown.style.fontSize = '12px';
+            } else {
+                profitBreakdown.style.fontSize = '16px';
+            }
+            
+            // Redraw the chart to fit the new size
+            if (chart) {
+                chart.resize();
+            }
+        }
+
         // Call this function when the page loads
         window.addEventListener('load', function() {
             setInitialValues();
             createChart();
             updateChart();
+            adjustLayout();
         });
+
+        window.addEventListener('resize', adjustLayout);
 
         // Update the existing event listeners
         const investmentInput = document.getElementById('investmentAmount');
