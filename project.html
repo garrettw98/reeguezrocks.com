@@ -211,7 +211,7 @@
 
         .event-image-container {
             position: relative;
-            height: 230px; /* Increased by approximately 15% */
+            height: 290px; /* Increased by an additional 25% from 230px */
             overflow: hidden;
         }
 
@@ -227,7 +227,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -236,7 +236,7 @@
 
         .event-title {
             color: white;
-            font-size: 1.8rem;
+            font-size: 2rem; /* Slightly increased for better visibility on larger image */
             font-weight: 700;
             margin: 0;
             text-align: center;
@@ -366,7 +366,7 @@
             transform: translateY(-50%);
             display: flex;
             justify-content: space-between;
-            z-index: 3;
+            pointer-events: none; /* This allows clicks to pass through to the card */
         }
 
         .prev-btn, .next-btn {
@@ -376,11 +376,59 @@
             padding: 10px 15px;
             font-size: 18px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+            pointer-events: auto; /* This makes the buttons clickable */
+            opacity: 0.7;
+            z-index: 10;
+        }
+
+        .prev-btn {
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            padding-left: 20px;
+        }
+
+        .next-btn {
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+            padding-right: 20px;
         }
 
         .prev-btn:hover, .next-btn:hover {
             background-color: rgba(80, 227, 194, 0.9);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .prev-btn, .next-btn {
+                padding: 15px 20px;
+                font-size: 24px;
+            }
+
+            .carousel-controls {
+                top: auto;
+                bottom: 20px;
+                transform: none;
+            }
+
+            .prev-btn {
+                left: 10px;
+            }
+
+            .next-btn {
+                right: 10px;
+            }
+        }
+
+        /* Adjust the event details padding to prevent overlap */
+        .event-details {
+            padding: 24px 60px 0; /* Increased side padding */
+        }
+
+        @media (max-width: 768px) {
+            .event-details {
+                padding: 24px 24px 60px; /* Added bottom padding for mobile */
+            }
         }
 
         /* Responsive design for smaller screens */
@@ -556,8 +604,13 @@
             }
 
             input[type="number"],
-            input[type="range"] {
-                font-size: 14px;
+            input[type="text"],
+            input[type="email"],
+            textarea,
+            select {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
             }
         }
 
