@@ -182,18 +182,15 @@
             text-align: right;
         }
         .currency-input {
-            position: relative;
+            display: flex;
+            align-items: center;
         }
-        .currency-input::before {
-            content: '$';
-            position: absolute;
-            left: 8px;
-            top: 50%;
-            transform: translateY(-50%);
+        .currency-symbol {
+            margin-right: 5px;
             color: #666;
         }
         .currency-input input {
-            padding-left: 20px;
+            width: 100%;
         }
         .key-metrics-wrapper {
             background-color: #fff;
@@ -350,6 +347,14 @@
                 /* Remove any size overrides here */
             }
         }
+
+        .input-group input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -388,12 +393,12 @@
                     </div>
                     <div class="input-group">
                         <label for="ticketSales">Total Ticket Sales</label>
-                        <input type="range" id="ticketSales" min="0" max="800" value="550" step="10">
-                        <span id="ticketSalesValue" class="range-value">550</span>
+                        <input type="number" id="ticketSales" min="0" max="10000" value="550" step="1">
                     </div>
                     <div class="input-group">
                         <label for="ticketCost">Ticket Cost</label>
                         <div class="currency-input">
+                            <span class="currency-symbol">$</span>
                             <input type="number" id="ticketCost" min="50" max="500" value="200" step="10">
                         </div>
                     </div>
@@ -404,18 +409,21 @@
                     <div class="input-group">
                         <label for="artistCost">Artist Cost</label>
                         <div class="currency-input">
-                            <input type="number" id="artistCost" min="0" max="100000" value="20000" step="1000">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" id="artistCost" min="0" max="100000" value="30000" step="1000">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="equipmentCost">Equipment Cost</label>
                         <div class="currency-input">
+                            <span class="currency-symbol">$</span>
                             <input type="number" id="equipmentCost" min="0" max="100000" value="15000" step="1000">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="miscCost">Miscellaneous Cost</label>
                         <div class="currency-input">
+                            <span class="currency-symbol">$</span>
                             <input type="number" id="miscCost" min="0" max="100000" value="10000" step="1000">
                         </div>
                     </div>
@@ -909,21 +917,21 @@
         }
 
         function setInitialValues() {
-            const ticketPrice = 200;
-            
+            document.getElementById('totalEarlyBirdTickets').value = 100;
+            document.getElementById('earlyBirdTickets').value = 1;
             document.getElementById('ticketSales').value = 550;
-            document.getElementById('ticketSalesValue').textContent = 550;
-            document.getElementById('ticketCost').value = ticketPrice;
+            document.getElementById('ticketCost').value = 200;
             document.getElementById('eventLength').value = 3;
-            
-            document.getElementById('artistCost').value = 20000;
+            document.getElementById('artistCost').value = 30000;
             document.getElementById('equipmentCost').value = 15000;
             document.getElementById('miscCost').value = 10000;
-            
-            const earlyBirdTicketsInput = document.getElementById('earlyBirdTickets');
-            earlyBirdTicketsInput.min = 50;
-            earlyBirdTicketsInput.max = 1000;
-            earlyBirdTicketsInput.value = 1;
+        }
+
+        // Function to format currency inputs
+        function formatCurrencyInput(input) {
+            input.addEventListener('blur', function() {
+                this.value = parseFloat(this.value).toFixed(2);
+            });
         }
 
         function adjustLayout() {
@@ -949,13 +957,19 @@
             createChart();
             updateChart();
             adjustLayout();
+
+            // Format currency inputs
+            formatCurrencyInput(document.getElementById('ticketCost'));
+            formatCurrencyInput(document.getElementById('artistCost'));
+            formatCurrencyInput(document.getElementById('equipmentCost'));
+            formatCurrencyInput(document.getElementById('miscCost'));
         });
 
         window.addEventListener('resize', adjustLayout);
 
         const totalEarlyBirdTicketsInput = document.getElementById('totalEarlyBirdTickets');
         const yourEarlyBirdTicketsInput = document.getElementById('earlyBirdTickets');
-        const ticketSalesSlider = document.getElementById('ticketSales');
+        const ticketSalesInput = document.getElementById('ticketSales');
         const ticketCostInput = document.getElementById('ticketCost');
         const eventLengthInput = document.getElementById('eventLength');
         const artistCostInput = document.getElementById('artistCost');
@@ -964,10 +978,7 @@
 
         totalEarlyBirdTicketsInput.addEventListener('change', updateChart);
         yourEarlyBirdTicketsInput.addEventListener('change', updateChart);
-        ticketSalesSlider.addEventListener('input', function() {
-            document.getElementById('ticketSalesValue').textContent = this.value;
-        });
-        ticketSalesSlider.addEventListener('change', updateChart);
+        ticketSalesInput.addEventListener('change', updateChart);
         ticketCostInput.addEventListener('change', updateChart);
         eventLengthInput.addEventListener('change', updateChart);
         artistCostInput.addEventListener('change', updateChart);
