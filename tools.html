@@ -341,31 +341,31 @@
         }
 
         function calculateWeights(numberOfSlots, weightValue) {
-            if (numberOfSlots === 1) return [1];
-            
-            const weights = new Array(numberOfSlots).fill(1);
-            
-            // Calculate the weight for the headliner (last slot)
-            const headlinerWeight = 1/numberOfSlots + (0.9 - 1/numberOfSlots) * weightValue;
-            weights[numberOfSlots - 1] = headlinerWeight;
-            
-            // Distribute the remaining weight among other slots with an exponential increase
-            const remainingWeight = 1 - headlinerWeight;
-            let totalExponentialWeight = 0;
-            
-            for (let i = 0; i < numberOfSlots - 1; i++) {
-                const normalizedIndex = i / (numberOfSlots - 2);
-                const exponentialWeight = Math.pow(normalizedIndex, 2 + weightValue * 2) + 0.1;
-                totalExponentialWeight += exponentialWeight;
-                weights[i] = exponentialWeight;
+            if (weightValue === 0) {
+                // Equal distribution
+                return new Array(numberOfSlots).fill(1 / numberOfSlots);
             }
-            
-            // Normalize the weights of non-headliner slots
-            for (let i = 0; i < numberOfSlots - 1; i++) {
-                weights[i] = (weights[i] / totalExponentialWeight) * remainingWeight;
+
+            if (weightValue === 1) {
+                // Headliner gets 100%
+                const weights = new Array(numberOfSlots).fill(0);
+                weights[numberOfSlots - 1] = 1;
+                return weights;
             }
-            
-            return weights;
+
+            // Logarithmic distribution
+            const weights = [];
+            let totalWeight = 0;
+
+            for (let i = 0; i < numberOfSlots; i++) {
+                // Use log base 2 for a more pronounced effect
+                const weight = Math.pow(2, i * weightValue) / Math.pow(2, (numberOfSlots - 1) * weightValue);
+                weights.push(weight);
+                totalWeight += weight;
+            }
+
+            // Normalize weights
+            return weights.map(w => w / totalWeight);
         }
 
         function timeToMinutes(time) {
