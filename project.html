@@ -253,7 +253,7 @@
         .event-info {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 15px;
         }
 
         .info-item {
@@ -263,15 +263,16 @@
         }
 
         .info-label {
-            font-weight: 600;
-            color: #555;
-            font-size: 0.9rem;
+            font-weight: 700; /* Increased from 600 to 700 */
+            color: #444; /* Slightly darker for better contrast */
+            font-size: 1rem; /* Increased from 0.9rem */
             min-width: 80px;
         }
 
         .info-value {
-            color: #333;
-            font-size: 0.95rem;
+            color: #222; /* Darker color for better readability */
+            font-size: 1.1rem; /* Increased from 0.95rem */
+            font-weight: 600; /* Added font weight */
         }
 
         .event-stats {
@@ -279,7 +280,7 @@
             justify-content: space-between;
             background-color: #f8f9fa;
             border-radius: 8px;
-            padding: 15px;
+            padding: 20px; /* Increased from 15px */
         }
 
         .stat-item {
@@ -290,13 +291,14 @@
         }
 
         .stat-label {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 5px;
+            font-size: 0.9rem; /* Increased from 0.8rem */
+            color: #555; /* Slightly darker for better contrast */
+            margin-bottom: 8px; /* Increased from 5px */
+            font-weight: 600; /* Added font weight */
         }
 
         .stat-value {
-            font-size: 1.1rem;
+            font-size: 1.3rem; /* Increased from 1.1rem */
             font-weight: 700;
             color: var(--primary-color);
         }
@@ -700,6 +702,21 @@
             font-size: 16px;
             font-weight: bold;
             color: var(--primary-color);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .info-label, .info-value {
+                font-size: 1rem; /* Slightly smaller on mobile, but still larger than before */
+            }
+
+            .stat-label {
+                font-size: 0.85rem;
+            }
+
+            .stat-value {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -1153,8 +1170,6 @@
             
             if (width <= 768) {
                 profitBreakdown.style.fontSize = '14px';
-            } else if (width <= 480) {
-                profitBreakdown.style.fontSize = '12px';
             } else {
                 profitBreakdown.style.fontSize = '16px';
             }
