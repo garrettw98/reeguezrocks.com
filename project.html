@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community-Driven Event Investment Platform</title>
+    <title>Community-Driven Festival Experience</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -635,25 +635,25 @@
 </head>
 <body>
     <header>
-        <h1>Community-Driven Event Investment Platform</h1>
-        <p>Revolutionizing event funding: Be an investor, not just an attendee!</p>
+        <h1>Community-Driven Festival Experience</h1>
+        <p>Be an early bird member and share in the festival's success!</p>
     </header>
 
     <main>
         <section id="about-and-how" class="card">
-            <h2>Revolutionizing Event Funding</h2>
-            <p>Welcome to our Community-Driven Event Investment Platform, where music lovers become event stakeholders. We're revolutionizing event funding by democratizing the investment process and empowering the community.</p>
+            <h2>Revolutionizing Festival Participation</h2>
+            <p>Welcome to our Community-Driven Festival Experience, where music lovers become part of the festival's success. We're revolutionizing the festival experience by offering early bird memberships with revenue sharing opportunities.</p>
             
-            <h3>Investment Process</h3>
+            <h3>Early Bird Membership Process</h3>
             <ol>
-                <li><strong>Opportunity Announcement:</strong> We present a curated event investment opportunity with a specified funding target.</li>
-                <li><strong>Community Participation:</strong> Members invest in the event, securing their attendance and a stake in its success.</li>
-                <li><strong>Milestone-Based Execution:</strong> As funding thresholds are met, we collaboratively secure venues, artists, and enhance the event experience.</li>
-                <li><strong>Event Realization:</strong> Together, we bring the community-backed event to life, with investors enjoying VIP status.</li>
-                <li><strong>Returns Distribution:</strong> Post-event, profits are calculated and distributed to stakeholders proportionally, on top of the unforgettable experience.</li>
+                <li><strong>Early Bird Ticket Release:</strong> We announce a limited number of early bird tickets for our curated festival experience.</li>
+                <li><strong>Community Participation:</strong> Members purchase early bird tickets, securing their attendance and a stake in the festival's success.</li>
+                <li><strong>Milestone-Based Execution:</strong> As ticket sales thresholds are met, we collaboratively secure venues, artists, and enhance the event experience.</li>
+                <li><strong>Festival Realization:</strong> Together, we bring the community-backed festival to life, with early bird members enjoying VIP status.</li>
+                <li><strong>Revenue Sharing:</strong> Post-festival, profits are calculated and 50% is distributed evenly among early bird members, on top of the unforgettable experience.</li>
             </ol>
 
-            <p>By participating, you're not just buying a ticket – you're investing in an experience you help create. Enjoy potential financial returns, exclusive perks, reduced corporate influence on events, and a stronger community connection. Join us in shaping the future of live events while potentially growing your investment.</p>
+            <p>By participating as an early bird member, you're not just buying a ticket – you're becoming part of a unique festival experience you help create. Enjoy potential financial returns, exclusive perks, and a stronger community connection. Join us in shaping the future of live events while potentially benefiting from the festival's success.</p>
         </section>
 
         <section id="example-event" class="card">
@@ -745,21 +745,17 @@
             <p>Adjust the inputs to see potential profits:</p>
             <div class="profitability-inputs">
                 <div class="input-group">
-                    <label for="investmentAmount">Your Investment ($)</label>
-                    <input type="number" id="investmentAmount" min="200" max="20000" value="200" step="100">
+                    <label for="earlyBirdTickets">Early Bird Tickets</label>
+                    <input type="number" id="earlyBirdTickets" min="50" max="1000" value="100" step="10">
                 </div>
                 <div class="input-group">
-                    <label for="ticketSales">Ticket Sales</label>
+                    <label for="ticketSales">Total Ticket Sales</label>
                     <input type="range" id="ticketSales" min="0" max="800" value="550" step="10">
                     <span id="ticketSalesValue">550</span>
                 </div>
                 <div class="input-group">
                     <label for="ticketCost">Ticket Cost ($)</label>
                     <input type="number" id="ticketCost" min="50" max="500" value="200" step="10">
-                </div>
-                <div class="input-group">
-                    <label for="totalInvestment">Total Investor Contribution ($)</label>
-                    <input type="number" id="totalInvestment" min="10000" max="100000" value="20000" step="1000">
                 </div>
                 <div class="input-group">
                     <label for="eventLength">Event Length (days)</label>
@@ -791,15 +787,15 @@
         <section id="faq" class="card">
             <h2>Frequently Asked Questions</h2>
             <h3>What happens if the event doesn't make a profit?</h3>
-            <p>In the unlikely event that we don't make a profit, investors will receive a proportional share of the remaining funds after event costs are covered.</p>
+            <p>In the unlikely event that we don't make a profit, early bird members will receive a proportional share of the remaining funds after event costs are covered.</p>
             <h3>How do I receive my share of the profits?</h3>
-            <p>Profits will be distributed electronically to the payment method you used for your initial investment within 30 days after the event.</p>
+            <p>Profits will be distributed electronically to the payment method you used for your early bird ticket purchase within 30 days after the event.</p>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 Community-Driven Event Investment Platform. All rights reserved.</p>
-        <p>Disclaimer: Investing involves risks. Please consult with a financial advisor before making any investment decisions.</p>
+        <p>&copy; 2024 Community-Driven Festival Experience. All rights reserved.</p>
+        <p>Disclaimer: Early bird membership involves risks. Please consult with a financial advisor before making any investment decisions.</p>
     </footer>
 
     <script>
@@ -816,7 +812,7 @@
                 data: {
                     labels: [],
                     datasets: [{
-                        label: 'Your Profit',
+                        label: 'Your Revenue Share',
                         borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         data: [],
@@ -837,7 +833,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Your Profit ($)'
+                                text: 'Your Revenue Share ($)'
                             }
                         }
                     }
@@ -866,90 +862,51 @@
         }
 
         function updateChart() {
-            const investment = parseFloat(document.getElementById('investmentAmount').value);
+            const earlyBirdTickets = parseInt(document.getElementById('earlyBirdTickets').value);
             const ticketPrice = parseFloat(document.getElementById('ticketCost').value);
-            const totalInvestment = parseFloat(document.getElementById('totalInvestment').value);
             const eventLength = parseInt(document.getElementById('eventLength').value);
             const artistCost = parseFloat(document.getElementById('artistCost').value);
             const equipmentCost = parseFloat(document.getElementById('equipmentCost').value);
             const miscCost = parseFloat(document.getElementById('miscCost').value);
             const variableCost = 25;
 
-            // Ensure investment is within valid range
-            if (investment < ticketPrice || investment > totalInvestment) {
-                alert(`Investment must be between $${ticketPrice.toLocaleString()} and $${totalInvestment.toLocaleString()}`);
-                document.getElementById('investmentAmount').value = Math.min(Math.max(investment, ticketPrice), totalInvestment);
-                return;
-            }
-
-            // Ensure ticket price is within valid range
-            if (ticketPrice < 50 || ticketPrice > 500) {
-                alert('Ticket price must be between $50 and $500');
-                document.getElementById('ticketCost').value = Math.min(Math.max(ticketPrice, 50), 500);
-                return;
-            }
-
             const labels = [];
-            const investorShareData = [];
+            const revenueShareData = [];
 
             for (let ticketSales = 0; ticketSales <= 800; ticketSales += 25) {
                 const fixedCosts = calculateFixedCosts(ticketSales, eventLength, artistCost, equipmentCost, miscCost);
-                const totalRevenue = ticketSales * ticketPrice + totalInvestment;
+                const totalRevenue = ticketSales * ticketPrice;
                 const eventCosts = fixedCosts.total + (variableCost * ticketSales);
-                let investorRepayment = 0;
-                let totalProfit = 0;
+                let totalProfit = Math.max(0, totalRevenue - eventCosts);
                 
-                if (totalRevenue > eventCosts) {
-                    investorRepayment = Math.min(totalInvestment, totalRevenue - eventCosts);
-                    totalProfit = Math.max(0, totalRevenue - eventCosts - investorRepayment);
-                }
-                
-                const investorTotalShare = totalProfit * 0.5;
-                const yourRepayment = (investment / totalInvestment) * investorRepayment;
-                const yourShareOfProfit = (investment / totalInvestment) * investorTotalShare;
-                const yourTotalReturn = yourRepayment + yourShareOfProfit;
-                const yourProfit = yourTotalReturn - investment;
+                const earlyBirdShare = totalProfit * 0.5;
+                const yourShareOfProfit = (1 / earlyBirdTickets) * earlyBirdShare;
 
                 labels.push(ticketSales);
-                investorShareData.push(yourProfit);
+                revenueShareData.push(yourShareOfProfit);
             }
 
             chart.data.labels = labels;
-            chart.data.datasets[0].data = investorShareData;
+            chart.data.datasets[0].data = revenueShareData;
             chart.update();
 
-            updateProfitBreakdown(investment, totalInvestment, ticketPrice, variableCost, artistCost, equipmentCost, miscCost);
+            updateProfitBreakdown(earlyBirdTickets, ticketPrice, variableCost, artistCost, equipmentCost, miscCost);
         }
 
-        function updateProfitBreakdown(investment, totalInvestment, ticketPrice, variableCost, artistCost, equipmentCost, miscCost) {
+        function updateProfitBreakdown(earlyBirdTickets, ticketPrice, variableCost, artistCost, equipmentCost, miscCost) {
             const ticketSales = parseInt(document.getElementById('ticketSales').value);
             const eventLength = parseInt(document.getElementById('eventLength').value);
             
             const fixedCosts = calculateFixedCosts(ticketSales, eventLength, artistCost, equipmentCost, miscCost);
-            const { fullBreakeven } = calculateBreakevens(fixedCosts, variableCost, ticketPrice, totalInvestment, eventLength);
             
             const ticketRevenue = ticketSales * ticketPrice;
-            const totalRevenue = ticketRevenue + totalInvestment;
             const eventCosts = fixedCosts.total + (variableCost * ticketSales);
             
-            let investorRepayment = 0;
-            let totalProfit = 0;
-            let companyShare = 0;
-            let investorTotalShare = 0;
+            let totalProfit = Math.max(0, ticketRevenue - eventCosts);
+            let earlyBirdShare = totalProfit * 0.5;
+            let companyShare = totalProfit * 0.5;
             
-            if (totalRevenue > eventCosts) {
-                investorRepayment = Math.min(totalInvestment, totalRevenue - eventCosts);
-                totalProfit = Math.max(0, totalRevenue - eventCosts - investorRepayment);
-                companyShare = totalProfit * 0.5;
-                investorTotalShare = totalProfit * 0.5;
-            }
-            
-            const totalCosts = eventCosts + investorRepayment;
-            const yourRepayment = (investment / totalInvestment) * investorRepayment;
-            const yourShareOfProfit = (investment / totalInvestment) * investorTotalShare;
-            const yourTotalReturn = yourRepayment + yourShareOfProfit;
-            const yourProfit = yourTotalReturn - investment;
-            const yourLoss = investment - yourRepayment;
+            const yourShareOfProfit = (1 / earlyBirdTickets) * earlyBirdShare;
             
             const breakdownHTML = `
                 <h3>Financial Breakdown</h3>
@@ -961,30 +918,12 @@
                         <th>Amount</th>
                     </tr>
                     <tr class="section-header">
-                        <td colspan="3">Key Metrics</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>Full Breakeven (incl. investor repayment)</td>
-                        <td>${fullBreakeven.toLocaleString()} tickets</td>
-                    </tr>
-                    <tr class="section-header">
                         <td colspan="3">Revenue</td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>Ticket Sales (${ticketSales} @ $${ticketPrice})</td>
                         <td>$${ticketRevenue.toLocaleString()}</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>Total Investor Contribution</td>
-                        <td>$${totalInvestment.toLocaleString()}</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td></td>
-                        <td>Total Revenue</td>
-                        <td>$${totalRevenue.toLocaleString()}</td>
                     </tr>
                     <tr class="section-header">
                         <td colspan="3">Costs</td>
@@ -1019,16 +958,6 @@
                         <td>Total Event Costs</td>
                         <td>$${eventCosts.toLocaleString()}</td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td>Investor Repayment</td>
-                        <td>$${investorRepayment.toLocaleString()}</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td></td>
-                        <td>Total Costs</td>
-                        <td>$${totalCosts.toLocaleString()}</td>
-                    </tr>
                     <tr class="section-header">
                         <td colspan="3">Profit/Loss</td>
                     </tr>
@@ -1044,26 +973,21 @@
                     </tr>
                     <tr>
                         <td></td>
-                        <td>Investors Total Share (50%)</td>
-                        <td>$${investorTotalShare.toLocaleString()}</td>
+                        <td>Early Bird Members Total Share (50%)</td>
+                        <td>$${earlyBirdShare.toLocaleString()}</td>
                     </tr>
                     <tr class="section-header">
-                        <td colspan="3">Your Investment</td>
+                        <td colspan="3">Your Early Bird Membership</td>
                     </tr>
                     <tr>
                         <td></td>
-                        <td>Your Investment Amount</td>
-                        <td>$${investment.toLocaleString()}</td>
+                        <td>Your Early Bird Tickets</td>
+                        <td>${earlyBirdTickets}</td>
                     </tr>
                     <tr>
                         <td></td>
-                        <td>Percentage of Total Investment</td>
-                        <td>${((investment / totalInvestment) * 100).toFixed(2)}%</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>Your Repayment</td>
-                        <td>$${yourRepayment.toLocaleString()}</td>
+                        <td>Percentage of Total Early Bird Tickets</td>
+                        <td>${((earlyBirdTickets / ticketSales) * 100).toFixed(2)}%</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1072,18 +996,8 @@
                     </tr>
                     <tr>
                         <td></td>
-                        <td>Your Total Return</td>
-                        <td>$${yourTotalReturn.toLocaleString()}</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td></td>
-                        <td>${yourProfit >= 0 ? 'Your Profit' : 'Your Loss'}</td>
-                        <td>$${(yourProfit >= 0 ? yourProfit : yourLoss).toLocaleString()}</td>
-                    </tr>
-                    <tr>
-                        <td></td>
                         <td>Your ROI</td>
-                        <td>${((yourProfit / investment) * 100).toFixed(2)}%</td>
+                        <td>${((yourShareOfProfit / (earlyBirdTickets * ticketPrice)) * 100).toFixed(2)}%</td>
                     </tr>
                 </table>
                 <p>Note: This breakdown is based on the current inputs. Actual results may vary.</p>
@@ -1095,40 +1009,21 @@
         // Add this function to set initial values
         function setInitialValues() {
             const ticketPrice = 200;
-            const totalInvestment = 20000;
             
             document.getElementById('ticketSales').value = 550;
             document.getElementById('ticketSalesValue').textContent = 550;
             document.getElementById('ticketCost').value = ticketPrice;
-            document.getElementById('totalInvestment').value = totalInvestment;
             document.getElementById('eventLength').value = 3;
             
             document.getElementById('artistCost').value = 20000;
             document.getElementById('equipmentCost').value = 15000;
             document.getElementById('miscCost').value = 10000;
             
-            // Set investment input limits and initial value
-            const investmentInput = document.getElementById('investmentAmount');
-            investmentInput.min = ticketPrice;
-            investmentInput.max = totalInvestment;
-            investmentInput.value = ticketPrice;
-        }
-
-        function updateInvestmentLimits() {
-            const ticketPrice = parseFloat(document.getElementById('ticketCost').value);
-            const totalInvestment = parseFloat(document.getElementById('totalInvestment').value);
-            const investmentInput = document.getElementById('investmentAmount');
-            
-            investmentInput.min = ticketPrice;
-            investmentInput.max = totalInvestment;
-            
-            // Ensure current investment is within new limits
-            const currentInvestment = parseFloat(investmentInput.value);
-            if (currentInvestment < ticketPrice) {
-                investmentInput.value = ticketPrice;
-            } else if (currentInvestment > totalInvestment) {
-                investmentInput.value = totalInvestment;
-            }
+            // Set early bird tickets input limits and initial value
+            const earlyBirdTicketsInput = document.getElementById('earlyBirdTickets');
+            earlyBirdTicketsInput.min = 50;
+            earlyBirdTicketsInput.max = 1000;
+            earlyBirdTicketsInput.value = 100;
         }
 
         function adjustLayout() {
@@ -1160,40 +1055,20 @@
         window.addEventListener('resize', adjustLayout);
 
         // Update the existing event listeners
-        const investmentInput = document.getElementById('investmentAmount');
+        const earlyBirdTicketsInput = document.getElementById('earlyBirdTickets');
         const ticketSalesSlider = document.getElementById('ticketSales');
         const ticketCostInput = document.getElementById('ticketCost');
-        const totalInvestmentInput = document.getElementById('totalInvestment');
         const eventLengthInput = document.getElementById('eventLength');
         const artistCostInput = document.getElementById('artistCost');
         const equipmentCostInput = document.getElementById('equipmentCost');
         const miscCostInput = document.getElementById('miscCost');
 
-        investmentInput.addEventListener('change', function() {
-            const investment = parseFloat(this.value);
-            const ticketPrice = parseFloat(ticketCostInput.value);
-            const totalInvestment = parseFloat(totalInvestmentInput.value);
-            
-            if (investment < ticketPrice) {
-                this.value = ticketPrice;
-            } else if (investment > totalInvestment) {
-                this.value = totalInvestment;
-            }
-            updateChart();
-        });
-
+        earlyBirdTicketsInput.addEventListener('change', updateChart);
         ticketSalesSlider.addEventListener('input', function() {
             document.getElementById('ticketSalesValue').textContent = this.value;
         });
         ticketSalesSlider.addEventListener('change', updateChart);
-        ticketCostInput.addEventListener('change', function() {
-            updateInvestmentLimits();
-            updateChart();
-        });
-        totalInvestmentInput.addEventListener('change', function() {
-            updateInvestmentLimits();
-            updateChart();
-        });
+        ticketCostInput.addEventListener('change', updateChart);
         eventLengthInput.addEventListener('change', updateChart);
         artistCostInput.addEventListener('change', updateChart);
         equipmentCostInput.addEventListener('change', updateChart);

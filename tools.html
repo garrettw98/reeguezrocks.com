@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Festival Budget Tool with Improved Weight Distribution</title>
+    <title>Festival Planning Tools</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,6 +24,7 @@
             flex: 0 0 300px;
             background-color: #fff;
             padding: 20px;
+            padding-bottom: 40px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
             overflow-y: auto;
             height: 100%;
@@ -32,126 +34,309 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            padding: 20px;
+            background-color: #f0f0f0;
         }
         #weightSliderContainer {
             background-color: #fff;
             padding: 20px;
+            border-radius: 4px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-            z-index: 10;
-        }
-        #weightSlider {
-            width: 100%;
-            margin: 10px 0;
         }
         .graph-container {
             flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        #graph {
             background-color: #fff;
             padding: 20px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-            overflow-y: auto;
-        }
-        .controls, #stageControls, #budgets {
-            margin-bottom: 20px;
         }
         .control-group {
-            display: flex;
-            flex-direction: column;
             margin-bottom: 10px;
         }
-        input {
-            margin-top: 5px;
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .control-group input {
+            width: 100%;
             padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        .day {
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-        }
-        h1, h2, h3 {
-            margin: 0 0 15px 0;
-            color: #333;
-        }
-        .timeline {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-        }
-        .stage-column {
-            flex: 1;
-            min-width: 200px;
-            max-width: 300px;
-        }
-        .stage-title {
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #e0e0e0;
-            border-radius: 3px;
-            font-weight: bold;
-        }
-        .time-slot-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            box-sizing: border-box;
         }
         .time-slot {
             background-color: #f0f0f0;
-            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stage-column {
+            flex: 1;
+            min-width: 0;
+        }
+        .stage-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #e0e0e0;
             border-radius: 3px;
-            padding: 10px;
-            font-size: 12px;
         }
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            .inputs, .graph-section {
-                flex: none;
-                width: 100%;
-                height: auto;
-            }
-        }
-
-        /* New styles for single-stage layout */
-        .single-stage-layout {
+        .tab-container {
             display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            margin-bottom: 20px;
         }
-
-        .single-stage-layout .day {
-            flex: 1 1 calc(50% - 10px);
-            min-width: 300px;
+        .tab {
+            padding: 10px 20px;
+            background-color: #ddd;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-bottom: none;
         }
-
-        .single-stage-layout .timeline {
+        .tab.active {
+            background-color: #fff;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        #profitability-calculator {
+            width: 100%;
+            padding-bottom: 40px;
+        }
+        .profitability-results {
+            display: none;
             flex-direction: column;
+            overflow-y: auto;
+            height: 100%;
+        }
+        .financial-breakdown-wrapper {
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+        .chart-container-wrapper {
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            margin-top: 20px;
+        }
+        .chart-container {
+            height: 300px;
+        }
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
         }
 
-        .single-stage-layout .stage-column {
-            max-width: none;
+        .modern-table th, .modern-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modern-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .modern-table .section-header {
+            background-color: #e6e6e6;
+            font-weight: bold;
+        }
+
+        .modern-table .total-row {
+            font-weight: bold;
+        }
+
+        .modern-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .days-container {
+            display: flex;
+            width: 100%;
+        }
+
+        .day {
+            flex: 1;
+            min-width: 0;
+            padding: 0 10px;
+            border-right: 2px solid #ccc;
+        }
+
+        .day:last-child {
+            border-right: none;
+        }
+
+        .timeline {
+            display: flex;
+        }
+
+        .stage-column {
+            flex: 1;
+            min-width: 0;
+            padding: 0 10px;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .stage-column:last-child {
+            border-right: none;
+        }
+
+        .profitability-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .input-group input[type="range"] {
+            width: calc(100% - 50px);
+            margin-right: 10px;
+        }
+
+        .input-group .range-value {
+            display: inline-block;
+            width: 40px;
+            text-align: right;
+        }
+
+        .currency-input {
+            position: relative;
+        }
+
+        .currency-input::before {
+            content: '$';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .currency-input input {
+            padding-left: 20px;
+        }
+
+        .key-metrics-wrapper {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+
+        .key-metric {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .key-metric-label {
+            font-weight: bold;
+        }
+
+        .key-metric-value {
+            font-family: monospace;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="inputs">
-            <h1>Music Festival Budget Tool</h1>
-            <div class="controls">
-                <div class="control-group">
-                    <label for="days">Number of Days:</label>
-                    <input type="number" id="days" value="2" min="1" max="7" onchange="updateControls()">
+            <h1>Festival Planning Tools</h1>
+            <div class="tab-container">
+                <div class="tab active" onclick="switchTab('lineup')">Lineup Fee Calculator</div>
+                <div class="tab" onclick="switchTab('profitability')">Profitability Analysis</div>
+            </div>
+            <div id="lineup-calculator" class="tab-content active">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="days">Number of Days:</label>
+                        <input type="number" id="days" value="2" min="1" max="7" onchange="updateControls()">
+                    </div>
+                    <div class="control-group">
+                        <label for="stages">Number of Stages:</label>
+                        <input type="number" id="stages" value="2" min="1" max="5" onchange="updateControls()">
+                    </div>
                 </div>
-                <div class="control-group">
-                    <label for="stages">Number of Stages:</label>
-                    <input type="number" id="stages" value="2" min="1" max="5" onchange="updateControls()">
+                <div id="stageControls"></div>
+                <div id="budgets"></div>
+            </div>
+            <div id="profitability-calculator" class="tab-content">
+                <h2>Profitability Analysis</h2>
+                <p>Adjust the inputs to see potential profits:</p>
+                <div class="profitability-inputs">
+                    <div class="input-group">
+                        <label for="totalEarlyBirdTickets">Total Early Bird Tickets</label>
+                        <input type="number" id="totalEarlyBirdTickets" min="50" max="1000" value="100" step="10">
+                    </div>
+                    <div class="input-group">
+                        <label for="earlyBirdTickets">Your Early Bird Tickets</label>
+                        <input type="number" id="earlyBirdTickets" min="1" max="100" value="1" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="ticketSales">Total Ticket Sales</label>
+                        <input type="range" id="ticketSales" min="0" max="800" value="550" step="10">
+                        <span id="ticketSalesValue" class="range-value">550</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="ticketCost">Ticket Cost</label>
+                        <div class="currency-input">
+                            <input type="number" id="ticketCost" min="50" max="500" value="200" step="10">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="eventLength">Event Length (days)</label>
+                        <input type="number" id="eventLength" min="1" max="14" value="3" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="artistCost">Artist Cost</label>
+                        <div class="currency-input">
+                            <input type="number" id="artistCost" min="0" max="100000" value="20000" step="1000">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="equipmentCost">Equipment Cost</label>
+                        <div class="currency-input">
+                            <input type="number" id="equipmentCost" min="0" max="100000" value="15000" step="1000">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="miscCost">Miscellaneous Cost</label>
+                        <div class="currency-input">
+                            <input type="number" id="miscCost" min="0" max="100000" value="10000" step="1000">
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="stageControls"></div>
-            <div id="budgets"></div>
         </div>
         <div class="graph-section">
             <div id="weightSliderContainer">
@@ -160,6 +345,14 @@
             </div>
             <div class="graph-container">
                 <div id="graph"></div>
+            </div>
+            <div id="profitability-results" class="profitability-results">
+                <div id="profitBreakdown" class="financial-breakdown-wrapper"></div>
+                <div class="chart-container-wrapper">
+                    <div class="chart-container">
+                        <canvas id="profitChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -230,7 +423,7 @@
 
             // Create a container for all days
             const daysContainer = document.createElement('div');
-            daysContainer.className = stages === 1 ? 'single-stage-layout' : '';
+            daysContainer.className = 'days-container';
             graphElement.appendChild(daysContainer);
 
             for (let day = 1; day <= days; day++) {
@@ -382,6 +575,350 @@
 
         // Initial setup
         updateControls();
+        
+        // Profitability analysis functions
+        let chart;
+
+        function createChart() {
+            const ctx = document.getElementById('profitChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Your Revenue Share',
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                        data: [],
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Ticket Sales'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Your Revenue Share ($)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            const totalEarlyBirdTickets = parseInt(document.getElementById('totalEarlyBirdTickets').value);
+            const yourEarlyBirdTickets = parseInt(document.getElementById('earlyBirdTickets').value);
+            const ticketPrice = parseFloat(document.getElementById('ticketCost').value);
+            const eventLength = parseInt(document.getElementById('eventLength').value);
+            const artistCost = parseFloat(document.getElementById('artistCost').value);
+            const equipmentCost = parseFloat(document.getElementById('equipmentCost').value);
+            const miscCost = parseFloat(document.getElementById('miscCost').value);
+            const variableCost = 25;
+
+            let companyBreakeven = 0;
+            let earlyBirdBreakeven = 0;
+
+            const labels = [];
+            const revenueShareData = [];
+
+            for (let ticketSales = 0; ticketSales <= 800; ticketSales += 1) {
+                const fixedCosts = calculateFixedCosts(ticketSales, eventLength, artistCost, equipmentCost, miscCost);
+                const totalRevenue = ticketSales * ticketPrice;
+                const eventCosts = fixedCosts.total + (variableCost * ticketSales);
+                let totalProfit = Math.max(0, totalRevenue - eventCosts);
+                
+                if (companyBreakeven === 0 && totalProfit > 0) {
+                    companyBreakeven = ticketSales;
+                }
+
+                const earlyBirdShare = totalProfit * 0.5;
+                const yourShareOfProfit = (yourEarlyBirdTickets / totalEarlyBirdTickets) * earlyBirdShare;
+
+                if (earlyBirdBreakeven === 0 && yourShareOfProfit > 200) {
+                    earlyBirdBreakeven = ticketSales;
+                }
+
+                labels.push(ticketSales);
+                revenueShareData.push(yourShareOfProfit);
+            }
+
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = revenueShareData;
+            chart.update();
+
+            updateProfitBreakdown(totalEarlyBirdTickets, yourEarlyBirdTickets, ticketPrice, variableCost, artistCost, equipmentCost, miscCost);
+        }
+
+        function updateProfitBreakdown(totalEarlyBirdTickets, yourEarlyBirdTickets, ticketPrice, variableCost, artistCost, equipmentCost, miscCost) {
+            const ticketSales = parseInt(document.getElementById('ticketSales').value);
+            const eventLength = parseInt(document.getElementById('eventLength').value);
+            
+            const fixedCosts = calculateFixedCosts(ticketSales, eventLength, artistCost, equipmentCost, miscCost);
+            
+            const ticketRevenue = ticketSales * ticketPrice;
+            const eventCosts = fixedCosts.total + (variableCost * ticketSales);
+            
+            let totalProfit = Math.max(0, ticketRevenue - eventCosts);
+            let earlyBirdShare = totalProfit * 0.5;
+            let companyShare = totalProfit * 0.5;
+            
+            const yourShareOfProfit = (yourEarlyBirdTickets / totalEarlyBirdTickets) * earlyBirdShare;
+            
+            // Calculate breakeven points independently
+            let companyBreakeven = 0;
+            let earlyBirdBreakeven = 0;
+            
+            for (let i = 1; i <= 10000; i++) { // Increased upper limit to ensure we find the breakeven points
+                const revenue = i * ticketPrice;
+                const costs = calculateFixedCosts(i, eventLength, artistCost, equipmentCost, miscCost).total + (variableCost * i);
+                const profit = revenue - costs;
+                
+                if (companyBreakeven === 0 && profit > 0) {
+                    companyBreakeven = i;
+                }
+                
+                const earlyBirdProfit = profit * 0.5 * (yourEarlyBirdTickets / totalEarlyBirdTickets);
+                if (earlyBirdBreakeven === 0 && earlyBirdProfit > 200) {
+                    earlyBirdBreakeven = i;
+                }
+                
+                if (companyBreakeven > 0 && earlyBirdBreakeven > 0) {
+                    break;
+                }
+            }
+            
+            const breakdownHTML = `
+                <h3>Financial Breakdown</h3>
+                <p>${ticketSales} tickets sold, ${eventLength} day event</p>
+                <table class="modern-table">
+                    <tr>
+                        <th>Category</th>
+                        <th>Item</th>
+                        <th>Amount</th>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Key Metrics</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Company Breakeven</td>
+                        <td>${companyBreakeven} tickets</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Early-Bird Member Breakeven</td>
+                        <td>${earlyBirdBreakeven} tickets</td>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Revenue</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Ticket Sales (${ticketSales} @ $${ticketPrice})</td>
+                        <td>$${ticketRevenue.toLocaleString()}</td>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Costs</td>
+                    </tr>
+                    <tr>
+                        <td>Fixed Costs</td>
+                        <td>Venue Cost ($10/day/ticket)</td>
+                        <td>$${fixedCosts.venueCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Artist Cost</td>
+                        <td>$${fixedCosts.artistCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Equipment Cost</td>
+                        <td>$${fixedCosts.equipmentCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Miscellaneous Cost</td>
+                        <td>$${fixedCosts.miscCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td>Variable Costs</td>
+                        <td>Per Ticket ($${variableCost} × ${ticketSales})</td>
+                        <td>$${(variableCost * ticketSales).toLocaleString()}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td></td>
+                        <td>Total Event Costs</td>
+                        <td>$${eventCosts.toLocaleString()}</td>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Profit/Loss</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Total Profit</td>
+                        <td>$${totalProfit.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Company Share (50%)</td>
+                        <td>$${companyShare.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Early Bird Members Total Share (50%)</td>
+                        <td>$${earlyBirdShare.toLocaleString()}</td>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Your Early Bird Membership</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Total Early Bird Tickets</td>
+                        <td>${totalEarlyBirdTickets}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Your Early Bird Tickets</td>
+                        <td>${yourEarlyBirdTickets}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Your Percentage of Early Bird Tickets</td>
+                        <td>${((yourEarlyBirdTickets / totalEarlyBirdTickets) * 100).toFixed(2)}%</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Your Share of Profit</td>
+                        <td>$${yourShareOfProfit.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Your ROI</td>
+                        <td>${((yourShareOfProfit / (yourEarlyBirdTickets * ticketPrice)) * 100).toFixed(2)}%</td>
+                    </tr>
+                </table>
+                <p>Note: This breakdown is based on the current inputs. Actual results may vary.</p>
+            `;
+
+            document.getElementById('profitBreakdown').innerHTML = breakdownHTML;
+        }
+
+        function calculateFixedCosts(ticketSales, eventLength, artistCost, equipmentCost, miscCost) {
+            const venueCost = 10 * ticketSales * eventLength;
+            return {
+                venueCost,
+                artistCost,
+                equipmentCost,
+                miscCost,
+                total: venueCost + artistCost + equipmentCost + miscCost
+            };
+        }
+
+        function setInitialValues() {
+            const ticketPrice = 200;
+            
+            document.getElementById('ticketSales').value = 550;
+            document.getElementById('ticketSalesValue').textContent = 550;
+            document.getElementById('ticketCost').value = ticketPrice;
+            document.getElementById('eventLength').value = 3;
+            
+            document.getElementById('artistCost').value = 20000;
+            document.getElementById('equipmentCost').value = 15000;
+            document.getElementById('miscCost').value = 10000;
+            
+            const earlyBirdTicketsInput = document.getElementById('earlyBirdTickets');
+            earlyBirdTicketsInput.min = 50;
+            earlyBirdTicketsInput.max = 1000;
+            earlyBirdTicketsInput.value = 1;
+        }
+
+        function adjustLayout() {
+            const width = window.innerWidth;
+            const profitBreakdown = document.getElementById('profitBreakdown');
+            
+            if (width <= 768) {
+                profitBreakdown.style.fontSize = '14px';
+            } else if (width <= 480) {
+                profitBreakdown.style.fontSize = '12px';
+            } else {
+                profitBreakdown.style.fontSize = '16px';
+            }
+            
+            if (chart) {
+                chart.resize();
+            }
+        }
+
+        window.addEventListener('load', function() {
+            setInitialValues();
+            createChart();
+            updateChart();
+            adjustLayout();
+        });
+
+        window.addEventListener('resize', adjustLayout);
+
+        const totalEarlyBirdTicketsInput = document.getElementById('totalEarlyBirdTickets');
+        const yourEarlyBirdTicketsInput = document.getElementById('earlyBirdTickets');
+        const ticketSalesSlider = document.getElementById('ticketSales');
+        const ticketCostInput = document.getElementById('ticketCost');
+        const eventLengthInput = document.getElementById('eventLength');
+        const artistCostInput = document.getElementById('artistCost');
+        const equipmentCostInput = document.getElementById('equipmentCost');
+        const miscCostInput = document.getElementById('miscCost');
+
+        totalEarlyBirdTicketsInput.addEventListener('change', updateChart);
+        yourEarlyBirdTicketsInput.addEventListener('change', updateChart);
+        ticketSalesSlider.addEventListener('input', function() {
+            document.getElementById('ticketSalesValue').textContent = this.value;
+        });
+        ticketSalesSlider.addEventListener('change', updateChart);
+        ticketCostInput.addEventListener('change', updateChart);
+        eventLengthInput.addEventListener('change', updateChart);
+        artistCostInput.addEventListener('change', updateChart);
+        equipmentCostInput.addEventListener('change', updateChart);
+        miscCostInput.addEventListener('change', updateChart);
+
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const weightSliderContainer = document.getElementById('weightSliderContainer');
+            const graphContainer = document.querySelector('.graph-container');
+            const profitabilityResults = document.getElementById('profitability-results');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-calculator`).classList.add('active');
+            
+            if (tabName === 'lineup') {
+                updateControls();
+                weightSliderContainer.style.display = 'block';
+                graphContainer.style.display = 'block';
+                profitabilityResults.style.display = 'none';
+            } else if (tabName === 'profitability') {
+                updateChart();
+                weightSliderContainer.style.display = 'none';
+                graphContainer.style.display = 'none';
+                profitabilityResults.style.display = 'flex';
+            }
+        }
+
+        // Make sure to call this function when the page loads
+        window.addEventListener('load', function() {
+            switchTab('lineup');
+        });
     </script>
 </body>
 </html>
