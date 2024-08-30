@@ -325,6 +325,31 @@
                 min-width: 500px; /* Adjust this value as needed */
             }
         }
+
+        /* Carousel button styles */
+        .carousel-control-prev, .carousel-control-next {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Remove any mobile-specific styles for carousel buttons if they exist */
+        @media (max-width: 767px) {
+            .carousel-control-prev, .carousel-control-next {
+                /* Remove any size overrides here */
+            }
+            .carousel-control-prev-icon, .carousel-control-next-icon {
+                /* Remove any size overrides here */
+            }
+        }
     </style>
 </head>
 <body>
