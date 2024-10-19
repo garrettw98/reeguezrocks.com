@@ -10,7 +10,7 @@
     
     <!-- Add these Open Graph meta tags -->
     <meta property="og:title" content="Reeguez Rocks 2024">
-    <meta property="og:description" content="October 31st - November 3rd | Pine Canyon, CA">
+    <meta property="og:description" content="October 31st - November 3rd | Lake Hughes, CA">
     <meta property="og:image" content="RR24Lineup.jpg">
     <meta property="og:url" content="https://reeguezrocks.com">
     <meta property="og:type" content="website">
@@ -216,15 +216,16 @@
         }
         .ticket-options-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 20px;
             margin-top: 20px;
             width: 100%;
         }
         .ticket-option, .donation-option {
-            width: 100%;
+            flex: 1 1 calc(33.333% - 40px); /* 3 columns */
             max-width: 300px;
+            min-width: 220px;
             background-color: rgba(0, 0, 0, 0.7);
             border: 2px solid #8A2BE2;
             color: white;
@@ -265,6 +266,11 @@
             background-color: #ffd700;
             color: black;
         }
+        @media (max-width: 1024px) {
+            .ticket-option, .donation-option {
+                flex: 1 1 calc(50% - 40px); /* 2 columns */
+            }
+        }
         @media (max-width: 768px) {
             .form-container {
                 max-width: 90%;
@@ -281,7 +287,8 @@
                 z-index: 1002;
             }
             .ticket-option, .donation-option {
-                max-width: 250px;
+                flex: 1 1 100%; /* 1 column */
+                max-width: 100%;
                 padding: 12px;
             }
             .ticket-option h3 {
@@ -372,8 +379,8 @@
             border-radius: 10px;
             padding: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 300px;
             width: 100%;
+            max-width: 300px;
         }
         .donation-option h3 {
             margin-top: 0;
@@ -469,7 +476,7 @@
             <div class="main-content">
                 <div class="content" tabindex="0">
                     <h1>REEGUEZ ROCKS 2024</h1>
-                    <p>October 31st - November 3rd | Pine Canyon, CA</p>
+                    <p>October 31st - November 3rd | Lake Hughes, CA</p>
                     <div id="countdown" aria-live="polite"></div>
                     <button id="buy-tickets-btn">TICKETS</button>
                 </div>
@@ -631,12 +638,22 @@
                     <p class="description">General Admission Ticket to Reeguez Rocks 2024</p>
                     <a href="https://donate.stripe.com/aEU4gz9li5xd6g86os" class="ticket-button">GA Ticket</a>
                 </div>
+
                 <div class="ticket-option">
                     <h3>GA + Merch Shirt</h3>
                     <p class="price">$85</p>
                     <p class="description">General Admission Ticket to Reeguez Rocks 2024 plus a special merch T-Shirt</p>
                     <a href="https://donate.stripe.com/bIY00jdBy9Nt9sk4gl" class="ticket-button">GA + Merch Ticket</a>
                 </div>
+
+                <!-- New Half-Weekend GA ticket option -->
+                <div class="ticket-option">
+                    <h3>1/2 Weekend GA</h3>
+                    <p class="price">$35</p>
+                    <p class="description">General Admission Ticket to Reeguez Rocks 2024 for half the weekend</p>
+                    <a href="https://donate.stripe.com/4gw28rfJG0cTawo6ou" class="ticket-button">1/2 Weekend GA</a>
+                </div>
+
                 <div class="donation-option">
                     <h3>Additional Donation</h3>
                     <p class="description">Support Reeguez Rocks 2024 with an extra donation</p>
