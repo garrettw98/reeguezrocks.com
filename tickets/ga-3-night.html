@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reeguez Rocks — GA 3 Night Checkout</title>
+  <link rel="icon" href="../icon.webp">
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #28144a 0%, #08070e 60%);
+      font-family: 'Inter', 'Space Grotesk', system-ui, sans-serif;
+      color: #f2ecff;
+    }
+    main {
+      max-width: 420px;
+      padding: 32px 28px;
+      border-radius: 16px;
+      background: rgba(14, 13, 24, 0.88);
+      border: 1px solid rgba(138, 43, 226, 0.35);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+      text-align: center;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 1.8rem;
+      color: #ffd36a;
+    }
+    p {
+      margin: 12px 0;
+      color: #d7d2e5;
+      line-height: 1.5;
+    }
+    #status {
+      margin: 18px 0 0;
+      font-size: 0.95rem;
+      color: #ffcf6a;
+    }
+    button {
+      margin-top: 22px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      border: none;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      background: linear-gradient(120deg, #f7a602, #ffd36a);
+      color: #141420;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+    .links {
+      margin-top: 24px;
+      font-size: 0.9rem;
+    }
+    .links a {
+      color: #8a6bff;
+      text-decoration: none;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Reeguez Rocks 2025</h1>
+    <p>Launching checkout for the GA — 3 Night pass (Thursday, Friday, and Saturday nights).</p>
+    <p>You will be redirected to Stripe for secure payment. If nothing happens, use the retry button below.</p>
+    <button id="retry-btn" type="button">Retry Checkout</button>
+    <div id="status" role="status" aria-live="polite">Preparing secure checkout&hellip;</div>
+    <div class="links">
+      <a href="../index.html">Return to main site</a>
+    </div>
+  </main>
+  <script src="../config.js"></script>
+  <script>
+    const TIER_ID = 'ga-3-night';
+    const statusEl = document.getElementById('status');
+    const retryBtn = document.getElementById('retry-btn');
+
+    function getApiBase(){
+      return window.PAYMENTS_API_BASE || '';
+    }
+
+    async function startCheckout(){
+      const apiBase = getApiBase();
+      if (!apiBase){
+        statusEl.textContent = 'PAYMENTS_API_BASE is not configured in config.js.';
+        retryBtn.disabled = false;
+        return;
+      }
+
+      retryBtn.disabled = true;
+      statusEl.textContent = 'Contacting Stripe checkout...';
+      try{
+        const res = await fetch(`${apiBase}/checkout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          cache: 'no-store',
+          body: JSON.stringify({ tierId: TIER_ID })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.url){
+          const message = (data && (data.error || data.detail)) || 'Checkout failed';
+          throw new Error(message);
+        }
+        window.location.href = data.url;
+      }catch(err){
+        const message = err instanceof Error ? err.message : 'Unable to start checkout.';
+        statusEl.textContent = `Could not start checkout: ${message}`;
+        retryBtn.disabled = false;
+      }
+    }
+
+    retryBtn.addEventListener('click', startCheckout);
+    window.addEventListener('load', () => {
+      startCheckout();
+    });
+  </script>
+</body>
+</html>

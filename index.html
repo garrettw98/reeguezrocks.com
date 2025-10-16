@@ -3,662 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reeguez Rocks 24'</title>
-    <!-- Updated lines for the icon -->
-    <link rel="icon" href="Image3.webp" type="image/webp">
-    <link rel="apple-touch-icon" href="Image3.webp">
+    <title>Reeguez Rocks 2025</title>
+    <!-- Icons and preview image -->
+    <link rel="icon" href="RR25Patch.png" type="image/png">
+    <link rel="shortcut icon" href="RR25Patch.png" type="image/png">
+    <link rel="apple-touch-icon" href="RR25Patch.png" sizes="180x180">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#f7a602">
+    <meta name="theme-color" content="#0b0b0f">
     
     <!-- Add these Open Graph meta tags -->
-    <meta property="og:title" content="Reeguez Rocks 2024">
-    <meta property="og:description" content="October 31st - November 3rd | Lake Hughes, CA">
-    <meta property="og:image" content="RR24Lineup.jpg">
+    <meta property="og:title" content="Reeguez Rocks 2025">
+    <meta name="description" content="Oct 23–26, 2025 • Fifth year of Reeguez Rocks — an underground, home‑grown bass festival at Space Ranch in the Mojave Desert.">
+    <meta property="og:description" content="Oct 23–26, 2025 • Fifth year of Reeguez Rocks — an underground, home‑grown bass festival at Space Ranch in the Mojave Desert.">
+    <meta property="og:image" content="https://reeguezrocks.com/RR25Patch.png">
+    <meta property="og:image:alt" content="Reeguez Rocks 2025 preview">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://reeguezrocks.com/RR25Patch.png">
     <meta property="og:url" content="https://reeguezrocks.com">
     <meta property="og:type" content="website">
 
     <!-- Remove or comment out this line -->
     <!-- <meta property="og:image" content="Image.webp"> -->
+    <link rel="preload" href="25BK2.png" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://api.stripe.com">
+    <link rel="dns-prefetch" href="https://checkout.stripe.com">
+    <link rel="preconnect" href="https://api.stripe.com" crossorigin>
+    <link rel="preconnect" href="https://checkout.stripe.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/main.css">
 
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            scroll-behavior: smooth;
-            height: 100%;
-            overflow-x: hidden;
-        }
-
-        .parallax-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('Image3.webp');
-            background-size: cover;
-            background-position: center;
-            z-index: -1;
-            transform: translateZ(0);
-            will-change: transform;
-        }
-
-        .content-wrapper {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Media query for mobile devices */
-        @media (max-width: 767px) {
-            .parallax-bg {
-                background-image: url('mobile_image.webp');
-                background-size: 100% auto;
-                background-position: center top;
-            }
-        }
-        
-        .parallax-container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 0;
-            box-sizing: border-box;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-
-        .content {
-            text-align: center;
-            color: #f7a602;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            max-width: 90%;
-        }
-        .content p {
-            color: white;
-        }
-        .separator {
-            display: none;
-        }
-        .stylish-separator {
-            height: 2px;
-            background-color: transparent;
-            position: relative;
-            margin: 40px auto;
-            width: 80%;
-            max-width: 800px;
-        }
-        .stylish-separator::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: #f7a602;
-            transform: translateY(-50%);
-        }
-        .stylish-separator::after {
-            content: '◆';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #f7a602;
-            font-size: 12px;
-            background-color: transparent;
-        }
-        .section {
-            padding: 50px 20px;
-            text-align: center;
-            background-color: transparent;
-        }
-        .lineup {
-            background-color: transparent;
-        }
-        .soundcloud-profiles {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-        .soundcloud-profile {
-            width: 150px;
-            text-align: center;
-        }
-        .soundcloud-profile img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .soundcloud-profile img[alt="XOXO"] {
-            object-position: center;
-        }
-        .artist-name {
-            margin-top: 10px;
-            font-weight: bold;
-            color: #f7a602;
-        }
-        .info-box {
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .info-box p {
-            margin: 0;
-            font-size: 1em;
-        }
-        /* Style for QR code image */
-        .info-box img {
-            margin-top: 10px;
-            border: 2px solid #f7a602;
-            border-radius: 10px;
-        }
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-        }
-        .form-container {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(30, 30, 30, 0.95);
-            color: #fff;
-            border-radius: 15px;
-            padding: 40px 30px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-            z-index: 1001;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80%;
-            overflow-y: auto;
-        }
-        .success-message, .error-message {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 1001;
-        }
-        .error-message {
-            background-color: #f44336;
-        }
-        .ticket-options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .ticket-option, .donation-option {
-            background-color: #222;
-            border: 1px solid #444;
-            border-radius: 10px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .ticket-option h3, .donation-option h3 {
-            margin: 0 0 10px;
-            font-size: 1.4em;
-            color: #f7a602;
-        }
-        .ticket-info {
-            flex: 1;
-        }
-        .ticket-action {
-            text-align: right;
-            min-width: 100px;
-        }
-        .ticket-option .description, .donation-option .description {
-            margin: 0;
-            font-size: 0.95em;
-            color: #ccc;
-        }
-        .ticket-option .price, .donation-option .price {
-            font-size: 1.2em;
-            color: #fff;
-            margin-bottom: 10px;
-        }
-        .ticket-button {
-            background-color: #f7a602;
-            border: none;
-            color: #000;
-            padding: 10px 20px;
-            font-size: 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-        }
-        .ticket-button:hover {
-            background-color: #ffd700;
-        }
-        #form-title {
-            color: #f7a602;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 1.8em;
-        }
-        #close-form {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            font-size: 28px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: #fff;
-            z-index: 1002;
-        }
-        #close-form:hover {
-            color: #ffd700;
-        }
-        .lineup-content {
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        #countdown {
-            font-size: 2em;
-            margin-top: 20px;
-            color: white;
-        }
-        #donation-field label {
-            color: white;
-        }
-        #donation-field input {
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid #f7a602;
-            color: white;
-            padding: 5px;
-        }
-        .section-header {
-            color: #f7a602;
-        }
-        #buy-tickets-btn {
-            background-color: #f7a602;
-            border: none;
-            color: black;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-        #buy-tickets-btn:hover {
-            background-color: #ffd700;
-            color: black;
-        }
-        .donation-option {
-            margin-top: 20px;
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.7);
-            border: 2px solid #8A2BE2;
-            color: white;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 300px;
-        }
-        .donation-option h3 {
-            margin-top: 0;
-            font-size: 1.4em;
-            color: #f7a602;
-        }
-        .donation-option .description {
-            font-size: 0.9em;
-            margin-bottom: 20px;
-        }
-        .section, .main-content {
-            position: relative;
-            z-index: 1;
-        }
-        .scroll-indicator {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            opacity: 1;
-            transition: opacity 0.3s ease-out;
-            z-index: 2;
-            padding-bottom: 10px;
-            margin-bottom: 60px;
-        }
-        .scroll-indicator.hidden {
-            opacity: 0;
-        }
-        .chevron {
-            width: 30px;
-            height: 6px;
-            margin: 2px 0;
-            position: relative;
-            overflow: hidden;
-        }
-        .chevron:before,
-        .chevron:after {
-            content: '';
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 50%;
-            background: rgba(255, 255, 255, 0.7);
-        }
-        .chevron:before {
-            left: 0;
-            transform: skewY(30deg);
-        }
-        .chevron:after {
-            right: 0;
-            width: 50%;
-            transform: skewY(-30deg);
-        }
-        @keyframes chevronAnimation {
-            0% { opacity: 0; transform: translateY(-10px); }
-            50% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(10px); }
-        }
-        .chevron:nth-child(1) { animation: chevronAnimation 2s infinite 0s; }
-        .chevron:nth-child(2) { animation: chevronAnimation 2s infinite 0.3s; }
-        .chevron:nth-child(3) { animation: chevronAnimation 2s infinite 0.6s; }
-
-        @media (max-height: 600px) {
-            .parallax-container {
-                padding: 10px 0;
-            }
-            .content {
-                padding: 10px;
-                margin-bottom: 10px;
-            }
-            .scroll-indicator {
-                transform: scale(0.8);
-                margin-bottom: 40px;
-            }
-        }
-
-        /* Add a safe area for devices with notches */
-        @supports (padding-top: env(safe-area-inset-top)) {
-            .form-container {
-                padding-top: calc(80px + env(safe-area-inset-top));
-            }
-            #close-form {
-                top: calc(40px + env(safe-area-inset-top));
-            }
-        }
-
-        /* Updated styles for the ticket modal (form-container) */
-        .form-container {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.95);
-            background: rgba(20, 20, 20, 0.95);
-            color: #fff;
-            border-radius: 15px;
-            padding: 40px 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-            z-index: 1001;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80%;
-            overflow-y: auto;
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        /* Apply padding adjustments for smaller screens */
-        @media (max-width: 480px) {
-            .form-container {
-                padding: 20px 15px;
-            }
-        }
-
-        .form-container.show {
-            display: block;
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        #form-title {
-            color: #f7a602;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2em;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-
-            /* Adjust font size for smaller screens */
-            @media (max-width: 480px) {
-                font-size: 1.5em;
-            }
-        }
-
-        /* Close button adjustments */
-        #close-form {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: #fff;
-            z-index: 1002;
-            transition: color 0.3s ease;
-        }
-        #close-form:hover {
-            color: #ffd700;
-        }
-
-        /* Ticket options styling */
-        .ticket-options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .ticket-option, .donation-option {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            backdrop-filter: blur(5px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .ticket-option:hover, .donation-option:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .ticket-option h3, .donation-option h3 {
-            margin: 0 0 10px;
-            font-size: 1.6em;
-            color: #f7a602;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-
-            /* Adjust font size for smaller screens */
-            @media (max-width: 480px) {
-                font-size: 1.4em;
-            }
-        }
-
-        .ticket-info {
-            flex: 1;
-            margin-right: 20px;
-
-            /* Adjust margin for smaller screens */
-            @media (max-width: 600px) {
-                margin-right: 0;
-            }
-        }
-
-        .ticket-action {
-            text-align: right;
-            min-width: 120px;
-
-            /* Adjust alignment for smaller screens */
-            @media (max-width: 600px) {
-                text-align: left;
-                margin-top: 15px;
-                width: 100%;
-            }
-        }
-
-        .ticket-option .description, .donation-option .description {
-            margin: 0;
-            font-size: 1em;
-            color: #ccc;
-            line-height: 1.5;
-
-            /* Adjust font size for smaller screens */
-            @media (max-width: 480px) {
-                font-size: 0.95em;
-            }
-        }
-
-        .ticket-option .price, .donation-option .price {
-            font-size: 1.4em;
-            color: #fff;
-            margin-bottom: 15px;
-
-            /* Adjust font size for smaller screens */
-            @media (max-width: 480px) {
-                font-size: 1.2em;
-            }
-        }
-
-        .ticket-button {
-            background: linear-gradient(135deg, #f7a602, #ffd700);
-            border: none;
-            color: #000;
-            padding: 12px 25px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-
-            /* Adjust font size and padding for smaller screens */
-            @media (max-width: 480px) {
-                font-size: 13px;
-                padding: 10px 20px;
-            }
-        }
-        .ticket-button:hover {
-            background: linear-gradient(135deg, #ffd700, #f7a602);
-            transform: translateY(-2px);
-        }
-
-        /* Media queries for responsiveness */
-        @media (max-width: 600px) {
-            .form-container {
-                padding: 20px 15px;
-            }
-            .ticket-option, .donation-option {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .ticket-action {
-                text-align: left;
-                width: 100%;
-                margin-top: 15px;
-            }
-            .ticket-button {
-                width: 100%;
-                padding: 14px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .ticket-button {
-                padding: 12px;
-            }
-        }
-
-        /* Adjustments for very small screens */
-        @media (max-width: 360px) {
-            .ticket-button {
-                padding: 10px;
-                font-size: 12px;
-            }
-        }
-
-        /* Style for the overlay */
-        .overlay {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .overlay.show {
-            display: block;
-            opacity: 1;
-        }
-    </style>
+    <!-- Inline presentation styles moved to assets/main.css -->
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="config.js"></script>
 </head>
 <body>
     <div class="parallax-bg"></div>
+    <nav class="top-nav" role="navigation" aria-label="Main">
+        <a href="#" class="brand" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" aria-label="Reeguez Rocks 2025">
+            <img src="assets/reeguez-rocks-2025-logo.png" alt="" class="brand-mark">
+        </a>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+        <div class="links">
+            <a href="#" onclick="openTickets();return false;">Tickets</a>
+            <a href="#schedule">Schedule</a>
+            <a href="#directions">Directions</a>
+            <a href="#camping">Camping</a>
+            <a href="#faq">FAQ</a>
+            <a href="#newsletter">Updates</a>
+            <a href="https://discord.gg/kyfR6vXwgG" target="_blank" rel="noopener">Discord</a>
+            <a href="#map">Map</a>
+        </div>
+    </nav>
     <div class="content-wrapper">
         <div class="parallax-container">
             <div class="main-content">
                 <div class="content" tabindex="0">
-                    <h1>REEGUEZ ROCKS 2024</h1>
-                    <p>October 31st - November 3rd | Lake Hughes, CA</p>
-                    <div id="countdown" aria-live="polite"></div>
-                    <button id="buy-tickets-btn">TICKETS</button>
+                    <h1 class="gradient-text">REEGUEZ ROCKS 2025</h1>
+                    <p class="event-date">October 23–26, 2025</p>
+                    <p class="event-venue"><span class="place">Space Ranch</span> • Mojave Desert, CA</p>
+                    <p class="event-kicker">Underground & home‑grown — celebrating our fifth year</p>
+                    <div id="countdown" data-event-date="2025-10-23T12:00:00-07:00" aria-live="polite"></div>
+                    <div class="cta">
+                        <button id="buy-tickets-btn" class="btn">Get Tickets</button>
+                        <div class="sub-cta">
+                            <a href="#newsletter" class="btn btn-sub btn-sub--updates">Get Updates</a>
+                            <a href="https://discord.gg/kyfR6vXwgG" target="_blank" rel="noopener" class="btn btn-sub btn-sub--discord">Join the Discord</a>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -669,135 +83,28 @@
             </div>
         </div>
 
-        <div class="stylish-separator"></div>
+        <div class="divider"></div>
 
-        <div class="section lineup">
+        <div class="section lineup" id="lineup">
             <div class="lineup-content">
                 <h2 class="section-header">Lineup</h2>
-                <div class="soundcloud-profiles">
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/reeguez" target="_blank" rel="noopener noreferrer">
-                            <img src="Reeguez.png" alt="Reeguez">
-                        </a>
-                        <div class="artist-name">Reeguez</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://www.instagram.com/xhaleghost/" target="_blank" rel="noopener noreferrer">
-                            <img src="XG.png" alt="Xhale Ghost">
-                        </a>
-                        <div class="artist-name">Xhale Ghost</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/primetimedubs" target="_blank" rel="noopener noreferrer">
-                            <img src="PrimeTime.png" alt="PrimeTime">
-                        </a>
-                        <div class="artist-name">PrimeTime</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/mindtake_music" target="_blank" rel="noopener noreferrer">
-                            <img src="Mindtake.png" alt="MiNDTAKE">
-                        </a>
-                        <div class="artist-name">MiNDTAKE</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/debasedsound" target="_blank" rel="noopener noreferrer">
-                            <img src="Debased.png" alt="Debased">
-                        </a>
-                        <div class="artist-name">Debased</div>
-                    </div>
-                    
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/myskosis" target="_blank" rel="noopener noreferrer">
-                            <img src="Myskosis.png" alt="Myskosis">
-                        </a>
-                        <div class="artist-name">Myskosis</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/handzzzzz" target="_blank" rel="noopener noreferrer">
-                            <img src="HANDZ2.png" alt="HANDZ">
-                        </a>
-                        <div class="artist-name">HANDZ</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/redlinedubs/tracks" target="_blank" rel="noopener noreferrer">
-                            <img src="REDLINE.png" alt="Redline">
-                        </a>
-                        <div class="artist-name">Redline</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://www.instagram.com/jsub5002/" target="_blank" rel="noopener noreferrer">
-                            <img src="SHERPA.png" alt="Sherpa Suby">
-                        </a>
-                        <div class="artist-name">Sherpa Suby</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://www.instagram.com/bennnn_10/?hl=en" target="_blank" rel="noopener noreferrer">
-                            <img src="Ben_10.png" alt="Ben 10">
-                        </a>
-                        <div class="artist-name">Ben10</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://www.instagram.com/jvgger_/" target="_blank" rel="noopener noreferrer">
-                            <img src="JVGGER.png" alt="JVGGER">
-                        </a>
-                        <div class="artist-name">JVGGER</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/therourie" target="_blank" rel="noopener noreferrer">
-                            <img src="Rourie.png" alt="Rourie">
-                        </a>
-                        <div class="artist-name">Rourie</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/user-123744987" target="_blank" rel="noopener noreferrer">
-                            <img src="XOXO.png" alt="XOXO">
-                        </a>
-                        <div class="artist-name">XOXO</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://www.instagram.com/fuckin_roadkill/" target="_blank" rel="noopener noreferrer">
-                            <img src="SIRK.png" alt="SIRK">
-                        </a>
-                        <div class="artist-name">SIRK</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/cptkook" target="_blank" rel="noopener noreferrer">
-                            <img src="CPTKOOK.png" alt="CPTKook">
-                        </a>
-                        <div class="artist-name">CPTKook</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/user-207590922" target="_blank" rel="noopener noreferrer">
-                            <img src="APEXLOGAN.png" alt="Apex Logan">
-                        </a>
-                        <div class="artist-name">Apex Logan</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://soundcloud.com/nadithemystic" target="_blank" rel="noopener noreferrer">
-                            <img src="Rorschach.png" alt="Rorschach">
-                        </a>
-                        <div class="artist-name">Rorschach</div>
-                    </div>
-                    <div class="soundcloud-profile" tabindex="0">
-                        <a href="https://www.instagram.com/pvrgvtory/" target="_blank" rel="noopener noreferrer">
-                            <img src="PVRGVTORY.png" alt="PVRGVTORY">
-                        </a>
-                        <div class="artist-name">PVRGVTORY</div>
-                    </div>
-                </div>
+                <div id="lineup-updated" class="lineup-updated" aria-live="polite"></div>
+                <div id="lineup-grid" class="grid lineup-grid"></div>
             </div>
         </div>
 
-        <div class="stylish-separator"></div>
+        <div class="divider"></div>
 
-        <div class="section" role="main">
-            <div class="info-box" tabindex="0">
-                <h2>3 Days of Impeccable Vibes</h2>
-                <p>Join us for three unforgettable days of music, connection, and natural beauty in Lake Hughes, CA.</p>
-                <ul>
-                    <li>Immerse yourself in performances from both emerging talents and underground artists.</li>
-                    <li>Connect with a welcoming community of electronic music enthusiasts.</li>
-                    <li>Celebrate under star-filled skies amidst stunning natural landscapes.</li>
+        <div class="section" role="region" aria-labelledby="experience-title">
+            <div class="panel reveal" tabindex="0">
+                <div class="kicker">Experience</div>
+                <h2 id="experience-title">Three Days of Impeccable Vibes</h2>
+                <p>Join us for an intimate, community-first festival — immersive bass music, art, and connection beneath the Mojave night sky.</p>
+                <p>Now in our fifth year, Reeguez Rocks has grown from a friends‑only campout into a home‑grown, underground festival — still community‑first at heart, now with a dedicated venue and high‑end production.</p>
+                <ul class="body-list">
+                    <li>Emerging talents + underground artists on high‑end production: LED video wall, programmable lighting, and high‑quality audio.</li>
+                    <li>Welcoming desert community, star-filled skies at Space Ranch.</li>
+                    <li>Workshops, great sets, and the best friends.</li>
                 </ul>
             </div>
         </div>
@@ -808,53 +115,10 @@
             <button id="close-form" aria-label="Close ticket form">×</button>
             <h2 id="form-title">Choose Your Ticket</h2>
 
-            <div class="ticket-options-container">
-                <div class="ticket-option">
-                    <div class="ticket-info">
-                        <h3>GA</h3>
-                        <p class="description">General Admission Ticket to Reeguez Rocks 2024</p>
-                    </div>
-                    <div class="ticket-action">
-                        <p class="price">$60</p>
-                        <a href="venmo://paycharge?txn=pay&recipients=Reegzzz&amount=60&note=GA%20Ticket" class="ticket-button">Buy Ticket</a>
-                    </div>
-                </div>
-
-                <div class="ticket-option">
-                    <div class="ticket-info">
-                        <h3>GA + Merch Shirt</h3>
-                        <p class="description">General Admission Ticket plus a special merch T-Shirt</p>
-                    </div>
-                    <div class="ticket-action">
-                        <p class="price">$85</p>
-                        <a href="venmo://paycharge?txn=pay&recipients=Reegzzz&amount=85&note=GA%20Ticket%20%2B%20Merch%20Shirt" class="ticket-button">Buy Ticket</a>
-                    </div>
-                </div>
-
-                <div class="ticket-option">
-                    <div class="ticket-info">
-                        <h3>1/2 Weekend GA</h3>
-                        <p class="description">Admission for half the weekend</p>
-                    </div>
-                    <div class="ticket-action">
-                        <p class="price">$35</p>
-                        <a href="venmo://paycharge?txn=pay&recipients=Reegzzz&amount=35&note=1%2F2%20Weekend%20GA%20Ticket" class="ticket-button">Buy Ticket</a>
-                    </div>
-                </div>
-
-                <div class="donation-option">
-                    <div class="ticket-info">
-                        <h3>Additional Donation</h3>
-                        <p class="description">Support Reeguez Rocks 2024 with an extra donation</p>
-                    </div>
-                    <div class="ticket-action">
-                        <a href="https://venmo.com/u/Reegzzz" class="ticket-button">Donate</a>
-                    </div>
-                </div>
-            </div>
+            <div class="ticket-options-container" id="ticket-list"></div>
 
             <div class="info-box">
-                <p>If the above links don't work, please send payment via Venmo to <strong>@Reegzzz</strong> and include the ticket type in the note.</p>
+                <p>If checkout has issues, please email <strong>reeguezrocks@gmail.com</strong> or reach out on Discord. You’ll receive coordinates and arrival details via email/text closer to the event.</p>
             </div>
 
             <div id="success-message" class="success-message" role="alert" aria-live="polite">
@@ -865,27 +129,167 @@
         </div>
     </div>
 
+    <!-- Additional 2025 sections (content placeholders) -->
+
+    <div class="divider"></div>
+    <div class="section" id="schedule" role="region" aria-labelledby="schedule-title">
+        <div class="lineup-content">
+            <h2 id="schedule-title" class="section-header">Schedule</h2>
+            <div id="public-schedule" class="schedule-dynamic"></div>
+            <div id="schedule-fallback">
+              <ul class="body-list">
+                  <li><strong>Thu 10/23:</strong> Gates open at 12:00 PM • Music begins at 5:00 PM</li>
+                  <li><strong>Nights:</strong> Main Stage runs until 2:00 AM nightly</li>
+                  <li><strong>Afters:</strong> The Dome carries on just past sunrise every morning</li>
+                  <li><strong>Daytime:</strong> Workshops, Games, and Wooktivities</li>
+              </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section" id="packlist" role="region" aria-labelledby="packlist-title">
+        <div class="lineup-content">
+            <h2 id="packlist-title" class="section-header">Pack List & What to Expect</h2>
+            <ul class="body-list">
+                <li><strong>Weather:</strong> Typical high 70s–80s°F (25–30°C), nights 35–50°F (2–10°C). Expect wind and some dust — secure your camp.</li>
+                <li><strong>Water:</strong> Bring at least 1–1.5 gallons (4–6 L) per person per day for drinking/cooking. Electrolytes highly recommended.</li>
+                <li><strong>Sun & Dust:</strong> Shade (canopy), wide‑brim hat, sunglasses/goggles, sunscreen, lip balm.</li>
+                <li><strong>Warm Layers:</strong> Insulated jacket, beanie, gloves — desert nights get cold.</li>
+                <li><strong>Footwear:</strong> Sturdy closed‑toe shoes/boots for rocky terrain.</li>
+                <li><strong>Lighting & Power:</strong> Headlamp + extra batteries; power banks for phones.</li>
+                <li><strong>Hearing Protection:</strong> It gets loud on the rail, protect yourself!</li>
+                <li><strong>Camp:</strong> Stakes/weights/ratchet straps for wind; solid tent; extra blankets.</li>
+                <li><strong>Food:</strong> Enough for 3–4 days.</li>
+                <li><strong>Fire Safety:</strong> Fires/stoves allowed pending wind. Bring firewood and be responsible.</li>
+                <li><strong>Trash:</strong> Pack it in, pack it out. Bring extra trash bags — leave no trace.</li>
+                <li><strong>Vehicle Prep:</strong> Full tank of gas, spare tire + jack, jump pack.</li>
+                <li><strong>First Aid:</strong> Personal meds, small kit; med volunteers on site if needed.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section" id="directions" role="region" aria-labelledby="directions-title">
+        <div class="lineup-content">
+            <h2 id="directions-title" class="section-header">Directions & Arrival</h2>
+            <p class="points">Final pin: Space Ranch — Mojave Desert, CA (between Boron and Ridgecrest). We’ll email detailed driving directions to ticket holders closer to the event.</p>
+            <p class="points"><strong>Coordinates:</strong> 35°13'11.6"N 117°27'01.8"W (decimal: 35.219889, -117.4505)</p>
+            <div class="map-apps" aria-label="Open location in your map app">
+                <a class="map-icon" href="https://maps.google.com/?q=35.219889,-117.4505" target="_blank" rel="noopener noreferrer" aria-label="Open in Google Maps" title="Google Maps">
+                    <svg viewBox="14.32 4.87961494 37.85626587 52.79038506" xmlns="http://www.w3.org/2000/svg" width="22" height="22" aria-hidden="true">
+                        <path d="m37.34 7.82c-1.68-.53-3.48-.82-5.34-.82-5.43 0-10.29 2.45-13.54 6.31l8.35 7.02z" fill="#1a73e8"/>
+                        <path d="m18.46 13.31a17.615 17.615 0 0 0 -4.14 11.36c0 3.32.66 6.02 1.75 8.43l10.74-12.77z" fill="#ea4335"/>
+                        <path d="m32 17.92a6.764 6.764 0 0 1 5.16 11.13l10.52-12.51a17.684 17.684 0 0 0 -10.35-8.71l-10.51 12.51a6.74 6.74 0 0 1 5.18-2.42" fill="#4285f4"/>
+                        <path d="m32 31.44c-3.73 0-6.76-3.03-6.76-6.76a6.7 6.7 0 0 1 1.58-4.34l-10.75 12.77c1.84 4.07 4.89 7.34 8.03 11.46l13.06-15.52a6.752 6.752 0 0 1 -5.16 2.39" fill="#fbbc04"/>
+                        <path d="m36.9 48.8c5.9-9.22 12.77-13.41 12.77-24.13 0-2.94-.72-5.71-1.99-8.15l-23.57 28.05c1 1.31 2.01 2.7 2.99 4.24 3.58 5.54 2.59 8.86 4.9 8.86s1.32-3.33 4.9-8.87" fill="#34a853"/>
+                    </svg>
+                </a>
+                <a class="map-icon" href="https://maps.apple.com/?ll=35.219889,-117.4505" target="_blank" rel="noopener noreferrer" aria-label="Open in Apple Maps" title="Apple Maps">
+                    <svg role="img" viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><title>Apple</title><path fill="#fff" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
+                </a>
+                <a class="map-icon" href="https://www.waze.com/ul?ll=35.219889,-117.4505&navigate=yes" target="_blank" rel="noopener noreferrer" aria-label="Open in Waze" title="Waze">
+                    <svg role="img" viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><title>Waze</title><path fill="#05C3DE" d="M13.218 0C9.915 0 6.835 1.49 4.723 4.148c-1.515 1.913-2.31 4.272-2.31 6.706v1.739c0 .894-.62 1.738-1.862 1.813-.298.025-.547.224-.547.522-.05.82.82 2.31 2.012 3.502.82.844 1.788 1.515 2.832 2.036a3 3 0 0 0 2.955 3.528 2.966 2.966 0 0 0 2.931-2.385h2.509c.323 1.689 2.086 2.856 3.974 2.21 1.64-.546 2.36-2.409 1.763-3.924a12.84 12.84 0 0 0 1.838-1.465 10.73 10.73 0 0 0 3.18-7.65c0-2.882-1.118-5.589-3.155-7.625A10.899 10.899 0 0 0 13.218 0zm0 1.217c2.558 0 4.967.994 6.78 2.807a9.525 9.525 0 0 1 2.807 6.78A9.526 9.526 0 0 1 20 17.585a9.647 9.647 0 0 1-6.78 2.807h-2.46a3.008 3.008 0 0 0-2.93-2.41 3.03 3.03 0 0 0-2.534 1.367v.024a8.945 8.945 0 0 1-2.41-1.788c-.844-.844-1.316-1.614-1.515-2.11a2.858 2.858 0 0 0 1.441-.846 2.959 2.959 0 0 0 .795-2.036v-1.789c0-2.11.696-4.197 2.012-5.861 1.863-2.385 4.62-3.726 7.6-3.726zm-2.41 5.986a1.192 1.192 0 0 0-1.191 1.192 1.192 1.192 0 0 0 1.192 1.193A1.192 1.192 0 0 0 12 8.395a1.192 1.192 0 0 0-1.192-1.192zm7.204 0a1.192 1.192 0 0 0-1.192 1.192 1.192 1.192 0 0 0 1.192 1.193 1.192 1.192 0 0 0 1.192-1.193 1.192 1.192 0 0 0-1.192-1.192zm-7.377 4.769a.596.596 0 0 0-.546.845 4.813 4.813 0 0 0 4.346 2.757 4.77 4.77 0 0 0 4.347-2.757.596.596 0 0 0-.547-.845h-.025a.561.561 0 0 0-.521.348 3.59 3.59 0 0 1-3.254 2.061 3.591 3.591 0 0 1-3.254-2.061.64.64 0 0 0-.546-.348z"/></svg>
+                </a>
+            </div>
+            <ul class="body-list body-list--spaced">
+                <li><strong>Gates:</strong> Open Thursday at 12:00 PM (noon).</li>
+                <li><strong>Check‑in:</strong> Ticket + ID checks (18+). Wristbands given at the gate.</li>
+                <li><strong>Re‑entry:</strong> Allowed. Come and go as you please.</li>
+                <li><strong>Late arrivals:</strong> No nightly cut‑off — arrive when you can.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section" id="camping" role="region" aria-labelledby="camping-title">
+        <div class="lineup-content">
+            <h2 id="camping-title" class="section-header">Camping & Stages</h2>
+            <p class="points"><strong>Main Stage:</strong> Designed for the heavier acts of the night — QSC tops and JBL double 18" subs. Paired with a video wall and programmable lighting for a full sensory experience. Main Stage programming runs until 2:00 AM each night.</p>
+            <p class="points"><strong>The Dome:</strong> A different vibe — calmer, immersive, and more psychedelic. Powered by five Soundboks units provided by Keith “Captain,” the same renegade setup some caught at Lightning in a Bottle.</p>
+            <ul class="body-list">
+                <li>Car camping for all; plenty of space. Quiet camping available away from stages.</li>
+                <li>RV‑friendly (no max length). Generators allowed; avoid use near tents.</li>
+                <li>Fires/stoves allowed pending wind. Bring campfire wood and practice safety.</li>
+                <li>Leave No Trace: Pack it in, pack it out — do not leave trash. Water may be dumped.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section" id="faq" role="region" aria-labelledby="faq-title">
+        <div class="lineup-content">
+            <h2 id="faq-title" class="section-header">Rules, Safety & FAQ</h2>
+            <ul class="body-list">
+                <li><strong>Age:</strong> 18+ only. Valid ID required upon arrival.</li>
+                <li><strong>Prohibited:</strong> Weapons and illegal items are strictly forbidden.</li>
+                <li><strong>Harm Reduction:</strong> Trained medical volunteers, naloxone on site, shaded rest areas when needed.</li>
+                <li><strong>Alcohol:</strong> BYO. No sales on site.</li>
+                <li><strong>Refunds:</strong> All sales final. If the event is cancelled, refunds will be issued.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Map section removed (merged into Directions; map will be added later) -->
+
+    <div class="divider"></div>
+    <div class="section" id="newsletter" role="region" aria-labelledby="newsletter-title">
+        <div class="lineup-content">
+            <h2 id="newsletter-title" class="section-header">Stay Updated</h2>
+            <p>Get lineup drops, schedule updates, and arrival details. No spam.</p>
+            <form id="newsletter-form">
+                <input type="email" id="newsletter-email" placeholder="you@example.com (required)" aria-label="Email address" required class="newsletter-input newsletter-input--wide">
+                <input type="text" id="newsletter-name" placeholder="Name (optional)" aria-label="Name" class="newsletter-input">
+                <input type="text" id="newsletter-zip" placeholder="ZIP (optional)" aria-label="Zip code" pattern="[0-9]{5}" class="newsletter-input newsletter-input--zip">
+                <button type="submit" class="btn btn--sm">Subscribe</button>
+            </form>
+            <div id="newsletter-msg" class="newsletter-message"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="foot">
+            <div>© 2025 Reeguez Rocks. All rights reserved.</div>
+            <div class="socials">
+                <a href="#" aria-label="Instagram">Instagram</a>
+                <a href="#" aria-label="SoundCloud">SoundCloud</a>
+                <a href="#" aria-label="Email">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Sticky mobile CTA -->
+    <button class="sticky-cta" onclick="openTickets()">Get Tickets</button>
+
     <script>
-        // Countdown timer
-        function updateCountdown() {
-            const eventDate = new Date("2024-10-31T00:00:00-07:00").getTime();
-            const now = new Date().getTime();
-            const timeLeft = eventDate - now;
-
-            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-            document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-            if (timeLeft < 0) {
-                clearInterval(countdownTimer);
-                document.getElementById("countdown").innerHTML = "The event has started!";
+        // Countdown timer (reads optional data-event-date from #countdown)
+        const countdownEl = document.getElementById('countdown');
+        let countdownTimer = null;
+        function startCountdown(dateStr) {
+            function updateCountdown() {
+                const eventDate = new Date(dateStr).getTime();
+                const now = new Date().getTime();
+                const timeLeft = eventDate - now;
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    countdownEl.textContent = 'The event has started!';
+                    return;
+                }
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
             }
+            countdownTimer = setInterval(updateCountdown, 1000);
+            updateCountdown();
         }
-
-        const countdownTimer = setInterval(updateCountdown, 1000);
+        const eventDateAttr = countdownEl?.getAttribute('data-event-date');
+        if (eventDateAttr && eventDateAttr.trim() !== '') {
+            startCountdown(eventDateAttr);
+        } else if (countdownEl) {
+            countdownEl.style.display = 'none';
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             const buyTicketsBtn = document.getElementById('buy-tickets-btn');
@@ -894,10 +298,13 @@
             const closeFormBtn = document.getElementById('close-form');
             const scrollIndicator = document.querySelector('.scroll-indicator');
 
-            buyTicketsBtn.addEventListener('click', function() {
+            function openTickets(){
                 formContainer.classList.add('show');
                 overlay.classList.add('show');
-            });
+                if (typeof refreshTickets === 'function') { refreshTickets(); }
+            }
+            window.openTickets = openTickets;
+            buyTicketsBtn.addEventListener('click', openTickets);
 
             closeFormBtn.addEventListener('click', function() {
                 formContainer.classList.remove('show');
@@ -921,12 +328,283 @@
 
             // Trigger the handleScroll function once on page load
             handleScroll();
+
+            if (REQUESTED_TIER_PARAM){
+                openTickets();
+            }
         });
+
+        // Simple Stripe Checkout starter; set API_BASE to your deployed API URL
+        const API_BASE = window.PAYMENTS_API_BASE || 'https://YOUR_API_ID.execute-api.YOUR_REGION.amazonaws.com';
+        async function startCheckout(tierId) {
+            try {
+                const res = await fetch(`${API_BASE}/checkout`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    cache: 'no-store',
+                    body: JSON.stringify({ tierId })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.url){
+                    const message = (data && (data.error || data.detail)) || 'Checkout failed';
+                    throw new Error(message);
+                }
+                window.location.href = data.url;
+            } catch (err) {
+                const msg = err instanceof Error ? err.message : 'This tier may be sold out or unavailable.';
+                alert(`Sorry, ${msg}`);
+            }
+        }
+
+        // Time-based tier schedule rendering
+        let lastInventory = null;
+        function msOrNull(ms, s){
+            if (typeof ms === 'number' && Number.isFinite(ms)) return ms;
+            if (!s) return null;
+            const d = Date.parse(s);
+            return Number.isFinite(d) ? d : null;
+        }
+        function isActive(t, now){
+            const nowMs = now.getTime();
+            const sMs = msOrNull(t.startAtMs, t.startAt);
+            const eMs = msOrNull(t.endAtMs, t.endAt);
+            const afterStart = (sMs==null) || (nowMs >= sMs);
+            const beforeEnd = (eMs==null) || (nowMs < eMs);
+            return afterStart && beforeEnd;
+        }
+        function nextChangeFor(t){
+            const eMs = msOrNull(t.endAtMs, t.endAt);
+            return (eMs!=null) ? new Date(eMs) : null;
+        }
+        async function fetchInventory(){
+            try{
+                const r = await fetch(`${API_BASE}/inventory`);
+                if(!r.ok) throw new Error('inventory_failed');
+                const j = await r.json();
+                if (j && Array.isArray(j.tiers) && j.tiers.length){
+                    const tiers = j.tiers.slice();
+                    // If API did not supply windows, merge from fallback schedule by id
+                    const fbList = Array.isArray(window.TIER_SCHEDULE_FALLBACK) ? window.TIER_SCHEDULE_FALLBACK : [];
+                    const fbById = new Map(fbList.map(t=>[t.id,t]));
+                    let anyWindow = tiers.some(t=> (t.startAt!=null) || (t.startAtMs!=null) || (t.endAt!=null) || (t.endAtMs!=null));
+                    if (!anyWindow && fbById.size){
+                        tiers.forEach(t=>{
+                            const f = fbById.get(t.id);
+                            if (f){
+                                t.startAt = f.startAt ?? null;
+                                t.endAt = f.endAt ?? null;
+                                t.startAtMs = msOrNull(null, f.startAt);
+                                t.endAtMs = msOrNull(null, f.endAt);
+                            }
+                        });
+                    }
+                    return tiers;
+                }
+            }catch(_e){}
+            // Fallback to local schedule if API unavailable
+            const fb = (window.TIER_SCHEDULE_FALLBACK||[]).slice();
+            return fb;
+        }
+
+        const TIER_COPY = {
+            'ga-3-night': {
+                description: 'Full weekend access - check in Thursday through Sunday breakdown.',
+                points: [
+                    'Arrive Thursday at 12:00 PM (noon) or later',
+                    'Covers Thursday, Friday, and Saturday nights',
+                    'Camping, parking, and re-entry included'
+                ]
+            },
+            'ga-2-night': {
+                description: 'Friday arrival option for guests staying two nights.',
+                points: [
+                    'Arrive Friday at 10:00 AM or later',
+                    'Covers Friday and Saturday nights',
+                    'Camping, parking, and re-entry included'
+                ]
+            },
+            'ga-1-night': {
+                description: 'Saturday-only pass for a single night under the stars.',
+                points: [
+                    'Arrive Saturday at 10:00 AM or later',
+                    'Covers Saturday night with Sunday morning departure',
+                    'Camping and parking included for one vehicle'
+                ]
+            }
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const REQUESTED_TIER_PARAM = (urlParams.get('ticket') || '').trim().toLowerCase() || null;
+
+        function renderTickets(tiers){
+            const list = document.getElementById('ticket-list');
+            if (!list) return;
+            list.innerHTML = '';
+
+            if (!tiers || !tiers.length){
+                const d = document.createElement('div');
+                d.className = 'availability error';
+                d.textContent = 'Tickets unavailable. Please try again soon.';
+                list.appendChild(d);
+                return;
+            }
+
+            // Sort by start date first to keep order consistent
+            const sorted = tiers.slice().sort((a,b)=>{
+                const as = msOrNull(a.startAtMs, a.startAt) ?? 0;
+                const bs = msOrNull(b.startAtMs, b.startAt) ?? 0;
+                return as - bs;
+            });
+
+            const now = new Date();
+            let focusTarget = null;
+            let rendered = 0;
+
+            const stateFor = (tier) => {
+                if (typeof tier.available === 'number' && tier.available <= 0) return 'sold';
+                if (isActive(tier, now)) return 'active';
+                const startMs = msOrNull(tier.startAtMs, tier.startAt);
+                if (startMs != null && now.getTime() < startMs) return 'upcoming';
+                const endMs = msOrNull(tier.endAtMs, tier.endAt);
+                if (endMs != null && now.getTime() >= endMs) return 'ended';
+                return 'inactive';
+            };
+
+            sorted.forEach(tier => {
+                const state = stateFor(tier);
+                if (state === 'ended' || state === 'inactive') return;
+
+                const root = document.createElement('div');
+                root.className = 'ticket-option';
+                root.dataset.tier = tier.id;
+                if (state === 'active') root.classList.add('current');
+                if (state === 'sold') root.classList.add('sold');
+
+                const info = document.createElement('div');
+                info.className = 'ticket-info';
+
+                const title = document.createElement('h3');
+                title.textContent = tier.label;
+                info.appendChild(title);
+
+                const copy = TIER_COPY[tier.id] || {};
+                const desc = document.createElement('p');
+                desc.className = 'description';
+                desc.textContent = copy.description || 'General Admission';
+                info.appendChild(desc);
+
+                if (Array.isArray(copy.points) && copy.points.length){
+                    const ul = document.createElement('ul');
+                    ul.className = 'ticket-notes';
+                    copy.points.forEach(note=>{
+                        const li = document.createElement('li');
+                        li.textContent = note;
+                        ul.appendChild(li);
+                    });
+                    info.appendChild(ul);
+                }
+
+                const action = document.createElement('div');
+                action.className = 'ticket-action';
+
+                const price = document.createElement('p');
+                price.className = 'price';
+                price.textContent = `$${tier.price}`;
+                action.appendChild(price);
+
+                const availability = document.createElement('div');
+                availability.className = 'availability';
+
+                if (state === 'sold'){
+                    availability.textContent = 'Sold Out';
+                    availability.classList.add('soldout');
+                    action.appendChild(availability);
+                } else if (state === 'upcoming'){
+                    const sMs = msOrNull(tier.startAtMs, tier.startAt);
+                    const fmt = sMs != null ? new Date(sMs).toLocaleString(undefined,{ month:'short', day:'numeric'}) : 'soon';
+                    availability.textContent = `Available ${fmt}`;
+                    action.appendChild(availability);
+                } else if (state === 'active'){
+                    availability.textContent = 'Available';
+                    action.appendChild(availability);
+                    const btn = document.createElement('a');
+                    btn.href = '#';
+                    btn.className = 'ticket-button';
+                    btn.textContent = `Buy $${tier.price}`;
+                    btn.setAttribute('data-tier', tier.id);
+                    btn.addEventListener('click', (e) => { e.preventDefault(); startCheckout(tier.id); });
+                    action.appendChild(btn);
+
+                    if (REQUESTED_TIER_PARAM && REQUESTED_TIER_PARAM === tier.id.toLowerCase()){
+                        root.classList.add('highlight');
+                        const chip = document.createElement('span');
+                        chip.className = 'status-chip';
+                        chip.textContent = 'Shared link';
+                        title.appendChild(chip);
+                        focusTarget = btn;
+                    }
+                }
+
+                root.appendChild(info);
+                root.appendChild(action);
+                list.appendChild(root);
+                rendered++;
+            });
+
+            if (!focusTarget && REQUESTED_TIER_PARAM){
+                const targetCard = list.querySelector(`.ticket-option[data-tier="${REQUESTED_TIER_PARAM}"]`);
+                if (targetCard){
+                    focusTarget = targetCard;
+                }
+            }
+
+            if (focusTarget){
+                setTimeout(()=>{
+                    if (typeof focusTarget.focus === 'function') focusTarget.focus();
+                    if (typeof focusTarget.scrollIntoView === 'function'){
+                        focusTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 150);
+            }
+
+            if (rendered === 0){
+                const d = document.createElement('div');
+                d.className = 'availability error';
+                d.textContent = 'Tickets unavailable. Please try again soon.';
+                list.appendChild(d);
+            }
+        }
+
+        async function refreshTickets(){
+            const list = document.getElementById('ticket-list');
+            if (list){
+                list.innerHTML = '<div class="availability loading">Loading ticket availability…</div>';
+            }
+            try{
+                const tiers = await fetchInventory();
+                lastInventory = tiers;
+                renderTickets(tiers);
+            } catch(err){
+                renderTickets([]);
+            }
+        }
 
         window.addEventListener('scroll', function() {
             var scrolled = window.pageYOffset;
             document.querySelector('.parallax-bg').style.transform = 'translateY(' + (scrolled * 0.5) + 'px)';
         });
     </script>
+    <script>
+      // Preconnect to the API base early
+      (function(){
+        try{
+          var base = window.PAYMENTS_API_BASE;
+          if (!base) return;
+          var l1 = document.createElement('link'); l1.rel = 'dns-prefetch'; l1.href = base; document.head.appendChild(l1);
+          var l2 = document.createElement('link'); l2.rel = 'preconnect'; l2.href = base; l2.crossOrigin = ''; document.head.appendChild(l2);
+        }catch(_e){}
+      })();
+    </script>
+    <script src="assets/main.js"></script>
 </body>
 </html>

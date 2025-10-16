@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ga-3-night",
+    "label": "GA — 3 Night",
+    "price": 80,
+    "limit": null,
+    "startAt": "2025-05-01T00:00:00-07:00",
+    "endAt":   null
+  },
+  {
+    "id": "ga-2-night",
+    "label": "GA — 2 Night",
+    "price": 60,
+    "limit": null,
+    "startAt": "2025-05-01T00:00:00-07:00",
+    "endAt":   null
+  },
+  {
+    "id": "ga-1-night",
+    "label": "GA — 1 Night",
+    "price": 30,
+    "limit": null,
+    "startAt": "2025-05-01T00:00:00-07:00",
+    "endAt":   null
+  }
+]

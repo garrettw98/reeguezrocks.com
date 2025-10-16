@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reeguez Rocks — Success</title>
+  <style>body{font-family:Arial,sans-serif;background:#111;color:#eee;margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh} .box{max-width:600px;padding:24px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;text-align:center}</style>
+  <script>function getParam(n){const u=new URL(window.location.href);return u.searchParams.get(n)}</script>
+</head>
+<body>
+  <div class="box">
+    <h1>Thank you!</h1>
+    <p>Your purchase is confirmed. See you at Space Ranch.</p>
+    <p>Order reference: <strong id="sid"></strong></p>
+    <p><a href="/">Back to site</a></p>
+  </div>
+  <script>document.getElementById('sid').textContent=getParam('session_id')||'—';</script>
+</body>
+</html>
+

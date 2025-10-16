@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Reeguez Rocks 2025 — neon desert bass festival. Three nights of immersive production, renegade domes, and underground community in the Mojave.">
+  <title>Reeguez Rocks 2025 Preview</title>
+  <link rel="icon" href="icon.webp" type="image/png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/preview.css">
+  <script defer src="config.js"></script>
+  <script defer src="assets/preview.js"></script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div class="app-wrapper">
+    <header class="site-header" data-condensed="false">
+      <nav class="nav-bar" aria-label="Main navigation">
+        <a class="brand" href="#home" aria-label="Reeguez Rocks 2025">
+          <img src="assets/reeguez-rocks-2025-logo.png" alt="" class="brand-mark">
+        </a>
+        <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+          ☰
+        </button>
+        <div class="nav-links" aria-label="Section navigation" data-open="false">
+          <a href="#tickets">Tickets</a>
+          <a href="#lineup">Lineup</a>
+          <a href="#experience">Experience</a>
+          <a href="#schedule">Schedule</a>
+          <a href="#travel">Travel</a>
+          <a href="#faq">FAQ</a>
+          <a href="#newsletter">Updates</a>
+        </div>
+        <button class="primary-nav-action" type="button">Get Tickets</button>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="home">
+        <div class="hero-content">
+          <img src="assets/reeguez-rocks-2025-logo.png" alt="Reeguez Rocks 2025 logo" class="hero-logo">
+          <span class="hero-kicker">Neon desert rave</span>
+          <h1 class="hero-title">Underground bass, fifth-year energy, Mojave nights.</h1>
+          <p class="hero-subtitle">October 23–26, 2025 · Space Ranch, Mojave Desert, CA. An intimate, community-first gathering with massive systems, renegade domes, and sunrise magic.</p>
+          <dl class="hero-meta">
+            <div class="hero-stat">
+              <dt>Dates</dt>
+              <dd>October 23–26, 2025</dd>
+            </div>
+            <div class="hero-stat">
+              <dt>Location</dt>
+              <dd>Space Ranch · Mojave Desert</dd>
+            </div>
+            <div class="hero-stat">
+              <dt>Stages</dt>
+              <dd>Main Stage · The Dome</dd>
+            </div>
+          </dl>
+          <div class="hero-actions">
+            <button class="hero-primary" type="button">View Passes</button>
+            <a class="hero-secondary" href="#lineup">See the energy</a>
+          </div>
+        </div>
+        <aside class="hero-floating" aria-hidden="true">
+          <img src="RR25Patch3.png" alt="">
+          <span class="hero-floating-caption">Five years of renegades. 2025 turns the desert neon.</span>
+        </aside>
+      </section>
+
+      <section class="content-section" id="tickets">
+        <div class="section-inner">
+          <header class="section-heading">
+            <h2 tabindex="-1">Choose your desert run</h2>
+            <p>Three ways to ride the Mojave wave. Every pass includes camping, parking, and unfiltered access to stages, domes, workshops, and renegades.</p>
+          </header>
+          <div id="ticket-grid" class="ticket-grid" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="content-section" id="lineup">
+        <div class="section-inner">
+          <header class="section-heading">
+            <h2>Lineup preview</h2>
+            <p>Underground heavy-hitters and curated friends of the fam. Full lineup announcement coming soon — here’s a taste.</p>
+          </header>
+          <div id="lineup-updated-preview" aria-live="polite"></div>
+          <div id="lineup-grid-preview" class="lineup-grid"></div>
+        </div>
+      </section>
+
+      <section class="content-section" id="experience">
+        <div class="section-inner">
+          <header class="section-heading">
+            <h2>Built for night creatures</h2>
+            <p>We scaled from backyard renegades to a bespoke desert experience — still community-driven, still wild, now with pro production.</p>
+          </header>
+          <div class="experience-grid">
+            <article class="experience-card reveal">
+              <h3>Main Stage · Nightfall to 2 AM</h3>
+              <p>QSC tops, JBL double 18" subs, video wall, and programmable lighting. Rail energy until the early hours.</p>
+              <ul>
+                <li>High-fidelity bass and lighting design</li>
+                <li>Label showcases + national headliners</li>
+                <li>Visual artists + live VJ programming</li>
+              </ul>
+            </article>
+            <article class="experience-card reveal">
+              <h3>The Dome · Sunrise sanctuary</h3>
+              <p>A calmer, kaleidoscopic vibe powered by five Soundboks units curated by Captain.</p>
+              <ul>
+                <li>Ambient journeys and liquid grooves</li>
+                <li>Workshops, breathwork, and decompression</li>
+                <li>Sunrise renegades & community takeovers</li>
+              </ul>
+            </article>
+            <article class="experience-card reveal">
+              <h3>Camp life · You belong here</h3>
+              <p>Wide-open car camping, quiet pockets, and a leave-no-trace ethos. We do this together.</p>
+              <ul>
+                <li>Car & RV camping (no max length)</li>
+                <li>Generators welcome — keep respectful</li>
+                <li>Late arrivals & re-entry approved</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section" id="schedule">
+        <div class="section-inner">
+          <header class="section-heading">
+            <h2>Programming rhythm</h2>
+            <p>Workshops, main stage runs, and late-night domes. The full run-of-show drops closer to the festival — a snapshot below.</p>
+          </header>
+          <div class="schedule-panel">
+            <div id="schedule-list-preview" class="schedule-list"></div>
+            <div id="schedule-fallback-preview">
+              <p><strong>Thursday</strong> · Gates open at 12 PM · Music kicks at 5 PM</p>
+              <p><strong>Nightly</strong> · Main Stage runs until 2 AM</p>
+              <p><strong>Sunrise</strong> · The Dome rolls past dawn</p>
+              <p><strong>Daytime</strong> · Workshops, games, open decks</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section" id="travel">
+        <div class="section-inner">
+          <header class="section-heading">
+            <h2>Getting to Space Ranch</h2>
+            <p>The Mojave is calling. We’ll send detailed driving directions to ticket holders — here’s what to know before you roll out.</p>
+          </header>
+          <div class="map-embed">
+            <div class="map-details">
+              <p><strong>Final pin:</strong> Space Ranch — Mojave Desert, CA (between Boron and Ridgecrest). Coordinates: 35°13'11.6"N 117°27'01.8"W.</p>
+              <ul class="ticket-points">
+                <li>Allow 3 hours from LA, 4.5 from Sacramento.</li>
+                <li>Pack 1–1.5 gallons of water per person per day.</li>
+                <li>Bring shade, dust protection, and warm nighttime layers.</li>
+              </ul>
+            </div>
+            <div class="map-links" aria-label="Open location in map apps">
+              <a href="https://maps.google.com/?q=35.219889,-117.4505" target="_blank" rel="noopener">Google Maps</a>
+              <a href="https://maps.apple.com/?ll=35.219889,-117.4505" target="_blank" rel="noopener">Apple Maps</a>
+              <a href="https://www.waze.com/ul?ll=35.219889,-117.4505&navigate=yes" target="_blank" rel="noopener">Waze</a>
+            </div>
+            <div class="map-frame">
+              <iframe title="Space Ranch map" src="https://maps.google.com/maps?q=35.219889,-117.4505&z=10&output=embed" loading="lazy"></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section" id="faq">
+        <div class="section-inner">
+          <header class="section-heading">
+            <h2>Need-to-knows</h2>
+            <p>We keep it transparent. Here are the most common questions as you prep for arrival.</p>
+          </header>
+          <div class="faq-grid">
+            <article class="faq-item" data-open="false">
+              <button class="faq-question" type="button">Age requirements</button>
+              <div class="faq-answer">
+                <p>Reeguez Rocks is 18+ only. Please bring a valid, government-issued photo ID for wristband pickup.</p>
+              </div>
+            </article>
+            <article class="faq-item" data-open="false">
+              <button class="faq-question" type="button">What’s prohibited?</button>
+              <div class="faq-answer">
+                <p>Weapons and illegal items are strictly forbidden. Harm reduction supplies and naloxone are on site.</p>
+              </div>
+            </article>
+            <article class="faq-item" data-open="false">
+              <button class="faq-question" type="button">Re-entry policy</button>
+              <div class="faq-answer">
+                <p>Come and go as you need. Late arrivals are welcome — there’s no nightly cut-off.</p>
+              </div>
+            </article>
+            <article class="faq-item" data-open="false">
+              <button class="faq-question" type="button">Refunds and transfers</button>
+              <div class="faq-answer">
+                <p>All sales are final. If the event is cancelled, we’ll issue refunds. Email <a href="mailto:reeguezrocks@gmail.com">reeguezrocks@gmail.com</a> for transfer requests.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <div class="section-inner">
+          <div class="community-banner">
+            <h3>Join the Reeguez community</h3>
+            <p>Tap into the Discord for build days, ride shares, and stage takeovers. We collaborate before we even hit the desert.</p>
+            <div class="community-actions">
+              <a data-discord-link href="https://discord.gg/Bm6PkETmP" target="_blank" rel="noopener">Join Discord</a>
+              <a href="mailto:reeguezrocks@gmail.com">Get involved</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section" id="newsletter">
+        <div class="section-inner">
+          <div class="newsletter-panel">
+            <header class="section-heading">
+              <h2>Stay in the loop</h2>
+              <p>Lineup drops, schedule reveals, and arrival intel. Zero spam. Just the essentials before we gather in the Mojave.</p>
+            </header>
+            <form id="newsletter-form-preview" class="newsletter-form">
+              <div class="newsletter-fields">
+                <input id="newsletter-email-preview" type="email" name="email" required autocomplete="email" placeholder="you@example.com *" aria-label="Email address">
+                <input id="newsletter-name-preview" type="text" name="name" autocomplete="name" placeholder="Name (optional)" aria-label="Name">
+                <input id="newsletter-zip-preview" type="text" name="zip" pattern="[0-9]{5}" inputmode="numeric" placeholder="ZIP (optional)" aria-label="ZIP code">
+              </div>
+              <button class="newsletter-submit" type="submit">Join the signal</button>
+              <div id="newsletter-msg-preview" class="newsletter-msg" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <a class="footer-brand" href="#home">
+            <img src="RR25Logo.jpg" alt="Reeguez Rocks logo" width="44" height="44">
+            Reeguez Rocks
+          </a>
+          <div class="footer-nav">
+            <a href="#tickets">Tickets</a>
+            <a href="#lineup">Lineup</a>
+            <a href="#schedule">Schedule</a>
+            <a href="#travel">Travel</a>
+            <a data-discord-link href="https://discord.gg/Bm6PkETmP" target="_blank" rel="noopener">Discord</a>
+            <a href="mailto:reeguezrocks@gmail.com">Contact</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2025 Reeguez Rocks. All rights reserved.</span>
+          <span>Made with love in the Mojave.</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <button class="floating-cta" type="button" data-hidden="true">Buy passes</button>
+</body>
+</html>
