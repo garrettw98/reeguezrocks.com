@@ -757,6 +757,69 @@ button {
   color: var(--color-text-subtle);
 }
 
+/* Future Phases Collapsible */
+.phase-details {
+  margin-top: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.phase-details__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  list-style: none;
+  transition: color var(--transition-fast);
+}
+
+.phase-details__summary::-webkit-details-marker {
+  display: none;
+}
+
+.phase-details__summary::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: var(--space-sm);
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(-45deg);
+  transition: transform var(--transition-fast);
+}
+
+.phase-details[open] .phase-details__summary::before {
+  transform: rotate(45deg);
+}
+
+.phase-details__summary:hover {
+  color: var(--color-text);
+}
+
+.phase-details__hint {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--color-text-subtle);
+}
+
+.phase-details__content {
+  padding: 0 var(--space-lg) var(--space-lg);
+}
+
+.phase--future {
+  opacity: 0.7;
+}
+
+.phase--future .tier__number {
+  background: var(--color-text-subtle);
+}
+
 /* --------------------------------------------------------------------------
    Lineup Grid
    -------------------------------------------------------------------------- */
