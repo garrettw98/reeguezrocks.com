@@ -1,4 +1,4 @@
-Reeguez Rocks 2025 — AWS Hosting
+Reeguez Rocks 2026 — AWS Hosting
 ================================
 
 This folder contains Infrastructure-as-Code and deployment notes to host the static site on AWS (S3 + CloudFront), while keeping Cloudflare as the domain registrar/DNS (recommended for simplicity). You can optionally migrate DNS to Route 53 later.

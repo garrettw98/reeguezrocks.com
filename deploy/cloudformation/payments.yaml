@@ -38,9 +38,13 @@ Parameters:
     Description: JSON array of tier configs with id,label,price,limit (0 or omit for unlimited)
     Default: |
       [
-        {"id":"ga-3-night","label":"GA — 3 Night","price":80},
-        {"id":"ga-2-night","label":"GA — 2 Night","price":60},
-        {"id":"ga-1-night","label":"GA — 1 Night","price":30}
+        {"id":"ga-4-day","label":"GA — 4 Day (Thu–Mon)","price":99},
+        {"id":"ga-3-day","label":"GA — 3 Day (Fri–Mon)","price":80},
+        {"id":"ga-2-day","label":"GA — 2 Day (Sat–Mon)","price":60},
+        {"id":"ga-1-day","label":"GA — 1 Day","price":30},
+        {"id":"car-camping","label":"Car Camping Add-On","price":30},
+        {"id":"early-arrival","label":"Early Arrival (Wed)","price":20},
+        {"id":"cabin","label":"Cabin (Sleeps 9)","price":1000,"limit":6}
       ]
 
 Resources:
