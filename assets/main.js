@@ -139,7 +139,7 @@ $$('.nav__link[href="#tickets"]').forEach(link => {
 });
 
 /* --------------------------------------------------------------------------
-   Ticket Rendering
+   Ticket Rendering & Multi-Step Checkout
    -------------------------------------------------------------------------- */
 const TIER_COPY = {
   'ga-4-day': {
@@ -170,6 +170,16 @@ const TIER_COPY = {
     description: 'Arrive Wednesday evening.',
     points: ['Best campsite selection', 'Extra night of camping']
   }
+};
+
+// Checkout state
+const checkoutState = {
+  step: 1,
+  selectedTicket: null,
+  selectedTicketData: null,
+  quantity: 1,
+  camping: 'ga-parking',
+  earlyArrival: false
 };
 
 let lastInventory = null;
@@ -244,12 +254,15 @@ function renderTickets(tiers) {
     return 'inactive';
   };
 
-  // Sort by start date
-  const sorted = tiers.slice().sort((a, b) => {
-    const as = msOrNull(a.startAtMs, a.startAt) ?? 0;
-    const bs = msOrNull(b.startAtMs, b.startAt) ?? 0;
-    return as - bs;
-  });
+  // Sort by start date, filter only GA tickets (not add-ons)
+  const gaTickets = ['ga-4-day', 'ga-3-day', 'ga-2-day', 'ga-1-day'];
+  const sorted = tiers.slice()
+    .filter(t => gaTickets.includes(t.id))
+    .sort((a, b) => {
+      const as = msOrNull(a.startAtMs, a.startAt) ?? 0;
+      const bs = msOrNull(b.startAtMs, b.startAt) ?? 0;
+      return as - bs;
+    });
 
   sorted.forEach(tier => {
     const state = stateFor(tier);
@@ -260,6 +273,7 @@ function renderTickets(tiers) {
     card.dataset.tier = tier.id;
     if (state === 'active') card.classList.add('current');
     if (state === 'sold') card.classList.add('sold');
+    if (checkoutState.selectedTicket === tier.id) card.classList.add('selected');
 
     const info = document.createElement('div');
     info.className = 'ticket-info';
@@ -306,18 +320,30 @@ function renderTickets(tiers) {
     } else if (state === 'active') {
       availability.textContent = 'Available';
       action.appendChild(availability);
-      const btn = document.createElement('button');
-      btn.className = 'ticket-button';
-      btn.textContent = `Buy $${tier.price}`;
-      btn.dataset.tier = tier.id;
-      btn.addEventListener('click', () => startCheckout(tier.id));
-      action.appendChild(btn);
+      // Make entire card clickable for selection
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => selectTicket(tier));
     }
 
     card.appendChild(info);
     card.appendChild(action);
     list.appendChild(card);
   });
+}
+
+// Select a ticket
+function selectTicket(tier) {
+  checkoutState.selectedTicket = tier.id;
+  checkoutState.selectedTicketData = tier;
+
+  // Update UI
+  $$('.ticket-option').forEach(opt => {
+    opt.classList.toggle('selected', opt.dataset.tier === tier.id);
+  });
+
+  // Enable continue button
+  const nextBtn = $('#step1-next');
+  if (nextBtn) nextBtn.disabled = false;
 }
 
 async function refreshTickets() {
@@ -630,4 +656,304 @@ async function startCheckout(tierId) {
     // Open modal on load
     setTimeout(() => modal.open(), 100);
   }
+})();
+
+/* --------------------------------------------------------------------------
+   Multi-Step Checkout Logic
+   -------------------------------------------------------------------------- */
+(function initCheckoutFlow() {
+  // Step navigation
+  function goToStep(step) {
+    checkoutState.step = step;
+
+    // Update step indicators
+    $$('.checkout-step').forEach(el => {
+      const s = parseInt(el.dataset.step, 10);
+      el.classList.toggle('checkout-step--active', s === step);
+      el.classList.toggle('checkout-step--completed', s < step);
+    });
+
+    // Update panels
+    $$('.checkout-panel').forEach(panel => {
+      const panelStep = parseInt(panel.id.replace('panel-step-', ''), 10);
+      panel.classList.toggle('checkout-panel--active', panelStep === step);
+    });
+
+    // If going to step 3, build order summary
+    if (step === 3) {
+      buildOrderSummary();
+    }
+  }
+
+  // Quantity controls
+  const qtyInput = $('#ticket-qty');
+  const qtyMinus = $('#qty-minus');
+  const qtyPlus = $('#qty-plus');
+
+  if (qtyMinus && qtyPlus && qtyInput) {
+    qtyMinus.addEventListener('click', () => {
+      const val = parseInt(qtyInput.value, 10) || 1;
+      if (val > 1) {
+        qtyInput.value = val - 1;
+        checkoutState.quantity = val - 1;
+      }
+    });
+
+    qtyPlus.addEventListener('click', () => {
+      const val = parseInt(qtyInput.value, 10) || 1;
+      if (val < 10) {
+        qtyInput.value = val + 1;
+        checkoutState.quantity = val + 1;
+      }
+    });
+  }
+
+  // Camping option selection
+  const campingOptions = $$('input[name="camping"]');
+  campingOptions.forEach(input => {
+    input.addEventListener('change', () => {
+      checkoutState.camping = input.value;
+      // Update visual state
+      $$('.camping-option').forEach(opt => {
+        opt.classList.toggle('camping-option--selected', opt.querySelector('input').checked);
+      });
+    });
+  });
+
+  // Early arrival checkbox
+  const earlyCheck = $('#early-arrival-check');
+  if (earlyCheck) {
+    earlyCheck.addEventListener('change', () => {
+      checkoutState.earlyArrival = earlyCheck.checked;
+    });
+  }
+
+  // Step 1 -> Step 2
+  const step1Next = $('#step1-next');
+  if (step1Next) {
+    step1Next.addEventListener('click', () => {
+      if (checkoutState.selectedTicket) {
+        goToStep(2);
+      }
+    });
+  }
+
+  // Step 2 -> Back
+  const step2Back = $('#step2-back');
+  if (step2Back) {
+    step2Back.addEventListener('click', () => goToStep(1));
+  }
+
+  // Step 2 -> Step 3
+  const step2Next = $('#step2-next');
+  if (step2Next) {
+    step2Next.addEventListener('click', () => goToStep(3));
+  }
+
+  // Step 3 -> Back
+  const step3Back = $('#step3-back');
+  if (step3Back) {
+    step3Back.addEventListener('click', () => goToStep(2));
+  }
+
+  // Final checkout button
+  const checkoutBtn = $('#checkout-btn');
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', () => processCheckout());
+  }
+
+  // Build order summary
+  function buildOrderSummary() {
+    const summary = $('#order-summary');
+    const totalEl = $('#order-total-amount');
+    if (!summary) return;
+
+    summary.innerHTML = '';
+    let total = 0;
+
+    // Ticket
+    if (checkoutState.selectedTicketData) {
+      const ticketPrice = checkoutState.selectedTicketData.price * checkoutState.quantity;
+      total += ticketPrice;
+
+      const item = document.createElement('div');
+      item.className = 'order-item';
+      item.innerHTML = `
+        <div>
+          <span class="order-item__name">${checkoutState.selectedTicketData.label}</span>
+          <span class="order-item__qty"> x ${checkoutState.quantity}</span>
+        </div>
+        <span class="order-item__price">$${ticketPrice}</span>
+      `;
+      summary.appendChild(item);
+    }
+
+    // Camping
+    if (checkoutState.camping === 'car-camping') {
+      const campingPrice = 30 * checkoutState.quantity;
+      total += campingPrice;
+
+      const item = document.createElement('div');
+      item.className = 'order-item';
+      item.innerHTML = `
+        <div>
+          <span class="order-item__name">Car Camping</span>
+          <span class="order-item__qty"> x ${checkoutState.quantity}</span>
+        </div>
+        <span class="order-item__price">$${campingPrice}</span>
+      `;
+      summary.appendChild(item);
+    } else if (checkoutState.camping === 'cabin') {
+      // Cabin replaces GA ticket pricing
+      // Recalculate - cabin is flat $1000
+      total = 1000;
+      summary.innerHTML = '';
+
+      const item = document.createElement('div');
+      item.className = 'order-item';
+      item.innerHTML = `
+        <div>
+          <span class="order-item__name">Cabin (Sleeps 9)</span>
+          <span class="order-item__qty"> x 1</span>
+        </div>
+        <span class="order-item__price">$1,000</span>
+      `;
+      summary.appendChild(item);
+    } else {
+      // GA Parking - included
+      const item = document.createElement('div');
+      item.className = 'order-item';
+      item.innerHTML = `
+        <div>
+          <span class="order-item__name">GA Parking</span>
+        </div>
+        <span class="order-item__price">Included</span>
+      `;
+      summary.appendChild(item);
+    }
+
+    // Early arrival
+    if (checkoutState.earlyArrival && checkoutState.camping !== 'cabin') {
+      const earlyPrice = 20 * checkoutState.quantity;
+      total += earlyPrice;
+
+      const item = document.createElement('div');
+      item.className = 'order-item';
+      item.innerHTML = `
+        <div>
+          <span class="order-item__name">Early Arrival (Wed)</span>
+          <span class="order-item__qty"> x ${checkoutState.quantity}</span>
+        </div>
+        <span class="order-item__price">$${earlyPrice}</span>
+      `;
+      summary.appendChild(item);
+    }
+
+    // Update total
+    if (totalEl) {
+      totalEl.textContent = `$${total.toLocaleString()}`;
+    }
+  }
+
+  // Process checkout - sends items to Stripe
+  async function processCheckout() {
+    const checkoutBtn = $('#checkout-btn');
+    if (checkoutBtn) {
+      checkoutBtn.disabled = true;
+      checkoutBtn.textContent = 'Processing...';
+    }
+
+    try {
+      // Build line items array
+      const lineItems = [];
+
+      if (checkoutState.camping === 'cabin') {
+        // Cabin purchase - single item
+        lineItems.push({ tierId: 'cabin', quantity: 1 });
+      } else {
+        // GA ticket + add-ons
+        lineItems.push({
+          tierId: checkoutState.selectedTicket,
+          quantity: checkoutState.quantity
+        });
+
+        if (checkoutState.camping === 'car-camping') {
+          lineItems.push({
+            tierId: 'car-camping',
+            quantity: checkoutState.quantity
+          });
+        }
+
+        if (checkoutState.earlyArrival) {
+          lineItems.push({
+            tierId: 'early-arrival',
+            quantity: checkoutState.quantity
+          });
+        }
+      }
+
+      // For now, use the existing single-item checkout
+      // TODO: Update API to handle multiple line items
+      const primaryItem = lineItems[0];
+      const res = await fetch(`${API_BASE}/checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
+        body: JSON.stringify({
+          tierId: primaryItem.tierId,
+          quantity: primaryItem.quantity,
+          // Pass additional items as metadata
+          addons: lineItems.slice(1)
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        const message = (data && (data.error || data.detail)) || 'Checkout failed';
+        throw new Error(message);
+      }
+      window.location.href = data.url;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Checkout failed. Please try again.';
+      alert(`Sorry, ${msg}`);
+
+      if (checkoutBtn) {
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = 'Proceed to Payment';
+      }
+    }
+  }
+
+  // Reset checkout state when modal opens
+  const originalOpen = modal.open.bind(modal);
+  modal.open = function() {
+    // Reset state
+    checkoutState.step = 1;
+    checkoutState.selectedTicket = null;
+    checkoutState.selectedTicketData = null;
+    checkoutState.quantity = 1;
+    checkoutState.camping = 'ga-parking';
+    checkoutState.earlyArrival = false;
+
+    // Reset UI
+    if (qtyInput) qtyInput.value = 1;
+    const step1Next = $('#step1-next');
+    if (step1Next) step1Next.disabled = true;
+
+    // Reset camping selection
+    const gaParkingRadio = $('input[name="camping"][value="ga-parking"]');
+    if (gaParkingRadio) gaParkingRadio.checked = true;
+    $$('.camping-option').forEach((opt, i) => {
+      opt.classList.toggle('camping-option--selected', i === 0);
+    });
+
+    // Reset early arrival
+    if (earlyCheck) earlyCheck.checked = false;
+
+    // Go to step 1
+    goToStep(1);
+
+    // Call original open
+    originalOpen();
+  };
 })();

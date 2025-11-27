@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Transparency | Reeguez Rocks 2026</title>
+
+    <!-- Icons and preview image -->
+    <link rel="icon" href="RR26Logo.png" type="image/png">
+    <link rel="shortcut icon" href="RR26Logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="RR26Logo.png" sizes="180x180">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Financial Transparency | Reeguez Rocks 2026">
+    <meta name="description" content="Full transparency on where every dollar goes. See our complete budget breakdown, tier details, and profit distribution model.">
+    <meta property="og:description" content="Full transparency on where every dollar goes. See our complete budget breakdown, tier details, and profit distribution model.">
+    <meta property="og:image" content="https://reeguezrocks.com/RR26Logo.png">
+    <meta property="og:url" content="https://reeguezrocks.com/financials.html">
+    <meta property="og:type" content="website">
+
+    <!-- Preloads -->
+    <link rel="preload" href="RR26BG.png" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/main.css">
+    <style>
+        /* Financials Page Specific Styles */
+        .finance-hero {
+            padding: calc(var(--nav-height) + var(--space-3xl)) var(--space-lg) var(--space-2xl);
+            text-align: center;
+        }
+
+        .finance-hero__title {
+            font-size: clamp(var(--text-2xl), 5vw, var(--text-4xl));
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .finance-hero__subtitle {
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .finance-section {
+            padding: var(--space-2xl) var(--space-lg);
+        }
+
+        .finance-section--alt {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .finance-section__title {
+            font-size: var(--text-2xl);
+            color: var(--color-accent);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+        }
+
+        .finance-section__subtitle {
+            max-width: 700px;
+            margin: 0 auto var(--space-xl);
+            text-align: center;
+            color: var(--color-text-muted);
+        }
+
+        /* Budget Breakdown Table */
+        .budget-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: var(--space-lg);
+        }
+
+        .budget-table th,
+        .budget-table td {
+            padding: var(--space-md);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .budget-table th {
+            font-weight: 600;
+            color: var(--color-accent);
+            background: rgba(247, 166, 2, 0.1);
+        }
+
+        .budget-table td {
+            color: var(--color-text-muted);
+        }
+
+        .budget-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .budget-table .amount {
+            text-align: right;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .budget-table .total-row {
+            font-weight: 700;
+        }
+
+        .budget-table .total-row td {
+            color: var(--color-accent);
+            border-top: 2px solid var(--color-accent);
+            background: rgba(247, 166, 2, 0.05);
+        }
+
+        .budget-table .category-header td {
+            font-weight: 600;
+            color: var(--color-text);
+            background: rgba(255, 255, 255, 0.03);
+            padding-top: var(--space-lg);
+        }
+
+        /* Tier Detail Cards */
+        .tier-detail {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-lg);
+            overflow: hidden;
+        }
+
+        .tier-detail__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-lg);
+            background: rgba(247, 166, 2, 0.1);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .tier-detail__phase {
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-subtle);
+        }
+
+        .tier-detail__name {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .tier-detail__amount {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .tier-detail__body {
+            padding: var(--space-lg);
+        }
+
+        .tier-detail__desc {
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-md);
+            line-height: 1.6;
+        }
+
+        .tier-detail__breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .tier-detail__item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--text-sm);
+        }
+
+        .tier-detail__item:last-child {
+            border-bottom: none;
+        }
+
+        .tier-detail__item-label {
+            color: var(--color-text-muted);
+        }
+
+        .tier-detail__item-value {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        /* Profit Distribution */
+        .profit-grid {
+            display: grid;
+            gap: var(--space-lg);
+        }
+
+        @media (min-width: 768px) {
+            .profit-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .profit-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+        }
+
+        .profit-card__title {
+            font-size: var(--text-lg);
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .profit-card__subtitle {
+            font-size: var(--text-sm);
+            color: var(--color-text-subtle);
+            margin-bottom: var(--space-lg);
+        }
+
+        .profit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .profit-item:last-child {
+            border-bottom: none;
+        }
+
+        .profit-item__label {
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+
+        .profit-item__value {
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        /* Venue Payment Info */
+        .venue-info {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-accent);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        .venue-info__title {
+            font-size: var(--text-lg);
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .venue-info__grid {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        @media (min-width: 640px) {
+            .venue-info__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .venue-info__grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .venue-info__item {
+            text-align: center;
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-md);
+        }
+
+        .venue-info__label {
+            font-size: var(--text-sm);
+            color: var(--color-text-subtle);
+            margin-bottom: var(--space-xs);
+        }
+
+        .venue-info__value {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .venue-info__note {
+            margin-top: var(--space-md);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-align: center;
+        }
+
+        /* Affiliate Section */
+        .affiliate-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .affiliate-table th,
+        .affiliate-table td {
+            padding: var(--space-md);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .affiliate-table th {
+            font-weight: 600;
+            color: var(--color-accent);
+            background: rgba(247, 166, 2, 0.1);
+        }
+
+        .affiliate-table td {
+            color: var(--color-text-muted);
+        }
+
+        .affiliate-table .rate {
+            font-weight: 600;
+            color: var(--color-success);
+        }
+
+        /* Back Link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+
+        .back-link:hover {
+            color: var(--color-accent);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (min-width: 640px) {
+            .summary-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .summary-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+        .summary-card__value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: var(--space-xs);
+        }
+
+        .summary-card__label {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-layer" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <header class="nav" role="banner">
+        <a href="/" class="nav__logo">
+            <img src="assets/reeguez-rocks-2026-logo.png" alt="Reeguez Rocks 2026" width="140" height="auto">
+        </a>
+        <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <nav class="nav__menu" id="nav-menu" role="navigation">
+            <a href="/#tickets" class="nav__link">Tickets</a>
+            <a href="/#crowdfunding" class="nav__link">Progress</a>
+            <a href="/#lineup" class="nav__link">Lineup</a>
+            <a href="/#experience" class="nav__link">Experience</a>
+            <a href="/#info" class="nav__link">Info</a>
+            <a href="/#faq" class="nav__link">FAQ</a>
+            <a href="https://discord.gg/kyfR6vXwgG" class="nav__link nav__link--external" target="_blank" rel="noopener">Discord</a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="finance-hero">
+        <div class="container">
+            <a href="/" class="back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Main Site
+            </a>
+            <h1 class="finance-hero__title">Financial Transparency</h1>
+            <p class="finance-hero__subtitle">Every dollar is accounted for. We believe in complete transparency about where your ticket money goes, how profits are distributed, and what each tier unlocks.</p>
+        </div>
+    </section>
+
+    <!-- Quick Summary -->
+    <section class="finance-section">
+        <div class="container">
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="summary-card__value">$6,900</div>
+                    <div class="summary-card__label">Minimum to Launch</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-card__value">$75,400</div>
+                    <div class="summary-card__label">All 14 Tiers Unlocked</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-card__value">100%</div>
+                    <div class="summary-card__label">Transparency</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Venue Payments -->
+    <section class="finance-section finance-section--alt">
+        <div class="container">
+            <h2 class="finance-section__title">Venue Payments</h2>
+            <p class="finance-section__subtitle">Camp Tahquitz receives $10 per ticket per music day. This is built into ticket pricing.</p>
+
+            <div class="venue-info">
+                <h3 class="venue-info__title">Per-Ticket Venue Breakdown</h3>
+                <div class="venue-info__grid">
+                    <div class="venue-info__item">
+                        <div class="venue-info__label">4-Day Pass</div>
+                        <div class="venue-info__value">$40 to venue</div>
+                    </div>
+                    <div class="venue-info__item">
+                        <div class="venue-info__label">3-Day Pass</div>
+                        <div class="venue-info__value">$30 to venue</div>
+                    </div>
+                    <div class="venue-info__item">
+                        <div class="venue-info__label">2-Day Pass</div>
+                        <div class="venue-info__value">$20 to venue</div>
+                    </div>
+                    <div class="venue-info__item">
+                        <div class="venue-info__label">1-Day Pass</div>
+                        <div class="venue-info__value">$10 to venue</div>
+                    </div>
+                </div>
+                <p class="venue-info__note">Margin after venue payment: $59 (4-day), $50 (3-day), $40 (2-day), $20 (1-day)</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tier Breakdown -->
+    <section class="finance-section">
+        <div class="container">
+            <h2 class="finance-section__title">Complete Tier Breakdown</h2>
+            <p class="finance-section__subtitle">Each tier has a specific purpose. Here's exactly where the money goes.</p>
+
+            <!-- Phase 1 -->
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 1 — Minimum Viable Production</div>
+                        <div class="tier-detail__name">Tier 1</div>
+                    </div>
+                    <div class="tier-detail__amount">$6,900</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">The absolute minimum needed to make the event happen. This covers legal requirements, basic production, and a safety buffer.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Liability Insurance ($2M policy)</span>
+                            <span class="tier-detail__item-value">$1,500</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Permits & Fees</span>
+                            <span class="tier-detail__item-value">$500</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Subphonic Events (Basic PA + Lighting)</span>
+                            <span class="tier-detail__item-value">$3,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Keith's Dome + Soundboks System</span>
+                            <span class="tier-detail__item-value">$900</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Contingency Fund</span>
+                            <span class="tier-detail__item-value">$1,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 2 — First Headliner (+20% ticket prices)</div>
+                        <div class="tier-detail__name">Tier 2: First Headliner</div>
+                    </div>
+                    <div class="tier-detail__amount">$6,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Book our first headliner and supporting acts. Artist fees vary by booking.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Headliner Fee</span>
+                            <span class="tier-detail__item-value">~$4,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">2 Support Acts</span>
+                            <span class="tier-detail__item-value">~$2,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 2</div>
+                        <div class="tier-detail__name">Tier 3: Subphonic Upgrade</div>
+                    </div>
+                    <div class="tier-detail__amount">$3,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Upgrade Subphonic production from $3k to $6k total. Better PA system and improved lighting rig.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Subphonic Upgrade (+$3k)</span>
+                            <span class="tier-detail__item-value">$3,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Running Total with Subphonic</span>
+                            <span class="tier-detail__item-value">$6,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 2</div>
+                        <div class="tier-detail__name">Tier 4: Festival Ambiance</div>
+                    </div>
+                    <div class="tier-detail__amount">$3,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Transform the venue with mood lighting and immersive elements.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">String Lights & Mood Lighting</span>
+                            <span class="tier-detail__item-value">$1,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Projectors & Visual Mapping</span>
+                            <span class="tier-detail__item-value">$1,200</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Decor & Signage</span>
+                            <span class="tier-detail__item-value">$800</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 2</div>
+                        <div class="tier-detail__name">Tier 5: Daytime Programming</div>
+                    </div>
+                    <div class="tier-detail__amount">$2,500</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Add daytime activities and wellness programming.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Yoga Instructors</span>
+                            <span class="tier-detail__item-value">$500</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Workshop Leaders</span>
+                            <span class="tier-detail__item-value">$500</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Activity Supplies & Equipment</span>
+                            <span class="tier-detail__item-value">$1,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Programming Coordination</span>
+                            <span class="tier-detail__item-value">$500</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 3 — Growth (+40% ticket prices)</div>
+                        <div class="tier-detail__name">Tier 6: Second Headliner</div>
+                    </div>
+                    <div class="tier-detail__amount">$6,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Book our second headliner and additional support acts.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Headliner Fee</span>
+                            <span class="tier-detail__item-value">~$4,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">2 Support Acts</span>
+                            <span class="tier-detail__item-value">~$2,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 3</div>
+                        <div class="tier-detail__name">Tier 7: Subphonic Upgrade</div>
+                    </div>
+                    <div class="tier-detail__amount">$3,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Upgrade Subphonic production from $6k to $9k total. Enhanced video elements and effects.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Subphonic Upgrade (+$3k)</span>
+                            <span class="tier-detail__item-value">$3,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Running Total with Subphonic</span>
+                            <span class="tier-detail__item-value">$9,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 3</div>
+                        <div class="tier-detail__name">Tier 8: Art & Infrastructure</div>
+                    </div>
+                    <div class="tier-detail__amount">$5,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Transform the venue with art installations and improved infrastructure.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Art Installations</span>
+                            <span class="tier-detail__item-value">$2,500</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Additional Lighting/Decor</span>
+                            <span class="tier-detail__item-value">$1,500</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Infrastructure Upgrades</span>
+                            <span class="tier-detail__item-value">$1,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 4 — Expansion (+60% ticket prices)</div>
+                        <div class="tier-detail__name">Tier 9: Third Headliner</div>
+                    </div>
+                    <div class="tier-detail__amount">$7,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Book our third headliner with additional support acts.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Headliner Fee</span>
+                            <span class="tier-detail__item-value">~$5,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">2 Support Acts</span>
+                            <span class="tier-detail__item-value">~$2,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 4</div>
+                        <div class="tier-detail__name">Tier 10: Underground Support Acts</div>
+                    </div>
+                    <div class="tier-detail__amount">$4,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Book additional underground and up-and-coming artists who are known in the scene but still affordable.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">3-4 Mid-Tier Underground Acts</span>
+                            <span class="tier-detail__item-value">$4,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 4</div>
+                        <div class="tier-detail__name">Tier 11: Subphonic Upgrade</div>
+                    </div>
+                    <div class="tier-detail__amount">$3,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Upgrade Subphonic production from $9k to $12k total. Festival-grade production.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Subphonic Upgrade (+$3k)</span>
+                            <span class="tier-detail__item-value">$3,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Running Total with Subphonic</span>
+                            <span class="tier-detail__item-value">$12,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 5 -->
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 5 — Festival Scale (+80% ticket prices)</div>
+                        <div class="tier-detail__name">Tier 12: Fourth Headliner (Marquee)</div>
+                    </div>
+                    <div class="tier-detail__amount">$12,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Book a marquee name headliner with full support.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Marquee Headliner Fee</span>
+                            <span class="tier-detail__item-value">~$10,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">2 Support Acts</span>
+                            <span class="tier-detail__item-value">~$2,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 5</div>
+                        <div class="tier-detail__name">Tier 13: Subphonic Elite</div>
+                    </div>
+                    <div class="tier-detail__amount">$3,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Maximum production level. Upgrade Subphonic from $12k to $15k total.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Subphonic Upgrade (+$3k)</span>
+                            <span class="tier-detail__item-value">$3,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Running Total with Subphonic</span>
+                            <span class="tier-detail__item-value">$15,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-detail">
+                <div class="tier-detail__header">
+                    <div>
+                        <div class="tier-detail__phase">Phase 5</div>
+                        <div class="tier-detail__name">Tier 14: Premium Package</div>
+                    </div>
+                    <div class="tier-detail__amount">$10,000</div>
+                </div>
+                <div class="tier-detail__body">
+                    <p class="tier-detail__desc">Premium amenities and professional documentation of the event.</p>
+                    <div class="tier-detail__breakdown">
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Professional Aftermovie</span>
+                            <span class="tier-detail__item-value">$5,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Medical Tent & Staff</span>
+                            <span class="tier-detail__item-value">$3,000</span>
+                        </div>
+                        <div class="tier-detail__item">
+                            <span class="tier-detail__item-label">Additional Amenities</span>
+                            <span class="tier-detail__item-value">$2,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profit Distribution -->
+    <section class="finance-section finance-section--alt">
+        <div class="container">
+            <h2 class="finance-section__title">Profit Distribution</h2>
+            <p class="finance-section__subtitle">When we exceed tier costs, profits are distributed to reward everyone who helped make it happen.</p>
+
+            <div class="profit-grid">
+                <div class="profit-card">
+                    <h3 class="profit-card__title">Phases 1-2 Distribution</h3>
+                    <p class="profit-card__subtitle">Before partner stages are added</p>
+                    <div class="profit-item">
+                        <span class="profit-item__label">Local/Opener Artist Pool</span>
+                        <span class="profit-item__value">30%</span>
+                    </div>
+                    <div class="profit-item">
+                        <span class="profit-item__label">Organizers</span>
+                        <span class="profit-item__value">50%</span>
+                    </div>
+                    <div class="profit-item">
+                        <span class="profit-item__label">Next Year Seed Fund</span>
+                        <span class="profit-item__value">20%</span>
+                    </div>
+                </div>
+
+                <div class="profit-card">
+                    <h3 class="profit-card__title">Phases 3-5 Distribution</h3>
+                    <p class="profit-card__subtitle">With partner stages active</p>
+                    <div class="profit-item">
+                        <span class="profit-item__label">Stage Partners (split)</span>
+                        <span class="profit-item__value">20%</span>
+                    </div>
+                    <div class="profit-item">
+                        <span class="profit-item__label">Local/Opener Artist Pool</span>
+                        <span class="profit-item__value">25%</span>
+                    </div>
+                    <div class="profit-item">
+                        <span class="profit-item__label">Organizers</span>
+                        <span class="profit-item__value">40%</span>
+                    </div>
+                    <div class="profit-item">
+                        <span class="profit-item__label">Next Year Seed Fund</span>
+                        <span class="profit-item__value">15%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="venue-info" style="margin-top: var(--space-xl);">
+                <h3 class="venue-info__title">Profit Pool Growth</h3>
+                <p class="tier-detail__desc">The profit pool grows with each tier reached, not just from surplus. This keeps everyone motivated to sell throughout the campaign.</p>
+                <table class="budget-table" style="margin-top: var(--space-md);">
+                    <thead>
+                        <tr>
+                            <th>Phase</th>
+                            <th>Per Tier Reached</th>
+                            <th>Tiers in Phase</th>
+                            <th class="amount">Phase Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Phase 1</td>
+                            <td>$300</td>
+                            <td>1</td>
+                            <td class="amount">$300</td>
+                        </tr>
+                        <tr>
+                            <td>Phase 2</td>
+                            <td>$400</td>
+                            <td>4</td>
+                            <td class="amount">$1,600</td>
+                        </tr>
+                        <tr>
+                            <td>Phase 3</td>
+                            <td>$500</td>
+                            <td>3</td>
+                            <td class="amount">$1,500</td>
+                        </tr>
+                        <tr>
+                            <td>Phase 4</td>
+                            <td>$600</td>
+                            <td>3</td>
+                            <td class="amount">$1,800</td>
+                        </tr>
+                        <tr>
+                            <td>Phase 5</td>
+                            <td>$700</td>
+                            <td>3</td>
+                            <td class="amount">$2,100</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="3"><strong>Maximum Profit Pool</strong></td>
+                            <td class="amount">$7,300</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="venue-info__note">Plus any remaining surplus after tier expenses are paid.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Affiliate Program -->
+    <section class="finance-section">
+        <div class="container">
+            <h2 class="finance-section__title">Affiliate Kickbacks</h2>
+            <p class="finance-section__subtitle">Everyone who helps sell tickets earns money. Get a trackable link and earn per ticket sold.</p>
+
+            <div class="tab-panels" style="max-width: 800px; margin: 0 auto;">
+                <table class="affiliate-table">
+                    <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Per Ticket</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Stage Partners</td>
+                            <td class="rate">$3-4</td>
+                            <td>Highest rate — bringing production value</td>
+                        </tr>
+                        <tr>
+                            <td>Local/Opener DJs</td>
+                            <td class="rate">$2</td>
+                            <td>Playing free, earn through promotion</td>
+                        </tr>
+                        <tr>
+                            <td>Vendors</td>
+                            <td class="rate">$2</td>
+                            <td>Reach their customer base</td>
+                        </tr>
+                        <tr>
+                            <td>Contracted Artists</td>
+                            <td class="rate">$1</td>
+                            <td>Optional — already getting paid</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Local DJ Pool -->
+    <section class="finance-section finance-section--alt">
+        <div class="container">
+            <h2 class="finance-section__title">Local DJ Pool Distribution</h2>
+            <p class="finance-section__subtitle">Local DJs share in the profit pool based on their set length.</p>
+
+            <div class="venue-info">
+                <h3 class="venue-info__title">Point System</h3>
+                <div class="venue-info__grid">
+                    <div class="venue-info__item">
+                        <div class="venue-info__label">1 Hour Set</div>
+                        <div class="venue-info__value">2 Points</div>
+                    </div>
+                    <div class="venue-info__item">
+                        <div class="venue-info__label">45 Min Set</div>
+                        <div class="venue-info__value">1.5 Points</div>
+                    </div>
+                    <div class="venue-info__item">
+                        <div class="venue-info__label">30 Min Set</div>
+                        <div class="venue-info__value">1 Point</div>
+                    </div>
+                </div>
+                <p class="venue-info__note">Formula: (Your Points / Total Points) x Local Pool = Your Payout</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Total Budget Summary -->
+    <section class="finance-section">
+        <div class="container">
+            <h2 class="finance-section__title">Complete Budget Summary</h2>
+
+            <div class="tab-panels" style="max-width: 800px; margin: 0 auto;">
+                <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th class="amount">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="category-header">
+                            <td colspan="2">Production</td>
+                        </tr>
+                        <tr>
+                            <td>Subphonic Events (Max)</td>
+                            <td class="amount">$15,000</td>
+                        </tr>
+                        <tr>
+                            <td>Keith's Dome + Soundboks</td>
+                            <td class="amount">$900</td>
+                        </tr>
+
+                        <tr class="category-header">
+                            <td colspan="2">Talent</td>
+                        </tr>
+                        <tr>
+                            <td>4 Headliners + Support</td>
+                            <td class="amount">$31,000</td>
+                        </tr>
+                        <tr>
+                            <td>Underground Support Acts</td>
+                            <td class="amount">$4,000</td>
+                        </tr>
+
+                        <tr class="category-header">
+                            <td colspan="2">Experience</td>
+                        </tr>
+                        <tr>
+                            <td>Daytime Programming</td>
+                            <td class="amount">$2,500</td>
+                        </tr>
+                        <tr>
+                            <td>Art & Infrastructure</td>
+                            <td class="amount">$5,000</td>
+                        </tr>
+                        <tr>
+                            <td>Premium Package</td>
+                            <td class="amount">$10,000</td>
+                        </tr>
+
+                        <tr class="category-header">
+                            <td colspan="2">Operations</td>
+                        </tr>
+                        <tr>
+                            <td>Liability Insurance</td>
+                            <td class="amount">$1,500</td>
+                        </tr>
+                        <tr>
+                            <td>Permits & Fees</td>
+                            <td class="amount">$500</td>
+                        </tr>
+                        <tr>
+                            <td>Contingency Fund</td>
+                            <td class="amount">$1,000</td>
+                        </tr>
+
+                        <tr class="category-header">
+                            <td colspan="2">Ambiance</td>
+                        </tr>
+                        <tr>
+                            <td>Festival Ambiance (Lighting, Projectors, Decor)</td>
+                            <td class="amount">$3,000</td>
+                        </tr>
+
+                        <tr class="total-row">
+                            <td><strong>Total All Tiers</strong></td>
+                            <td class="amount">$75,400</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <p>&copy; 2026 Reeguez Rocks. All rights reserved.</p>
+            <div class="footer__links">
+                <a href="/">Back to Main Site</a>
+                <a href="mailto:reeguezrocks@gmail.com">Contact</a>
+                <a href="https://discord.gg/kyfR6vXwgG" target="_blank" rel="noopener">Discord</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple nav toggle for mobile
+        const toggle = document.getElementById('nav-toggle');
+        const menu = document.getElementById('nav-menu');
+        if (toggle && menu) {
+            toggle.addEventListener('click', () => {
+                const isOpen = menu.classList.toggle('is-open');
+                toggle.setAttribute('aria-expanded', isOpen);
+            });
+        }
+
+        // Nav scroll behavior
+        const nav = document.querySelector('.nav');
+        if (nav) {
+            const handleScroll = () => {
+                nav.classList.toggle('nav--scrolled', window.scrollY > 20);
+            };
+            handleScroll();
+            window.addEventListener('scroll', handleScroll, { passive: true });
+        }
+    </script>
+</body>
+</html>
