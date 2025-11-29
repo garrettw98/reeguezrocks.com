@@ -78,7 +78,7 @@ export const handler = async (event) => {
         const item = existing.Items[0]
         return json({
           ok: true,
-          link: `https://reeguezrocks.com/?ref=${item.slug.S}`,
+          link: `${SITE_URL}/?ref=${item.slug.S}`,
           code: item.code.S,
           existing: true
         })
@@ -267,7 +267,7 @@ export const handler = async (event) => {
           email: item.email?.S || '',
           slug: item.slug?.S || '',
           code: item.code?.S || '',
-          link: `https://reeguezrocks.com/?ref=${item.slug?.S || ''}`,
+          link: `${SITE_URL}/?ref=${item.slug?.S || ''}`,
           ticketsSold: parseInt(item.ticketsSold?.N || '0', 10),
           earnings: parseInt(item.earnings?.N || '0', 10),
           clicks: parseInt(item.clicks?.N || '0', 10),

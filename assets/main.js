@@ -178,9 +178,25 @@ const TIER_COPY = {
     description: 'Single day pass.',
     points: ['Access for one calendar day', 'Day parking included']
   },
+  'ga-3-night': {
+    description: 'Full festival access — three nights of music.',
+    points: ['Arrive Friday at 10:00 AM', 'Three nights of music', 'Tent camping included']
+  },
+  'ga-2-night': {
+    description: 'Weekend pass for two nights.',
+    points: ['Arrive Saturday at 10:00 AM', 'Two nights of music', 'Tent camping included']
+  },
+  'ga-1-night': {
+    description: 'Single night pass.',
+    points: ['Access for one night', 'Day parking included']
+  },
   'car-camping': {
     description: 'Park at your campsite.',
     points: ['Add-on for any GA ticket', 'Camp next to your vehicle']
+  },
+  'rv-camping': {
+    description: 'RV or camper spot.',
+    points: ['Add-on for any GA ticket', 'Designated RV area']
   },
   'cabin': {
     description: '9-person heated cabin.',
@@ -275,7 +291,7 @@ function renderTickets(tiers) {
   };
 
   // Sort by start date, filter only GA tickets (not add-ons)
-  const gaTickets = ['ga-4-day', 'ga-3-day', 'ga-2-day', 'ga-1-day'];
+  const gaTickets = ['ga-4-day', 'ga-3-day', 'ga-2-day', 'ga-1-day', 'ga-3-night', 'ga-2-night', 'ga-1-night'];
   const sorted = tiers.slice()
     .filter(t => gaTickets.includes(t.id))
     .sort((a, b) => {
@@ -823,6 +839,20 @@ async function startCheckout(tierId) {
         <span class="order-item__price">$${campingPrice}</span>
       `;
       summary.appendChild(item);
+    } else if (checkoutState.camping === 'rv-camping') {
+      const rvPrice = 100 * checkoutState.quantity;
+      total += rvPrice;
+
+      const item = document.createElement('div');
+      item.className = 'order-item';
+      item.innerHTML = `
+        <div>
+          <span class="order-item__name">RV Camping</span>
+          <span class="order-item__qty"> x ${checkoutState.quantity}</span>
+        </div>
+        <span class="order-item__price">$${rvPrice}</span>
+      `;
+      summary.appendChild(item);
     } else if (checkoutState.camping === 'cabin') {
       // Cabin replaces GA ticket pricing
       // Recalculate - cabin is flat $1000
@@ -900,6 +930,11 @@ async function startCheckout(tierId) {
         if (checkoutState.camping === 'car-camping') {
           lineItems.push({
             tierId: 'car-camping',
+            quantity: checkoutState.quantity
+          });
+        } else if (checkoutState.camping === 'rv-camping') {
+          lineItems.push({
+            tierId: 'rv-camping',
             quantity: checkoutState.quantity
           });
         }

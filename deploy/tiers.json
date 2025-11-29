@@ -5,7 +5,7 @@
     "price": 80,
     "limit": null,
     "startAt": "2025-05-01T00:00:00-07:00",
-    "endAt":   null
+    "endAt": null
   },
   {
     "id": "ga-2-night",
@@ -13,7 +13,7 @@
     "price": 60,
     "limit": null,
     "startAt": "2025-05-01T00:00:00-07:00",
-    "endAt":   null
+    "endAt": null
   },
   {
     "id": "ga-1-night",
@@ -21,6 +21,30 @@
     "price": 30,
     "limit": null,
     "startAt": "2025-05-01T00:00:00-07:00",
-    "endAt":   null
+    "endAt": null
+  },
+  {
+    "id": "car-camping",
+    "label": "Car Camping Add-On",
+    "price": 30,
+    "limit": null
+  },
+  {
+    "id": "rv-camping",
+    "label": "RV Camping Add-On",
+    "price": 100,
+    "limit": null
+  },
+  {
+    "id": "early-arrival",
+    "label": "Early Arrival (Wed)",
+    "price": 20,
+    "limit": null
+  },
+  {
+    "id": "cabin",
+    "label": "Cabin (Sleeps 9)",
+    "price": 1000,
+    "limit": 6
   }
 ]

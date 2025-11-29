@@ -43,6 +43,7 @@ Parameters:
         {"id":"ga-2-day","label":"GA — 2 Day (Sat–Mon)","price":60},
         {"id":"ga-1-day","label":"GA — 1 Day","price":30},
         {"id":"car-camping","label":"Car Camping Add-On","price":30},
+        {"id":"rv-camping","label":"RV Camping Add-On (Dry)","price":100,"limit":5},
         {"id":"early-arrival","label":"Early Arrival (Wed)","price":20},
         {"id":"cabin","label":"Cabin (Sleeps 9)","price":1000,"limit":6}
       ]
@@ -155,13 +156,6 @@ Resources:
                   - !Sub ${ContentBucket.Arn}/*
               - Effect: Allow
                 Action:
-                  - s3:GetObject
-                  - s3:ListBucket
-                Resource:
-                  - !GetAtt ContentBucket.Arn
-                  - !Sub ${ContentBucket.Arn}/*
-              - Effect: Allow
-                Action:
                   - ssm:GetParameter
                 Resource:
                   - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${StripeSecretParam}
@@ -188,17 +182,12 @@ Resources:
                   - dynamodb:GetItem
                   - dynamodb:UpdateItem
                   - dynamodb:PutItem
+                  - dynamodb:Scan
                 Resource:
                   - !GetAtt InventoryTable.Arn
                   - !GetAtt OrdersTable.Arn
                   - !GetAtt NewsletterTable.Arn
-              - Effect: Allow
-                Action:
-                  - s3:GetObject
-                  - s3:ListBucket
-                Resource:
-                  - !GetAtt ContentBucket.Arn
-                  - !Sub ${ContentBucket.Arn}/*
+                  - !GetAtt AffiliateTable.Arn
               - Effect: Allow
                 Action:
                   - s3:GetObject
@@ -293,7 +282,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: affiliate-dynamo
+        - PolicyName: affiliate-dynamo-ses
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -305,6 +294,11 @@ Resources:
                   - dynamodb:Scan
                 Resource:
                   - !GetAtt AffiliateTable.Arn
+              - Effect: Allow
+                Action:
+                  - ses:SendEmail
+                  - ses:SendRawEmail
+                Resource: '*'
 
   CheckoutFunction:
     Type: AWS::Lambda::Function
@@ -325,8 +319,6 @@ Resources:
           SUCCESS_URL: !Ref SuccessUrl
           CANCEL_URL: !Ref CancelUrl
           TIER_CONFIG: !Ref TierConfigJson
-          TIERS_BUCKET: !Ref ContentBucket
-          TIERS_KEY: tiers.json
           TIERS_BUCKET: !Ref ContentBucket
           TIERS_KEY: tiers.json
 
@@ -353,8 +345,7 @@ Resources:
           SITE_URL: !Sub https://${DomainName}
           TIERS_BUCKET: !Ref ContentBucket
           TIERS_KEY: tiers.json
-          TIERS_BUCKET: !Ref ContentBucket
-          TIERS_KEY: tiers.json
+          AFFILIATE_TABLE: !Ref AffiliateTable
 
   HttpApi:
     Type: AWS::ApiGatewayV2::Api
@@ -406,8 +397,6 @@ Resources:
         Variables:
           INVENTORY_TABLE: !Ref InventoryTable
           TIER_CONFIG: !Ref TierConfigJson
-          TIERS_BUCKET: !Ref ContentBucket
-          TIERS_KEY: tiers.json
           TIERS_BUCKET: !Ref ContentBucket
           TIERS_KEY: tiers.json
 
@@ -463,24 +452,6 @@ Resources:
           ADMIN_PASSWORD_PARAM: !Ref AdminPasswordParam
           TIER_CONFIG: !Ref TierConfigJson
 
-  TiersFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      FunctionName: !Sub ${ApiName}-tiers
-      Runtime: nodejs20.x
-      Handler: handler.handler
-      Role: !GetAtt ArtistsFunctionRole.Arn
-      Code:
-        S3Bucket: !Ref CodeBucket
-        S3Key: !Sub ${CodeKeyPrefix}/tiers.zip
-      Timeout: 10
-      Environment:
-        Variables:
-          TIERS_BUCKET: !Ref ContentBucket
-          TIERS_KEY: tiers.json
-          ADMIN_PASSWORD_PARAM: !Ref AdminPasswordParam
-          TIER_CONFIG: !Ref TierConfigJson
-
   NewsletterFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -512,6 +483,55 @@ Resources:
       Environment:
         Variables:
           AFFILIATE_TABLE: !Ref AffiliateTable
+          FROM_EMAIL: !Sub affiliates@${DomainName}
+          SITE_URL: !Sub https://${DomainName}
+
+  AffiliatePayoutFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: affiliate-payout-policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Scan
+                Resource:
+                  - !GetAtt AffiliateTable.Arn
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                Resource:
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${StripeSecretParam}
+
+  AffiliatePayoutFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ApiName}-affiliate-payout
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      Role: !GetAtt AffiliatePayoutFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Sub ${CodeKeyPrefix}/affiliate-payout.zip
+      Timeout: 30
+      Environment:
+        Variables:
+          AFFILIATE_TABLE: !Ref AffiliateTable
+          STRIPE_SECRET_PARAM: !Ref StripeSecretParam
+          SITE_URL: !Sub https://${DomainName}
 
   InventoryIntegration:
     Type: AWS::ApiGatewayV2::Integration
@@ -537,6 +557,14 @@ Resources:
       IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AffiliateFunction.Arn}/invocations
       PayloadFormatVersion: '2.0'
 
+  AffiliatePayoutIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AffiliatePayoutFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
   ArtistsIntegration:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
@@ -551,14 +579,6 @@ Resources:
       ApiId: !Ref HttpApi
       IntegrationType: AWS_PROXY
       IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ScheduleFunction.Arn}/invocations
-      PayloadFormatVersion: '2.0'
-
-  TiersIntegration:
-    Type: AWS::ApiGatewayV2::Integration
-    Properties:
-      ApiId: !Ref HttpApi
-      IntegrationType: AWS_PROXY
-      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TiersFunction.Arn}/invocations
       PayloadFormatVersion: '2.0'
 
   TiersIntegration:
@@ -611,6 +631,27 @@ Resources:
       RouteKey: 'GET /affiliate'
       Target: !Sub integrations/${AffiliateIntegration}
 
+  AffiliatePayoutPostRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'POST /affiliate-payout/{proxy+}'
+      Target: !Sub integrations/${AffiliatePayoutIntegration}
+
+  AffiliatePayoutGetRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'GET /affiliate-payout/{proxy+}'
+      Target: !Sub integrations/${AffiliatePayoutIntegration}
+
+  AffiliatePayoutOptionsRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'OPTIONS /affiliate-payout/{proxy+}'
+      Target: !Sub integrations/${AffiliatePayoutIntegration}
+
   ArtistsGetRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
@@ -638,20 +679,6 @@ Resources:
       ApiId: !Ref HttpApi
       RouteKey: 'PUT /schedule'
       Target: !Sub integrations/${ScheduleIntegration}
-
-  TiersGetRoute:
-    Type: AWS::ApiGatewayV2::Route
-    Properties:
-      ApiId: !Ref HttpApi
-      RouteKey: 'GET /tiers'
-      Target: !Sub integrations/${TiersIntegration}
-
-  TiersPutRoute:
-    Type: AWS::ApiGatewayV2::Route
-    Properties:
-      ApiId: !Ref HttpApi
-      RouteKey: 'PUT /tiers'
-      Target: !Sub integrations/${TiersIntegration}
 
   TiersGetRoute:
     Type: AWS::ApiGatewayV2::Route
@@ -707,6 +734,14 @@ Resources:
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/affiliate
 
+  AffiliatePayoutPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref AffiliatePayoutFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/affiliate-payout/*
+
   ArtistsPermission:
     Type: AWS::Lambda::Permission
     Properties:
@@ -722,14 +757,6 @@ Resources:
       FunctionName: !Ref ScheduleFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/schedule
-
-  TiersPermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: !Ref TiersFunction
-      Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/tiers
 
   TiersPermission:
     Type: AWS::Lambda::Permission

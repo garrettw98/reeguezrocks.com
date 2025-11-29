@@ -137,10 +137,15 @@ async function handleCheckoutCompleted(eventObj) {
   const data = eventObj.data?.object || {}
   const sessionId = data.id
   const tierId = data.metadata?.tier || data.client_reference_id
+  const allTiersStr = data.metadata?.all_tiers || tierId
+  const quantitiesStr = data.metadata?.quantities || '1'
   const referralSlug = data.metadata?.referral // Affiliate referral slug
   const paymentStatus = data.payment_status
   if (paymentStatus !== 'paid' || !tierId) return { ok: true }
 
+  // Parse all tiers and quantities
+  const allTierIds = allTiersStr.split(',').filter(Boolean)
+  const quantities = quantitiesStr.split(',').map(q => parseInt(q, 10) || 1)
   const tier = await findTier(tierId) || { id: tierId, label: tierId, price: null }
 
   // Idempotency: if already marked paid, skip increment
@@ -154,22 +159,29 @@ async function handleCheckoutCompleted(eventObj) {
     if (existing.Item?.status?.S === 'paid') return { ok: true }
   } catch {}
 
-  const limit = typeof tier.limit === 'number' ? tier.limit : 0
-  if (limit > 0) {
-    try {
-      await ddb.send(new UpdateItemCommand({
-        TableName: INVENTORY_TABLE,
-        Key: { tier: { S: tierId } },
-        UpdateExpression: 'SET sold = if_not_exists(sold, :zero) + :one',
-        ConditionExpression: 'attribute_not_exists(sold) OR sold < :limit',
-        ExpressionAttributeValues: {
-          ':one': { N: '1' },
-          ':zero': { N: '0' },
-          ':limit': { N: String(limit) }
-        }
-      }))
-    } catch (err) {
-      // If over limit, do not fail email/receipt; just skip increment
+  // Increment inventory for each tier purchased
+  for (let i = 0; i < allTierIds.length; i++) {
+    const itemTierId = allTierIds[i]
+    const itemQty = quantities[i] || 1
+    const itemTier = await findTier(itemTierId) || { id: itemTierId, limit: 0 }
+    const limit = typeof itemTier.limit === 'number' ? itemTier.limit : 0
+
+    if (limit > 0) {
+      try {
+        await ddb.send(new UpdateItemCommand({
+          TableName: INVENTORY_TABLE,
+          Key: { tier: { S: itemTierId } },
+          UpdateExpression: 'SET sold = if_not_exists(sold, :zero) + :qty',
+          ConditionExpression: 'attribute_not_exists(sold) OR sold + :qty <= :limit',
+          ExpressionAttributeValues: {
+            ':qty': { N: String(itemQty) },
+            ':zero': { N: '0' },
+            ':limit': { N: String(limit) }
+          }
+        }))
+      } catch (err) {
+        // If over limit, do not fail email/receipt; just skip increment
+      }
     }
   }
 
@@ -179,6 +191,8 @@ async function handleCheckoutCompleted(eventObj) {
     Item: {
       sessionId: { S: sessionId },
       tier: { S: tierId },
+      allTiers: { S: allTiersStr },
+      quantities: { S: quantitiesStr },
       status: { S: 'paid' },
       amount: { N: String(amountCents) },
       referral: referralSlug ? { S: referralSlug } : { NULL: true },
@@ -207,21 +221,30 @@ async function handleCheckoutCompleted(eventObj) {
   try {
     const to = data.customer_details?.email || data.customer_email
     if (to && FROM_EMAIL){
-      const subject = `Your Reeguez Rocks 2025 Order Confirmation`
+      // Build items list for email
+      const itemsHtml = await Promise.all(allTierIds.map(async (tid, idx) => {
+        const itemTier = await findTier(tid) || { label: tid }
+        const qty = quantities[idx] || 1
+        return `<p style="margin:0 0 6px">${itemTier.label}${qty > 1 ? ` x${qty}` : ''}</p>`
+      }))
+      const subject = `Your Reeguez Rocks 2026 Order Confirmation`
       const html = `<!DOCTYPE html><html><body style="background:#0b0b0f;color:#fff;font-family:Arial,sans-serif;padding:20px;">
         <div style="max-width:640px;margin:0 auto;background:#141420;border:1px solid rgba(255,255,255,.12);border-radius:12px;overflow:hidden">
           <div style="padding:16px 16px 0 16px;text-align:center">
-            <img src="${SITE_URL}/RR25Patch.png" alt="Reeguez Rocks 2025" style="max-width:220px;height:auto"/>
+            <img src="${SITE_URL}/RR26Logo.png" alt="Reeguez Rocks 2026" style="max-width:220px;height:auto"/>
             <h1 style="margin:10px 0 0 0;color:#f7a602;font-size:22px;">Order Confirmation</h1>
-            <p style="margin:6px 0 0 0;color:#cfd1d6">Thanks for your purchase! See you in the Mojave.</p>
+            <p style="margin:6px 0 0 0;color:#cfd1d6">Thanks for your purchase! See you in the mountains.</p>
           </div>
           <div style="padding:16px;color:#eaeaea">
             <p style="margin:0 0 10px">Order: <strong>${sessionId}</strong></p>
-            <p style="margin:0 0 10px">Tier: <strong>${tier.label || tierId}</strong></p>
-            <p style="margin:0 0 10px">Amount: <strong>$${(amountCents/100).toFixed(2)}</strong></p>
+            <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:12px;margin:0 0 10px">
+              <p style="margin:0 0 8px;color:#9aa1ad;font-size:12px;text-transform:uppercase">Items Purchased</p>
+              ${itemsHtml.join('')}
+            </div>
+            <p style="margin:0 0 10px">Total: <strong style="color:#f7a602">$${(amountCents/100).toFixed(2)}</strong></p>
             <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0"/>
-            <p style="margin:0 0 6px">Join the Discord: <a href="https://discord.gg/kyfR6vXwgG" style="color:#8A2BE2">discord.gg/kyfR6vXwgG</a></p>
-            <p style="margin:0 0 6px">Event site: <a href="${SITE_URL}" style="color:#8A2BE2">${SITE_URL}</a></p>
+            <p style="margin:0 0 6px">Follow us on Instagram: <a href="https://www.instagram.com/reeguez_rocks_festival/" style="color:#E1306C">@reeguez_rocks_festival</a></p>
+            <p style="margin:0 0 6px">Event site: <a href="${SITE_URL}" style="color:#f7a602">${SITE_URL}</a></p>
             <p style="margin:10px 0 0;color:#9aa1ad;font-size:12px">From: ${FROM_EMAIL}</p>
           </div>
         </div>

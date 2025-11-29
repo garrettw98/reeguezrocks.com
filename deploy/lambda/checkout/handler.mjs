@@ -98,17 +98,43 @@ async function ensureTierRow(tierId) {
   })).catch(() => {})
 }
 
-async function createCheckoutSession({ tierId, email, referral }) {
+async function createCheckoutSession({ tierId, quantity = 1, addons = [], email, referral }) {
   const { tier, error } = await selectTier(tierId)
   if (error) return error
 
   const effectiveTierId = tier.id
+  const qty = Math.max(1, Math.min(10, parseInt(quantity, 10) || 1)) // Clamp 1-10
 
   await ensureTierRow(effectiveTierId)
   const sold = await getSoldCount(effectiveTierId)
   const limit = typeof tier.limit === 'number' ? tier.limit : 0
-  if (limit > 0 && sold >= limit) {
-    return { statusCode: 409, body: JSON.stringify({ error: 'Tier sold out' }) }
+  if (limit > 0 && sold + qty > limit) {
+    const remaining = limit - sold
+    return { statusCode: 409, body: JSON.stringify({ error: `Only ${remaining} tickets remaining for this tier` }) }
+  }
+
+  // Validate and prepare all line items (primary + addons)
+  const lineItems = [{ tier, qty }]
+  const allTierIds = [effectiveTierId]
+
+  for (const addon of addons) {
+    if (!addon.tierId) continue
+    const addonResult = await selectTier(addon.tierId)
+    if (addonResult.error) continue // Skip invalid addons silently
+
+    const addonTier = addonResult.tier
+    const addonQty = Math.max(1, Math.min(10, parseInt(addon.quantity, 10) || 1))
+
+    // Check addon inventory
+    await ensureTierRow(addonTier.id)
+    const addonSold = await getSoldCount(addonTier.id)
+    const addonLimit = typeof addonTier.limit === 'number' ? addonTier.limit : 0
+    if (addonLimit > 0 && addonSold + addonQty > addonLimit) {
+      return { statusCode: 409, body: JSON.stringify({ error: `${addonTier.label} is sold out` }) }
+    }
+
+    lineItems.push({ tier: addonTier, qty: addonQty })
+    allTierIds.push(addonTier.id)
   }
 
   const stripeKey = await getStripeKey()
@@ -119,6 +145,8 @@ async function createCheckoutSession({ tierId, email, referral }) {
   params.append('client_reference_id', effectiveTierId)
   if (email) params.append('customer_email', email)
   params.append('metadata[tier]', effectiveTierId)
+  params.append('metadata[all_tiers]', allTierIds.join(','))
+  params.append('metadata[quantities]', lineItems.map(i => i.qty).join(','))
   if (tierId && tierId !== effectiveTierId){
     params.append('metadata[requested_tier]', String(tierId))
   }
@@ -128,10 +156,14 @@ async function createCheckoutSession({ tierId, email, referral }) {
     // Apply 5% discount using Stripe's automatic discount
     params.append('discounts[0][coupon]', 'AFFILIATE5')
   }
-  params.append('line_items[0][quantity]', '1')
-  params.append('line_items[0][price_data][currency]', 'usd')
-  params.append('line_items[0][price_data][unit_amount]', String(Math.round(tier.price * 100)))
-  params.append('line_items[0][price_data][product_data][name]', tier.label)
+
+  // Add all line items to checkout session
+  lineItems.forEach((item, idx) => {
+    params.append(`line_items[${idx}][quantity]`, String(item.qty))
+    params.append(`line_items[${idx}][price_data][currency]`, 'usd')
+    params.append(`line_items[${idx}][price_data][unit_amount]`, String(Math.round(item.tier.price * 100)))
+    params.append(`line_items[${idx}][price_data][product_data][name]`, item.tier.label)
+  })
 
   const res = await fetch('https://api.stripe.com/v1/checkout/sessions', {
     method: 'POST',
@@ -148,13 +180,15 @@ async function createCheckoutSession({ tierId, email, referral }) {
   }
   const session = await res.json()
 
-  // Optionally record a pre-order record
+  // Optionally record a pre-order record with all tier info
   const now = Date.now()
   await ddb.send(new PutItemCommand({
     TableName: ORDERS_TABLE,
     Item: {
       sessionId: { S: session.id },
       tier: { S: effectiveTierId },
+      allTiers: { S: allTierIds.join(',') },
+      quantities: { S: lineItems.map(i => i.qty).join(',') },
       createdAt: { N: String(now) },
       status: { S: 'created' }
     }
@@ -172,9 +206,11 @@ export const handler = async (event) => {
     }
     const body = event.body ? JSON.parse(event.body) : {}
     const tierId = body.tierId
+    const quantity = body.quantity
+    const addons = Array.isArray(body.addons) ? body.addons : []
     const email = body.email
     const referral = body.referral
-    const resp = await createCheckoutSession({ tierId, email, referral })
+    const resp = await createCheckoutSession({ tierId, quantity, addons, email, referral })
     return cors(resp.statusCode, resp.body)
   } catch (e) {
     return cors(500, JSON.stringify({ error: 'internal_error', detail: String(e) }))
