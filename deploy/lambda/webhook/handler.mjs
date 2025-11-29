@@ -1,10 +1,10 @@
 import crypto from 'node:crypto'
-import { DynamoDBClient, UpdateItemCommand, PutItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, UpdateItemCommand, PutItemCommand, GetItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb'
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses'
 import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm'
 import { S3Client, GetObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3'
 
-const { INVENTORY_TABLE, ORDERS_TABLE, STRIPE_SECRET_PARAM, STRIPE_WEBHOOK_SECRET_PARAM, TIER_CONFIG, NEWSLETTER_TABLE, FROM_EMAIL, SITE_URL, TIERS_BUCKET, TIERS_KEY = 'tiers.json' } = process.env
+const { INVENTORY_TABLE, ORDERS_TABLE, STRIPE_SECRET_PARAM, STRIPE_WEBHOOK_SECRET_PARAM, TIER_CONFIG, NEWSLETTER_TABLE, FROM_EMAIL, SITE_URL, TIERS_BUCKET, TIERS_KEY = 'tiers.json', AFFILIATE_TABLE } = process.env
 const ddb = new DynamoDBClient({})
 const ses = new SESClient({})
 const ssm = new SSMClient({})
@@ -42,6 +42,89 @@ async function loadTiers(){
 async function parseTierConfig(){ const now=Date.now(); if (tiersCache.data && (now - tiersCache.at) < 60000) return tiersCache.data; const data=await loadTiers(); tiersCache={at:now,data}; return data }
 async function findTier(tierId){ const cfg=await parseTierConfig(); return cfg.find(t=> t.id===tierId) }
 
+// Credit affiliate for a sale and send notification email
+async function creditAffiliate(referralSlug, amountCents, tierLabel) {
+  if (!referralSlug || !AFFILIATE_TABLE) return
+
+  try {
+    // Find affiliate by slug
+    const result = await ddb.send(new ScanCommand({
+      TableName: AFFILIATE_TABLE,
+      FilterExpression: 'slug = :slug',
+      ExpressionAttributeValues: { ':slug': { S: referralSlug } },
+      Limit: 1
+    }))
+
+    if (!result.Items || result.Items.length === 0) return
+
+    const affiliate = result.Items[0]
+    const affiliateSlug = affiliate.slug.S
+    const affiliateEmail = affiliate.email?.S
+    const affiliateName = affiliate.name?.S || 'Affiliate'
+    const currentEarnings = parseInt(affiliate.earnings?.N || '0', 10)
+    const currentTickets = parseInt(affiliate.ticketsSold?.N || '0', 10)
+
+    // Credit $5 per ticket and increment tickets sold
+    await ddb.send(new UpdateItemCommand({
+      TableName: AFFILIATE_TABLE,
+      Key: { slug: { S: affiliateSlug } },
+      UpdateExpression: 'SET ticketsSold = if_not_exists(ticketsSold, :zero) + :one, earnings = if_not_exists(earnings, :zero) + :five',
+      ExpressionAttributeValues: {
+        ':zero': { N: '0' },
+        ':one': { N: '1' },
+        ':five': { N: '500' } // $5.00 in cents
+      }
+    }))
+
+    console.log(`Credited affiliate ${affiliateSlug} for sale`)
+
+    // Send notification email to affiliate
+    if (affiliateEmail && FROM_EMAIL) {
+      const newEarnings = currentEarnings + 500
+      const newTickets = currentTickets + 1
+      const subject = `You just earned $5! - Reeguez Rocks Affiliate`
+      const html = `<!DOCTYPE html><html><body style="background:#0b0b0f;color:#fff;font-family:Arial,sans-serif;padding:20px;">
+        <div style="max-width:640px;margin:0 auto;background:#141420;border:1px solid rgba(255,255,255,.12);border-radius:12px;overflow:hidden">
+          <div style="padding:20px;text-align:center;background:rgba(247,166,2,0.1)">
+            <h1 style="margin:0;color:#f7a602;font-size:24px;">Cha-ching! $5 Earned</h1>
+          </div>
+          <div style="padding:20px;color:#eaeaea">
+            <p style="margin:0 0 16px">Hey ${affiliateName}!</p>
+            <p style="margin:0 0 16px">Someone just bought a ticket using your referral link. You earned <strong style="color:#f7a602">$5.00</strong>!</p>
+            <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:16px;margin:0 0 16px">
+              <p style="margin:0 0 8px;color:#9aa1ad;font-size:14px">Ticket Type</p>
+              <p style="margin:0;font-weight:600">${tierLabel || 'Festival Pass'}</p>
+            </div>
+            <div style="display:flex;gap:16px;margin-bottom:16px">
+              <div style="flex:1;background:rgba(255,255,255,0.05);border-radius:8px;padding:16px;text-align:center">
+                <p style="margin:0;font-size:24px;font-weight:700;color:#f7a602">$${(newEarnings / 100).toFixed(0)}</p>
+                <p style="margin:4px 0 0;color:#9aa1ad;font-size:12px">Total Earned</p>
+              </div>
+              <div style="flex:1;background:rgba(255,255,255,0.05);border-radius:8px;padding:16px;text-align:center">
+                <p style="margin:0;font-size:24px;font-weight:700;color:#f7a602">${newTickets}</p>
+                <p style="margin:4px 0 0;color:#9aa1ad;font-size:12px">Tickets Sold</p>
+              </div>
+            </div>
+            <p style="margin:0 0 16px;font-size:14px;color:#9aa1ad">Keep sharing your link to earn more! Every ticket = $5 in your pocket.</p>
+            <a href="https://reeguezrocks.com/affiliate-dashboard.html" style="display:inline-block;padding:12px 24px;background:#f7a602;color:#0b0b0f;border-radius:6px;text-decoration:none;font-weight:600">View Your Dashboard</a>
+          </div>
+        </div>
+      </body></html>`
+
+      await ses.send(new SendEmailCommand({
+        Source: FROM_EMAIL,
+        Destination: { ToAddresses: [affiliateEmail] },
+        Message: {
+          Subject: { Data: subject },
+          Body: { Html: { Data: html } }
+        }
+      })).catch(e => console.error('Failed to send affiliate notification:', e))
+    }
+  } catch (err) {
+    console.error('Failed to credit affiliate:', err)
+  }
+}
+
 function verifyStripeSignature(rawBody, sigHeader, secret) {
   // Stripe sends: t=timestamp,v1=signature
   const parts = Object.fromEntries(sigHeader.split(',').map(p => p.split('=')))
@@ -54,6 +137,7 @@ async function handleCheckoutCompleted(eventObj) {
   const data = eventObj.data?.object || {}
   const sessionId = data.id
   const tierId = data.metadata?.tier || data.client_reference_id
+  const referralSlug = data.metadata?.referral // Affiliate referral slug
   const paymentStatus = data.payment_status
   if (paymentStatus !== 'paid' || !tierId) return { ok: true }
 
@@ -97,9 +181,15 @@ async function handleCheckoutCompleted(eventObj) {
       tier: { S: tierId },
       status: { S: 'paid' },
       amount: { N: String(amountCents) },
+      referral: referralSlug ? { S: referralSlug } : { NULL: true },
       completedAt: { N: String(Date.now()) }
     }
   })).catch(() => {})
+
+  // Credit affiliate if this sale came from a referral
+  if (referralSlug) {
+    await creditAffiliate(referralSlug, amountCents, tier.label)
+  }
 
   // De-duplicate newsletter: insert if not exists
   try {

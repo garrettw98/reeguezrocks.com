@@ -84,6 +84,18 @@ Resources:
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
 
+  AffiliateTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${ApiName}-affiliates
+      AttributeDefinitions:
+        - AttributeName: slug
+          AttributeType: S
+      KeySchema:
+        - AttributeName: slug
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
   ContentBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -267,6 +279,32 @@ Resources:
                 Resource:
                   - !GetAtt NewsletterBucket.Arn
                   - !Sub ${NewsletterBucket.Arn}/*
+
+  AffiliateFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: affiliate-dynamo
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Scan
+                Resource:
+                  - !GetAtt AffiliateTable.Arn
 
   CheckoutFunction:
     Type: AWS::Lambda::Function
@@ -460,6 +498,21 @@ Resources:
           NEWSLETTER_BUCKET: !Ref NewsletterBucket
           NEWSLETTER_KEY: newsletter/subscribers.csv
 
+  AffiliateFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ApiName}-affiliate
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      Role: !GetAtt AffiliateFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Sub ${CodeKeyPrefix}/affiliate.zip
+      Timeout: 10
+      Environment:
+        Variables:
+          AFFILIATE_TABLE: !Ref AffiliateTable
+
   InventoryIntegration:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
@@ -474,6 +527,14 @@ Resources:
       ApiId: !Ref HttpApi
       IntegrationType: AWS_PROXY
       IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${NewsletterFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
+  AffiliateIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AffiliateFunction.Arn}/invocations
       PayloadFormatVersion: '2.0'
 
   ArtistsIntegration:
@@ -535,6 +596,20 @@ Resources:
       ApiId: !Ref HttpApi
       RouteKey: 'POST /newsletter'
       Target: !Sub integrations/${NewsletterIntegration}
+
+  AffiliatePostRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'POST /affiliate'
+      Target: !Sub integrations/${AffiliateIntegration}
+
+  AffiliateGetRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'GET /affiliate'
+      Target: !Sub integrations/${AffiliateIntegration}
 
   ArtistsGetRoute:
     Type: AWS::ApiGatewayV2::Route
@@ -623,6 +698,14 @@ Resources:
       FunctionName: !Ref NewsletterFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/POST/newsletter
+
+  AffiliatePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref AffiliateFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/affiliate
 
   ArtistsPermission:
     Type: AWS::Lambda::Permission

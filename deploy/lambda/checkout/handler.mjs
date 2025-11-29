@@ -98,7 +98,7 @@ async function ensureTierRow(tierId) {
   })).catch(() => {})
 }
 
-async function createCheckoutSession({ tierId, email }) {
+async function createCheckoutSession({ tierId, email, referral }) {
   const { tier, error } = await selectTier(tierId)
   if (error) return error
 
@@ -121,6 +121,12 @@ async function createCheckoutSession({ tierId, email }) {
   params.append('metadata[tier]', effectiveTierId)
   if (tierId && tierId !== effectiveTierId){
     params.append('metadata[requested_tier]', String(tierId))
+  }
+  // Track referral for affiliate program and apply 5% discount
+  if (referral) {
+    params.append('metadata[referral]', String(referral))
+    // Apply 5% discount using Stripe's automatic discount
+    params.append('discounts[0][coupon]', 'AFFILIATE5')
   }
   params.append('line_items[0][quantity]', '1')
   params.append('line_items[0][price_data][currency]', 'usd')
@@ -167,7 +173,8 @@ export const handler = async (event) => {
     const body = event.body ? JSON.parse(event.body) : {}
     const tierId = body.tierId
     const email = body.email
-    const resp = await createCheckoutSession({ tierId, email })
+    const referral = body.referral
+    const resp = await createCheckoutSession({ tierId, email, referral })
     return cors(resp.statusCode, resp.body)
   } catch (e) {
     return cors(500, JSON.stringify({ error: 'internal_error', detail: String(e) }))

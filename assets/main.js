@@ -9,6 +9,26 @@ const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 // API Base
 const API_BASE = window.PAYMENTS_API_BASE || '';
 
+// Capture referral code from URL and store in localStorage
+(function captureReferral() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const ref = urlParams.get('ref');
+  if (ref) {
+    localStorage.setItem('rr_referral', ref);
+    // Track click for this affiliate (fire and forget)
+    fetch(`${API_BASE}/affiliate/click?ref=${encodeURIComponent(ref)}`, { method: 'POST' }).catch(() => {});
+    // Clean up URL without refreshing
+    const url = new URL(window.location.href);
+    url.searchParams.delete('ref');
+    window.history.replaceState({}, '', url.toString());
+  }
+})();
+
+// Get stored referral code
+function getReferralCode() {
+  return localStorage.getItem('rr_referral') || null;
+}
+
 /* --------------------------------------------------------------------------
    Navigation
    -------------------------------------------------------------------------- */
@@ -895,6 +915,7 @@ async function startCheckout(tierId) {
       // For now, use the existing single-item checkout
       // TODO: Update API to handle multiple line items
       const primaryItem = lineItems[0];
+      const referral = getReferralCode();
       const res = await fetch(`${API_BASE}/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -903,7 +924,9 @@ async function startCheckout(tierId) {
           tierId: primaryItem.tierId,
           quantity: primaryItem.quantity,
           // Pass additional items as metadata
-          addons: lineItems.slice(1)
+          addons: lineItems.slice(1),
+          // Pass referral code if present
+          referral: referral || undefined
         })
       });
 
@@ -957,3 +980,236 @@ async function startCheckout(tierId) {
     originalOpen();
   };
 })();
+
+/* --------------------------------------------------------------------------
+   Crowdfunding Progress Tracker
+   -------------------------------------------------------------------------- */
+(function initCrowdfunding() {
+  // Tier configuration with cumulative goals (each tier amount includes 10% community fund)
+  const TIERS = [
+    { id: 1, name: 'Minimum Viable Production', amount: 7590 },
+    { id: 2, name: 'First Headliner + Support', amount: 6600 },
+    { id: 3, name: 'Subphonic Upgrade ($6k)', amount: 3300 },
+    { id: 4, name: 'Festival Ambiance', amount: 3300 },
+    { id: 5, name: 'Daytime Programming', amount: 2750 },
+    { id: 6, name: 'Second Headliner + Support', amount: 6600 },
+    { id: 7, name: 'Subphonic Upgrade ($9k)', amount: 3300 },
+    { id: 8, name: 'Art & Infrastructure', amount: 5500 },
+    { id: 9, name: 'Third Headliner + Support', amount: 7700 },
+    { id: 10, name: 'Underground Support Acts', amount: 4400 },
+    { id: 11, name: 'Subphonic Upgrade ($12k)', amount: 3300 },
+    { id: 12, name: 'Marquee Headliner', amount: 13200 },
+    { id: 13, name: 'Subphonic Elite ($15k)', amount: 3300 },
+    { id: 14, name: 'Premium Package', amount: 11000 }
+  ];
+
+  // Calculate cumulative goals
+  let cumulative = 0;
+  TIERS.forEach(tier => {
+    cumulative += tier.amount;
+    tier.cumulativeGoal = cumulative;
+  });
+
+  // DOM elements
+  const progressBar = $('#funding-progress-bar');
+  const currentEl = $('#funding-current');
+  const goalEl = $('#funding-goal');
+  const tierNameEl = $('#next-tier-name');
+  const tiersUnlockedEl = $('#tiers-unlocked');
+
+  if (!progressBar || !currentEl || !goalEl) return;
+
+  // Update progress display
+  function updateProgress(raised) {
+    // Find current tier (first one not fully funded)
+    let tiersUnlocked = 0;
+    let currentTier = TIERS[0];
+    let prevCumulative = 0;
+
+    for (let i = 0; i < TIERS.length; i++) {
+      if (raised >= TIERS[i].cumulativeGoal) {
+        tiersUnlocked = i + 1;
+        prevCumulative = TIERS[i].cumulativeGoal;
+        if (i < TIERS.length - 1) {
+          currentTier = TIERS[i + 1];
+        } else {
+          currentTier = null; // All tiers complete
+        }
+      } else {
+        currentTier = TIERS[i];
+        break;
+      }
+    }
+
+    // Update tiers unlocked count
+    if (tiersUnlockedEl) {
+      tiersUnlockedEl.textContent = tiersUnlocked;
+    }
+
+    // If all tiers complete
+    if (tiersUnlocked === TIERS.length) {
+      if (tierNameEl) tierNameEl.textContent = 'All Tiers Unlocked!';
+      currentEl.textContent = '$' + raised.toLocaleString();
+      goalEl.textContent = '$' + TIERS[TIERS.length - 1].cumulativeGoal.toLocaleString();
+      progressBar.style.width = '100%';
+      return;
+    }
+
+    // Calculate progress within current tier
+    const tierStart = prevCumulative;
+    const tierEnd = currentTier.cumulativeGoal;
+    const tierProgress = raised - tierStart;
+    const tierGoal = tierEnd - tierStart;
+    const percent = Math.min(100, Math.max(0, (tierProgress / tierGoal) * 100));
+
+    // Update display
+    currentEl.textContent = '$' + tierProgress.toLocaleString();
+    goalEl.textContent = '$' + tierGoal.toLocaleString();
+    progressBar.style.width = percent + '%';
+
+    if (tierNameEl) {
+      tierNameEl.textContent = `Tier ${currentTier.id}: ${currentTier.name}`;
+    }
+
+    // Update tier cards in the DOM
+    updateTierCards(raised, tiersUnlocked, currentTier);
+  }
+
+  // Update visual state of tier cards
+  function updateTierCards(raised, tiersUnlocked, currentTier) {
+    const tierCards = $$('.tier[data-tier]');
+    let prevCumulative = 0;
+
+    tierCards.forEach(card => {
+      const tierNum = parseInt(card.dataset.tier, 10);
+      const tier = TIERS[tierNum - 1];
+      if (!tier) return;
+
+      const tierStart = tierNum === 1 ? 0 : TIERS[tierNum - 2].cumulativeGoal;
+      const tierEnd = tier.cumulativeGoal;
+
+      // Remove all state classes
+      card.classList.remove('tier--active', 'tier--complete');
+
+      if (raised >= tierEnd) {
+        // Tier is complete
+        card.classList.add('tier--complete');
+
+        // Update progress bar if it exists
+        const fillEl = card.querySelector('.tier__fill');
+        const statusEl = card.querySelector('.tier__status');
+        if (fillEl) fillEl.style.width = '100%';
+        if (statusEl) statusEl.textContent = 'Complete!';
+      } else if (currentTier && tierNum === currentTier.id) {
+        // This is the active tier
+        card.classList.add('tier--active');
+
+        // Calculate and show progress
+        const tierProgress = Math.max(0, raised - tierStart);
+        const tierGoal = tier.amount;
+        const percent = Math.min(100, (tierProgress / tierGoal) * 100);
+
+        // Ensure progress elements exist
+        let progressDiv = card.querySelector('.tier__progress');
+        if (!progressDiv) {
+          progressDiv = document.createElement('div');
+          progressDiv.className = 'tier__progress';
+          progressDiv.innerHTML = `
+            <div class="tier__bar"><div class="tier__fill" style="width: 0%"></div></div>
+            <span class="tier__status">$0 / $${tierGoal.toLocaleString()}</span>
+          `;
+          card.appendChild(progressDiv);
+        }
+
+        const fillEl = card.querySelector('.tier__fill');
+        const statusEl = card.querySelector('.tier__status');
+        if (fillEl) fillEl.style.width = percent + '%';
+        if (statusEl) statusEl.textContent = `$${tierProgress.toLocaleString()} / $${tierGoal.toLocaleString()}`;
+      }
+    });
+  }
+
+  // Fetch current funding from API (or use mock data for now)
+  async function fetchFunding() {
+    try {
+      // Try to get real data from orders table
+      const res = await fetch(`${API_BASE}/inventory?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        // Calculate total raised from ticket sales
+        // For now, use 0 until we have real sales data
+        const raised = data.totalRaised || 0;
+        updateProgress(raised);
+      }
+    } catch (e) {
+      // On error, just show 0 progress
+      updateProgress(0);
+    }
+  }
+
+  // Initialize
+  updateProgress(0); // Start with 0, will update when API responds
+  fetchFunding();
+})();
+
+/* --------------------------------------------------------------------------
+   Affiliate Signup Form
+   -------------------------------------------------------------------------- */
+(function initAffiliate() {
+  const form = $('#affiliate-form');
+  const result = $('#affiliate-result');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button[type="submit"]');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+    }
+
+    const name = ($('#affiliate-name')?.value || '').trim();
+    const email = ($('#affiliate-email')?.value || '').trim();
+
+    try {
+      const res = await fetch(`${API_BASE}/affiliate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email })
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        $('#affiliate-link').value = data.link;
+        $('#affiliate-code').textContent = data.code;
+        if (result) result.style.display = 'block';
+        form.style.display = 'none';
+      } else {
+        alert(data.error || 'Something went wrong');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Get My Affiliate Link';
+        }
+      }
+    } catch (_) {
+      alert('Network error. Please try again.');
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Get My Affiliate Link';
+      }
+    }
+  });
+})();
+
+// Copy affiliate link helper
+window.copyAffiliateLink = function() {
+  const input = $('#affiliate-link');
+  if (!input) return;
+  input.select();
+  document.execCommand('copy');
+  const btn = input.nextElementSibling;
+  if (btn) {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+  }
+};

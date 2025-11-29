@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reeguez Rocks 2026</title>
+
+    <!-- Icons and preview image -->
+    <link rel="icon" href="RR26Logo.png" type="image/png">
+    <link rel="shortcut icon" href="RR26Logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="RR26Logo.png" sizes="180x180">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Reeguez Rocks 2026">
+    <meta name="description" content="October 2026 — Underground bass festival at Camp Tahquitz, San Bernardino National Forest. Four days of immersive music, art, and community.">
+    <meta property="og:description" content="October 2026 — Underground bass festival at Camp Tahquitz, San Bernardino National Forest. Four days of immersive music, art, and community.">
+    <meta property="og:image" content="https://reeguezrocks.com/RR26Logo.png">
+    <meta property="og:url" content="https://reeguezrocks.com">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Preloads -->
+    <link rel="preload" href="RR26BG.png" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stripe -->
+    <link rel="dns-prefetch" href="https://api.stripe.com">
+    <link rel="preconnect" href="https://api.stripe.com" crossorigin>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="config.js"></script>
+
+    <link rel="stylesheet" href="assets/main.css">
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-layer" aria-hidden="true"></div>
+    <div class="bg-overlay" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <header class="nav" role="banner">
+        <a href="#" class="nav__logo" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+            <img src="assets/reeguez-rocks-2026-logo.png" alt="Reeguez Rocks 2026" width="140" height="auto">
+        </a>
+        <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <nav class="nav__menu" id="nav-menu" role="navigation">
+            <a href="#tickets" class="nav__link">Tickets</a>
+            <a href="#crowdfunding" class="nav__link">Progress</a>
+            <a href="#lineup" class="nav__link">Lineup</a>
+            <a href="#experience" class="nav__link">Experience</a>
+            <a href="#info" class="nav__link">Info & FAQ</a>
+            <a href="https://www.instagram.com/reeguez_rocks_festival/" class="nav__link nav__link--external" target="_blank" rel="noopener">Instagram</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero__logo-wrapper">
+            <img src="assets/reeguez-rocks-2026-logo.png" alt="Reeguez Rocks 2026" class="hero__logo">
+        </div>
+
+        <div class="hero__info">
+            <div class="hero__badge">Year Six</div>
+            <div class="hero__details">
+                <span class="hero__date">October 2026</span>
+                <span class="hero__divider"></span>
+                <span class="hero__venue">Camp Tahquitz, San Bernardino National Forest</span>
+            </div>
+            <p class="hero__tagline">Four days of underground bass music in the mountains</p>
+        </div>
+
+        <div class="hero__actions">
+            <button class="btn btn--primary btn--lg" id="hero-tickets-btn">Get Tickets</button>
+            <a href="https://www.instagram.com/reeguez_rocks_festival/" class="btn btn--instagram" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> Follow Us</a>
+        </div>
+
+        <div class="hero__scroll" aria-hidden="true">
+            <span>Explore</span>
+            <div class="hero__scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Crowdfunding Progress -->
+    <section class="section" id="crowdfunding">
+        <div class="container">
+            <header class="section__header">
+                <h2 class="section__title">Crowdfunding Progress</h2>
+                <p class="section__subtitle">Reeguez Rocks scales with the community. Each tier unlocks production upgrades. <strong>Prices increase 20% per phase</strong> — early supporters get the best deal.</p>
+            </header>
+
+            <div class="progress-card">
+                <div class="progress-card__header">
+                    <span class="progress-card__label">Next Unlock</span>
+                    <span class="progress-card__tier" id="next-tier-name">Tier 1: Minimum Viable Production</span>
+                </div>
+                <div class="progress-card__bar">
+                    <div class="progress-card__fill" id="funding-progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="progress-card__stats">
+                    <span><strong id="funding-current">$0</strong> of <strong id="funding-goal">$7,590</strong></span>
+                    <span class="progress-card__tiers"><span class="progress-card__unlocked" id="tiers-unlocked">0</span>/<span class="progress-card__total">14</span> tiers</span>
+                </div>
+            </div>
+
+            <div class="tiers">
+                <!-- Phase 1: Minimum Viable Production -->
+                <div class="phase" data-phase="1">
+                    <div class="phase__header">
+                        <div class="phase__info">
+                            <h3 class="phase__title">Phase 1: Minimum Viable Production</h3>
+                            <span class="phase__badge">Base Pricing</span>
+                        </div>
+                        <div class="phase__prices">$99 / $80 / $60 / $30</div>
+                    </div>
+                    <div class="phase__tiers">
+                        <div class="tier tier--active" data-tier="1">
+                            <div class="tier__main">
+                                <span class="tier__number">1</span>
+                                <span class="tier__desc">Insurance, permits, Subphonic main stage ($3k), The Bowl + Dome sound ($900), contingency</span>
+                                <span class="tier__amount">$7,590</span>
+                            </div>
+                            <div class="tier__progress">
+                                <div class="tier__bar"><div class="tier__fill" style="width: 0%"></div></div>
+                                <span class="tier__status">$0 / $7,590</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 2: First Headliner -->
+                <div class="phase" data-phase="2">
+                    <div class="phase__header">
+                        <div class="phase__info">
+                            <h3 class="phase__title">Phase 2: First Headliner</h3>
+                            <span class="phase__badge phase__badge--2">+20%</span>
+                        </div>
+                        <div class="phase__prices">$119 / $96 / $72 / $36</div>
+                    </div>
+                    <div class="phase__tiers">
+                        <div class="tier" data-tier="2">
+                            <div class="tier__main">
+                                <span class="tier__number">2</span>
+                                <span class="tier__desc">First headliner + 2 support acts</span>
+                                <span class="tier__amount">$6,600</span>
+                            </div>
+                        </div>
+                        <div class="tier" data-tier="3">
+                            <div class="tier__main">
+                                <span class="tier__number">3</span>
+                                <span class="tier__desc">Subphonic main stage upgrade — enhanced PA + lighting ($6k total)</span>
+                                <span class="tier__amount">$3,300</span>
+                            </div>
+                        </div>
+                        <div class="tier" data-tier="4">
+                            <div class="tier__main">
+                                <span class="tier__number">4</span>
+                                <span class="tier__desc">Festival ambiance (mood lighting, projectors, decor)</span>
+                                <span class="tier__amount">$3,300</span>
+                            </div>
+                        </div>
+                        <div class="tier" data-tier="5">
+                            <div class="tier__main">
+                                <span class="tier__number">5</span>
+                                <span class="tier__desc">Daytime programming (yoga, workshops, activities)</span>
+                                <span class="tier__amount">$2,750</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Future Phases (Collapsible) -->
+                <details class="phase-details">
+                    <summary class="phase-details__summary">
+                        <span>View Future Phases (3-5)</span>
+                        <span class="phase-details__hint">Unlock as we grow</span>
+                    </summary>
+                    <div class="phase-details__content">
+                        <!-- Phase 3: Growth -->
+                        <div class="phase phase--future" data-phase="3">
+                            <div class="phase__header">
+                                <div class="phase__info">
+                                    <h3 class="phase__title">Phase 3: Growth</h3>
+                                    <span class="phase__badge phase__badge--3">+40%</span>
+                                </div>
+                                <div class="phase__prices">$139 / $112 / $84 / $42</div>
+                            </div>
+                            <div class="phase__tiers">
+                                <div class="tier" data-tier="6">
+                                    <div class="tier__main">
+                                        <span class="tier__number">6</span>
+                                        <span class="tier__desc">Second headliner + 2 support acts</span>
+                                        <span class="tier__amount">$6,600</span>
+                                    </div>
+                                </div>
+                                <div class="tier" data-tier="7">
+                                    <div class="tier__main">
+                                        <span class="tier__number">7</span>
+                                        <span class="tier__desc">Subphonic main stage upgrade — video wall + effects ($9k total)</span>
+                                        <span class="tier__amount">$3,300</span>
+                                    </div>
+                                </div>
+                                <div class="tier" data-tier="8">
+                                    <div class="tier__main">
+                                        <span class="tier__number">8</span>
+                                        <span class="tier__desc">Art installations + infrastructure upgrades</span>
+                                        <span class="tier__amount">$5,500</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 4: Expansion -->
+                        <div class="phase phase--future" data-phase="4">
+                            <div class="phase__header">
+                                <div class="phase__info">
+                                    <h3 class="phase__title">Phase 4: Expansion</h3>
+                                    <span class="phase__badge phase__badge--4">+60%</span>
+                                </div>
+                                <div class="phase__prices">$159 / $128 / $96 / $48</div>
+                            </div>
+                            <div class="phase__tiers">
+                                <div class="tier" data-tier="9">
+                                    <div class="tier__main">
+                                        <span class="tier__number">9</span>
+                                        <span class="tier__desc">Third headliner + 2 support acts</span>
+                                        <span class="tier__amount">$7,700</span>
+                                    </div>
+                                </div>
+                                <div class="tier" data-tier="10">
+                                    <div class="tier__main">
+                                        <span class="tier__number">10</span>
+                                        <span class="tier__desc">Additional support acts (underground names)</span>
+                                        <span class="tier__amount">$4,400</span>
+                                    </div>
+                                </div>
+                                <div class="tier" data-tier="11">
+                                    <div class="tier__main">
+                                        <span class="tier__number">11</span>
+                                        <span class="tier__desc">Subphonic main stage upgrade — festival-grade production ($12k total)</span>
+                                        <span class="tier__amount">$3,300</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 5: Festival Scale -->
+                        <div class="phase phase--future" data-phase="5">
+                            <div class="phase__header">
+                                <div class="phase__info">
+                                    <h3 class="phase__title">Phase 5: Festival Scale</h3>
+                                    <span class="phase__badge phase__badge--5">+80%</span>
+                                </div>
+                                <div class="phase__prices">$179 / $144 / $108 / $54</div>
+                            </div>
+                            <div class="phase__tiers">
+                                <div class="tier" data-tier="12">
+                                    <div class="tier__main">
+                                        <span class="tier__number">12</span>
+                                        <span class="tier__desc">Fourth headliner (marquee name) + 2 support acts</span>
+                                        <span class="tier__amount">$13,200</span>
+                                    </div>
+                                </div>
+                                <div class="tier" data-tier="13">
+                                    <div class="tier__main">
+                                        <span class="tier__number">13</span>
+                                        <span class="tier__desc">Subphonic elite — maximum production ($15k total)</span>
+                                        <span class="tier__amount">$3,300</span>
+                                    </div>
+                                </div>
+                                <div class="tier" data-tier="14">
+                                    <div class="tier__main">
+                                        <span class="tier__number">14</span>
+                                        <span class="tier__desc">Premium package (aftermovie, medical tent, amenities)</span>
+                                        <span class="tier__amount">$11,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <p class="tiers__note">Tier progress is calculated after venue fees. <a href="financials.html">See full financial breakdown &rarr;</a></p>
+        </div>
+    </section>
+
+    <!-- Lineup -->
+    <section class="section section--alt" id="lineup">
+        <div class="container">
+            <header class="section__header">
+                <h2 class="section__title">Lineup</h2>
+                <p class="section__subtitle" id="lineup-updated"></p>
+            </header>
+            <div class="lineup-grid" id="lineup-grid"></div>
+        </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="section" id="experience">
+        <div class="container">
+            <header class="section__header">
+                <h2 class="section__title">The Experience</h2>
+                <p class="section__subtitle">Four days of immersive bass music, art, and connection beneath the forest sky.</p>
+            </header>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                    </div>
+                    <h3 class="feature__title">Main Stage</h3>
+                    <p class="feature__desc">Powered by Subphonic Events with LED video wall, full lighting rig, and massive PA with serious bass. Matching or exceeding the 2025 setup, scaling up with ticket sales.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                    </div>
+                    <h3 class="feature__title">The Bowl</h3>
+                    <p class="feature__desc">Camp's natural amphitheater — our high-energy afters stage after main shuts down. Scales from Keith's Soundboks setup to full second production based on ticket sales.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                    </div>
+                    <h3 class="feature__title">The Dome</h3>
+                    <p class="feature__desc">Geodesic chill space for winding down. Relaxed vibes, comfortable seating, ambient music on a small Soundboks — a place to decompress, not rage.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                    </div>
+                    <h3 class="feature__title">640 Acres</h3>
+                    <p class="feature__desc">Camp Tahquitz at 6,500ft elevation. Heated pool, Munzer Lake, historic cabins, zip line, climbing wall, and miles of forest trails.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info & FAQ Combined -->
+    <section class="section section--alt" id="info">
+        <div class="container">
+            <header class="section__header">
+                <h2 class="section__title">Info & FAQ</h2>
+            </header>
+
+            <div class="tabs" role="tablist">
+                <button class="tab tab--active" role="tab" aria-selected="true" data-tab="schedule">Schedule</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="directions">Directions</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="camping">Camping</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="faq">FAQ</button>
+            </div>
+
+            <div class="tab-panels">
+                <!-- Schedule -->
+                <div class="tab-panel tab-panel--active" id="panel-schedule" role="tabpanel">
+                    <ul class="info-list">
+                        <li><strong>Thursday:</strong> Gates open at 12 PM. Music begins at 5 PM on the Main Stage and runs until 2 AM.</li>
+                        <li><strong>Afters:</strong> The Bowl and The Dome remain open past sunrise every night.</li>
+                        <li><strong>Daytime:</strong> Programming, workshops, and activities start at 9 AM on Friday, Saturday, and Sunday.</li>
+                        <li><strong>Gates:</strong> Close every night at 10 PM. Reopen at 10 AM Friday through Sunday.</li>
+                        <li><strong>Monday:</strong> Pack out and depart by noon.</li>
+                    </ul>
+                </div>
+
+                <!-- Directions -->
+                <div class="tab-panel" id="panel-directions" role="tabpanel">
+                    <p class="info-lead">Camp Tahquitz is a 640-acre private camp in the San Bernardino Mountains, near Angelus Oaks. About 90 minutes from Los Angeles via Highway 38.</p>
+
+                    <div class="location-address">
+                        <strong>Camp Tahquitz</strong><br>
+                        39000 Mill Creek Rd<br>
+                        Angelus Oaks, CA 92305
+                    </div>
+
+                    <div class="map-links">
+                        <a href="https://maps.google.com/?q=Camp+Tahquitz+39000+Mill+Creek+Rd+Angelus+Oaks+CA" target="_blank" rel="noopener" class="map-link">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            Google Maps
+                        </a>
+                        <a href="https://maps.apple.com/?address=39000+Mill+Creek+Rd,Angelus+Oaks,CA+92305" target="_blank" rel="noopener" class="map-link">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                            Apple Maps
+                        </a>
+                        <a href="https://waze.com/ul?q=Camp%20Tahquitz%20Angelus%20Oaks%20CA" target="_blank" rel="noopener" class="map-link">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.54 6.63c.69 1.28 1.05 2.71 1.05 4.14 0 2.17-.89 4.19-2.5 5.73-.27.27-.56.51-.87.73.67 1.34-.17 2.68-1.62 2.68-.58 0-1.11-.23-1.49-.61-.45.09-.91.14-1.37.14-3.67 0-6.93-2.35-8.09-5.79-.16-.48.1-.99.58-1.15.48-.16.99.1 1.15.58.91 2.68 3.46 4.51 6.36 4.51.44 0 .87-.04 1.29-.13.36-.07.74.02 1.03.26.13.11.31.17.49.17.33 0 .49-.26.35-.58-.24-.53-.09-1.14.38-1.51.24-.19.47-.4.68-.62 1.29-1.24 2-2.87 2-4.61 0-1.14-.29-2.29-.84-3.31-.15-.27-.29-.55-.47-.81-.19-.26-.15-.62.08-.84.24-.22.6-.2.81.05.24.3.46.62.65.96M6.88 16.38c-.86 0-1.56-.7-1.56-1.56s.7-1.56 1.56-1.56 1.56.7 1.56 1.56-.7 1.56-1.56 1.56m6.24 0c-.86 0-1.56-.7-1.56-1.56s.7-1.56 1.56-1.56 1.56.7 1.56 1.56-.7 1.56-1.56 1.56M12 2C6.5 2 2 6.5 2 12c0 .68.07 1.35.2 2h2.04c-.14-.65-.24-1.32-.24-2 0-4.41 3.59-8 8-8s8 3.59 8 8h2c0-5.5-4.5-10-10-10z"/></svg>
+                            Waze
+                        </a>
+                    </div>
+
+                    <ul class="info-list">
+                        <li><strong>From LA:</strong> Take I-10 East to Highway 38 (near Redlands). Follow 38 through the mountains to Mill Creek Rd.</li>
+                        <li><strong>Gates:</strong> Open Thursday 12:00 PM. Early arrival Wednesday with add-on.</li>
+                        <li><strong>Check-in:</strong> Ticket + ID (18+). Wristbands at the gate.</li>
+                        <li><strong>Re-entry:</strong> Allowed. Come and go as needed.</li>
+                        <li><strong>Late arrivals:</strong> No nightly cut-off.</li>
+                        <li><strong>Parking:</strong> General areas available. Car camping add-on for campsite parking.</li>
+                    </ul>
+                </div>
+
+                <!-- Camping -->
+                <div class="tab-panel" id="panel-camping" role="tabpanel">
+                    <h4 style="color: var(--color-accent); margin-bottom: var(--space-md);">Camping Options</h4>
+                    <ul class="info-list">
+                        <li><strong>GA Parking + Tent Camping</strong> — Included with every wristband</li>
+                        <li><strong>Car Camping</strong> — $30 add-on. Park your vehicle at your campsite.</li>
+                        <li><strong>RV Camping</strong> — $100 add-on. Dry camping only (no power, water, or sewer hookups). Bring your own RV. <em>Limited to 5 spots.</em></li>
+                        <li><strong>Heated Cabins</strong> — $1,000 each. 6 historic cabins available, sleeps 9 per cabin.</li>
+                    </ul>
+                    <h4 style="color: var(--color-accent); margin: var(--space-lg) 0 var(--space-md);">Campground Info</h4>
+                    <ul class="info-list">
+                        <li><strong>Munzer Lake</strong> available for swimming and boating</li>
+                        <li><strong>Leave No Trace:</strong> Pack it in, pack it out</li>
+                    </ul>
+                </div>
+
+                <!-- FAQ -->
+                <div class="tab-panel" id="panel-faq" role="tabpanel">
+                    <div class="faq-list">
+                        <details class="faq-item">
+                            <summary class="faq-q">What is the age requirement?</summary>
+                            <p class="faq-a">18+ only. Valid government-issued ID required at check-in.</p>
+                        </details>
+                        <details class="faq-item">
+                            <summary class="faq-q">What items are prohibited?</summary>
+                            <p class="faq-a">Weapons, illegal items, and glass containers are strictly forbidden. Wood fires are not allowed — propane stoves and grills only.</p>
+                        </details>
+                        <details class="faq-item">
+                            <summary class="faq-q">Is there harm reduction on site?</summary>
+                            <p class="faq-a">Yes. Trained medical volunteers, naloxone available, and shaded rest areas. Your safety is our priority.</p>
+                        </details>
+                        <details class="faq-item">
+                            <summary class="faq-q">Can I bring alcohol?</summary>
+                            <p class="faq-a">Yes, BYO. No alcohol sales on site. Please drink responsibly.</p>
+                        </details>
+                        <details class="faq-item">
+                            <summary class="faq-q">Are meal plans available?</summary>
+                            <p class="faq-a">Yes! Full Festival ($100/8 meals), Weekend ($50/4 meals), or Single Day ($30/2 meals). Purchase during checkout.</p>
+                        </details>
+                        <details class="faq-item">
+                            <summary class="faq-q">What is the refund policy?</summary>
+                            <p class="faq-a">All sales are final. If the event is cancelled, full refunds will be issued.</p>
+                        </details>
+                        <details class="faq-item">
+                            <summary class="faq-q">Is there cell service?</summary>
+                            <p class="faq-a">Limited. Some carriers work better than others at 6,500ft elevation. Download offline content before arriving.</p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Affiliate Program -->
+    <section class="section section--alt" id="affiliate">
+        <div class="container container--narrow">
+            <header class="section__header">
+                <h2 class="section__title">Earn With Us</h2>
+                <p class="section__subtitle">Get your own link. Earn $5 for every ticket sold, and your referrals get 5% off.</p>
+            </header>
+
+            <div class="affiliate-signup">
+                <form class="affiliate-form" id="affiliate-form">
+                    <div class="affiliate-form__fields">
+                        <input type="text" id="affiliate-name" placeholder="Your Name" required class="input">
+                        <input type="email" id="affiliate-email" placeholder="Email" required class="input">
+                    </div>
+                    <button type="submit" class="btn btn--primary">Get My Affiliate Link</button>
+                </form>
+
+                <div class="affiliate-result" id="affiliate-result" style="display: none;">
+                    <p class="affiliate-result__label">Your Affiliate Link</p>
+                    <div class="affiliate-result__link">
+                        <input type="text" id="affiliate-link" readonly class="input">
+                        <button type="button" class="btn btn--outline" onclick="copyAffiliateLink()">Copy</button>
+                    </div>
+                    <p class="affiliate-result__code">Promo Code: <strong id="affiliate-code"></strong></p>
+                </div>
+
+                <p class="affiliate-leaderboard-link">
+                    <a href="affiliate-dashboard.html">My Dashboard</a> · <a href="affiliates.html">Leaderboard</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <p>&copy; 2026 Reeguez Rocks. All rights reserved.</p>
+            <div class="footer__links">
+                <a href="financials.html">Financials</a>
+                <a href="mailto:reeguezrocks@gmail.com">Contact</a>
+                <a href="https://www.instagram.com/reeguez_rocks_festival/" target="_blank" rel="noopener">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Ticket Modal (Multi-Step) -->
+    <div class="modal-overlay" id="modal-overlay" aria-hidden="true"></div>
+    <div class="modal modal--checkout" id="ticket-modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <button class="modal__close" id="modal-close" aria-label="Close">&times;</button>
+
+        <!-- Step Indicator -->
+        <div class="checkout-steps">
+            <div class="checkout-step checkout-step--active" data-step="1">
+                <span class="checkout-step__num">1</span>
+                <span class="checkout-step__label">Tickets</span>
+            </div>
+            <div class="checkout-step" data-step="2">
+                <span class="checkout-step__num">2</span>
+                <span class="checkout-step__label">Camping</span>
+            </div>
+            <div class="checkout-step" data-step="3">
+                <span class="checkout-step__num">3</span>
+                <span class="checkout-step__label">Checkout</span>
+            </div>
+        </div>
+
+        <!-- Step 1: Ticket Selection -->
+        <div class="checkout-panel checkout-panel--active" id="panel-step-1">
+            <h2 id="modal-title" class="modal__title">Choose Your Ticket</h2>
+            <div class="ticket-list" id="ticket-list"></div>
+            <div class="checkout-quantity">
+                <label for="ticket-qty">How many tickets?</label>
+                <div class="qty-selector">
+                    <button type="button" class="qty-btn" id="qty-minus">-</button>
+                    <input type="number" id="ticket-qty" value="1" min="1" max="10" readonly>
+                    <button type="button" class="qty-btn" id="qty-plus">+</button>
+                </div>
+            </div>
+            <div class="checkout-actions">
+                <button class="btn btn--primary btn--lg checkout-next" id="step1-next" disabled>Continue to Camping</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Camping Selection -->
+        <div class="checkout-panel" id="panel-step-2">
+            <h2 class="modal__title">Choose Your Camping</h2>
+            <div class="camping-options" id="camping-options">
+                <label class="camping-option camping-option--selected">
+                    <input type="radio" name="camping" value="ga-parking" checked>
+                    <div class="camping-option__content">
+                        <div class="camping-option__header">
+                            <span class="camping-option__name">GA Parking</span>
+                            <span class="camping-option__price">Included</span>
+                        </div>
+                        <p class="camping-option__desc">Park in general area, walk to your campsite. Tent camping included with all GA tickets.</p>
+                    </div>
+                </label>
+                <label class="camping-option">
+                    <input type="radio" name="camping" value="car-camping">
+                    <div class="camping-option__content">
+                        <div class="camping-option__header">
+                            <span class="camping-option__name">Car Camping</span>
+                            <span class="camping-option__price">+$30</span>
+                        </div>
+                        <p class="camping-option__desc">Park directly at your campsite. Camp next to your vehicle for easy access to your gear.</p>
+                    </div>
+                </label>
+                <label class="camping-option">
+                    <input type="radio" name="camping" value="cabin">
+                    <div class="camping-option__content">
+                        <div class="camping-option__header">
+                            <span class="camping-option__name">Cabin</span>
+                            <span class="camping-option__price">$1,000</span>
+                        </div>
+                        <p class="camping-option__desc">Historic heated cabin, sleeps 9. Only 6 available — perfect for groups. Replaces GA ticket.</p>
+                    </div>
+                </label>
+            </div>
+            <div class="checkout-addon" id="early-arrival-addon">
+                <label class="addon-checkbox">
+                    <input type="checkbox" id="early-arrival-check">
+                    <div class="addon-checkbox__content">
+                        <span class="addon-checkbox__name">Early Arrival (Wednesday)</span>
+                        <span class="addon-checkbox__price">+$20</span>
+                    </div>
+                    <p class="addon-checkbox__desc">Arrive a day early for the best campsite selection.</p>
+                </label>
+            </div>
+            <div class="checkout-actions">
+                <button class="btn btn--outline checkout-back" id="step2-back">Back</button>
+                <button class="btn btn--primary btn--lg checkout-next" id="step2-next">Review Order</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Order Summary -->
+        <div class="checkout-panel" id="panel-step-3">
+            <h2 class="modal__title">Review Your Order</h2>
+            <div class="order-summary" id="order-summary">
+                <!-- Populated by JS -->
+            </div>
+            <div class="order-total">
+                <span>Total</span>
+                <span id="order-total-amount">$0</span>
+            </div>
+            <div class="checkout-actions">
+                <button class="btn btn--outline checkout-back" id="step3-back">Back</button>
+                <button class="btn btn--primary btn--lg" id="checkout-btn">Proceed to Payment</button>
+            </div>
+        </div>
+
+        <p class="modal__note">Questions? Email <strong>reeguezrocks@gmail.com</strong> or reach out on Discord.</p>
+        <div id="success-message" class="modal__success" role="alert" hidden>Thank you for your purchase!</div>
+        <div id="error-message" class="modal__error" role="alert" hidden></div>
+    </div>
+
+    <!-- Mobile CTA -->
+    <button class="mobile-cta" id="mobile-cta">Get Tickets</button>
+
+    <!-- Scripts -->
+    <script src="assets/main.js"></script>
+</body>
+</html>

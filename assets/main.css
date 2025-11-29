@@ -22,6 +22,7 @@
   --color-success: #4ade80;
   --color-error: #ff6b6b;
   --color-discord: #5865F2;
+  --color-instagram: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
 
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-accent: rgba(247, 166, 2, 0.3);
@@ -89,9 +90,7 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   color: var(--color-text);
-  background: var(--color-bg) url('bg.png') no-repeat center top;
-  background-size: cover;
-  background-attachment: fixed;
+  background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -140,11 +139,24 @@ button {
    -------------------------------------------------------------------------- */
 .bg-layer {
   position: fixed;
-  inset: 0;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  z-index: -2;
+  background-image: url('../RR26BG.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.bg-overlay {
+  position: fixed;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
   z-index: -1;
-  background:
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.8) 100%),
-    url('../RR26BG.png') center/cover no-repeat;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.8) 100%);
 }
 
 /* --------------------------------------------------------------------------
@@ -345,12 +357,19 @@ button {
 
 .hero__details {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   font-size: var(--text-base);
   color: var(--color-text);
+}
+
+@media (min-width: 640px) {
+  .hero__details {
+    flex-direction: row;
+    gap: var(--space-sm);
+  }
 }
 
 .hero__date {
@@ -359,10 +378,17 @@ button {
 }
 
 .hero__divider {
+  display: none;
   width: 4px;
   height: 4px;
   background: var(--color-accent);
   border-radius: 50%;
+}
+
+@media (min-width: 640px) {
+  .hero__divider {
+    display: block;
+  }
 }
 
 .hero__venue {
@@ -491,6 +517,23 @@ button {
 
 .btn--discord:hover {
   color: #fff;
+}
+
+.btn--instagram {
+  background: var(--color-instagram);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn--instagram svg {
+  flex-shrink: 0;
+}
+
+.btn--instagram:hover {
+  color: #fff;
+  opacity: 0.9;
 }
 
 .btn--lg {
@@ -692,13 +735,20 @@ button {
   border: 1px solid var(--color-border-accent);
 }
 
+.tier--complete,
 .tier--completed {
   background: rgba(74, 222, 128, 0.08);
   border: 1px solid rgba(74, 222, 128, 0.3);
 }
 
+.tier--complete .tier__number,
 .tier--completed .tier__number {
   background: var(--color-success);
+}
+
+.tier--complete .tier__status {
+  color: var(--color-success);
+  font-weight: 600;
 }
 
 .tier__main {
@@ -1004,6 +1054,49 @@ button {
   margin-bottom: var(--space-lg);
   color: var(--color-text-muted);
   line-height: 1.6;
+}
+
+.location-address {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-lg);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.map-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.map-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.map-link:hover {
+  background: rgba(247, 166, 2, 0.1);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.map-link svg {
+  width: 18px;
+  height: 18px;
 }
 
 .info-grid {
@@ -1458,6 +1551,69 @@ button {
   border-bottom: none;
 }
 
+/* Schedule Grid (Fallback) */
+.schedule-grid {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 640px) {
+  .schedule-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .schedule-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.schedule-day {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.schedule-day__title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.schedule-day__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.schedule-day__list li {
+  display: flex;
+  gap: var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.schedule-time {
+  flex-shrink: 0;
+  min-width: 65px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.schedule-note {
+  margin-top: var(--space-lg);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-subtle);
+  font-style: italic;
+}
+
 /* --------------------------------------------------------------------------
    Multi-Step Checkout
    -------------------------------------------------------------------------- */
@@ -1779,4 +1935,70 @@ button {
 .ticket-option.selected {
   border-color: var(--color-accent);
   background: rgba(247, 166, 2, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   Affiliate Signup
+   -------------------------------------------------------------------------- */
+.affiliate-signup {
+  text-align: center;
+}
+
+.affiliate-form__fields {
+  display: grid;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+@media (min-width: 480px) {
+  .affiliate-form__fields {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.affiliate-result {
+  margin-top: var(--space-xl);
+  padding: var(--space-lg);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.affiliate-result__label {
+  font-weight: 600;
+  color: var(--color-accent);
+  margin-bottom: var(--space-md);
+}
+
+.affiliate-result__link {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.affiliate-result__link input {
+  flex: 1;
+}
+
+.affiliate-result__code {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.affiliate-result__code strong {
+  color: var(--color-accent);
+  font-size: var(--text-lg);
+}
+
+.affiliate-leaderboard-link {
+  margin-top: var(--space-lg);
+}
+
+.affiliate-leaderboard-link a {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.affiliate-leaderboard-link a:hover {
+  color: var(--color-accent);
 }
