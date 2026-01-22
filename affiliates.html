@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate Leaderboard | Reeguez Rocks 2026</title>
+
+    <!-- Icons and preview image -->
+    <link rel="icon" href="RR26Logo.png" type="image/png">
+    <link rel="shortcut icon" href="RR26Logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="RR26Logo.png" sizes="180x180">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <!-- Config -->
+    <script src="config.js"></script>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Affiliate Leaderboard | Reeguez Rocks 2026">
+    <meta name="description" content="See who's leading the pack in ticket sales. Earn $5 for every ticket sold through your affiliate link.">
+    <meta property="og:description" content="See who's leading the pack in ticket sales. Earn $5 for every ticket sold through your affiliate link.">
+    <meta property="og:image" content="https://reeguezrocks.com/RR26Logo.png">
+    <meta property="og:url" content="https://reeguezrocks.com/affiliates.html">
+    <meta property="og:type" content="website">
+
+    <!-- Preloads -->
+    <link rel="preload" href="RR26BG.png" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/main.css">
+    <style>
+        .affiliate-hero {
+            padding: calc(var(--nav-height) + var(--space-3xl)) var(--space-lg) var(--space-2xl);
+            text-align: center;
+        }
+
+        .affiliate-hero__title {
+            font-size: clamp(var(--text-2xl), 5vw, var(--text-4xl));
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .affiliate-hero__subtitle {
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+
+        .back-link:hover {
+            color: var(--color-accent);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .stats-section {
+            padding: var(--space-xl) var(--space-lg);
+        }
+
+        .stats-grid {
+            display: grid;
+            gap: var(--space-md);
+            max-width: 600px;
+            margin: 0 auto var(--space-2xl);
+        }
+
+        @media (min-width: 480px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+        .stat-card__value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-card__label {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .leaderboard-section {
+            padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+        }
+
+        .leaderboard-section__title {
+            font-size: var(--text-2xl);
+            color: var(--color-accent);
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .leaderboard {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .leaderboard__empty {
+            text-align: center;
+            color: var(--color-text-muted);
+            padding: var(--space-3xl) var(--space-lg);
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+        }
+
+        .leaderboard__loading {
+            text-align: center;
+            color: var(--color-text-muted);
+            padding: var(--space-3xl);
+        }
+
+        .leaderboard__item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: var(--space-md);
+            align-items: center;
+            padding: var(--space-lg);
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-md);
+            transition: border-color 0.2s;
+        }
+
+        .leaderboard__item:hover {
+            border-color: var(--color-border-accent);
+        }
+
+        .leaderboard__item--top {
+            border-color: var(--color-accent);
+            background: rgba(247, 166, 2, 0.05);
+        }
+
+        .leaderboard__rank {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            font-weight: 700;
+            color: var(--color-text-muted);
+        }
+
+        .leaderboard__item--top .leaderboard__rank {
+            background: var(--color-accent);
+            color: var(--color-bg);
+        }
+
+        .leaderboard__name {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .leaderboard__stats {
+            text-align: right;
+        }
+
+        .leaderboard__tickets {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .leaderboard__earnings {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .join-cta {
+            text-align: center;
+            padding: var(--space-2xl) var(--space-lg);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .join-cta__title {
+            font-size: var(--text-xl);
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+        }
+
+        .join-cta__desc {
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-lg);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .join-cta__btn {
+            display: inline-block;
+            padding: var(--space-md) var(--space-xl);
+            background: var(--color-accent);
+            color: var(--color-bg);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .join-cta__btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-layer" aria-hidden="true"></div>
+    <div class="bg-overlay" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <header class="nav" role="banner">
+        <a href="/" class="nav__logo">
+            <img src="assets/reeguez-rocks-2026-logo.png" alt="Reeguez Rocks 2026" width="140" height="auto">
+        </a>
+        <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <nav class="nav__menu" id="nav-menu" role="navigation">
+            <a href="/#tickets" class="nav__link">Tickets</a>
+            <a href="/#crowdfunding" class="nav__link">Progress</a>
+            <a href="/#lineup" class="nav__link">Lineup</a>
+            <a href="/#experience" class="nav__link">Experience</a>
+            <a href="/#info" class="nav__link">Info & FAQ</a>
+            <a href="https://www.instagram.com/reeguez_rocks_festival/" class="nav__link nav__link--external" target="_blank" rel="noopener">Instagram</a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="affiliate-hero">
+        <div class="container">
+            <a href="financials.html" class="back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Financials
+            </a>
+            <h1 class="affiliate-hero__title">Affiliate Leaderboard</h1>
+            <p class="affiliate-hero__subtitle">See who's crushing it with ticket sales. Earn $5 for every ticket sold through your link, and your referrals get 5% off!</p>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card__value" id="total-affiliates">-</div>
+                    <div class="stat-card__label">Total Affiliates</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__value" id="total-tickets">-</div>
+                    <div class="stat-card__label">Tickets Sold via Affiliates</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard -->
+    <section class="leaderboard-section">
+        <div class="container">
+            <h2 class="leaderboard-section__title">Top Sellers</h2>
+            <div class="leaderboard" id="leaderboard">
+                <div class="leaderboard__loading">Loading leaderboard...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join CTA -->
+    <section class="join-cta">
+        <div class="container">
+            <h2 class="join-cta__title">Want to join the leaderboard?</h2>
+            <p class="join-cta__desc">Get your own affiliate link in seconds. Earn $5 per ticket, and your friends get 5% off!</p>
+            <a href="/#affiliate" class="join-cta__btn">Get Your Affiliate Link</a>
+            <p style="margin-top: var(--space-md); font-size: var(--text-sm);"><a href="affiliate-dashboard.html" style="color: var(--color-text-muted);">Already an affiliate? View your dashboard →</a></p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <p>&copy; 2026 Reeguez Rocks. All rights reserved.</p>
+            <div class="footer__links">
+                <a href="/">Back to Main Site</a>
+                <a href="mailto:reeguezrocks@gmail.com">Contact</a>
+                <a href="https://www.instagram.com/reeguez_rocks_festival/" target="_blank" rel="noopener">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Nav toggle
+        const toggle = document.getElementById('nav-toggle');
+        const menu = document.getElementById('nav-menu');
+        if (toggle && menu) {
+            toggle.addEventListener('click', () => {
+                const isOpen = menu.classList.toggle('is-open');
+                toggle.setAttribute('aria-expanded', isOpen);
+            });
+        }
+
+        // Nav scroll behavior
+        const nav = document.querySelector('.nav');
+        if (nav) {
+            const handleScroll = () => {
+                nav.classList.toggle('nav--scrolled', window.scrollY > 20);
+            };
+            handleScroll();
+            window.addEventListener('scroll', handleScroll, { passive: true });
+        }
+
+        // Load leaderboard
+        const API_BASE = window.PAYMENTS_API_BASE || 'https://gg9rf9hsf0.execute-api.us-east-1.amazonaws.com';
+
+        async function loadLeaderboard() {
+            const leaderboard = document.getElementById('leaderboard');
+            const totalAffiliates = document.getElementById('total-affiliates');
+            const totalTickets = document.getElementById('total-tickets');
+
+            try {
+                const res = await fetch(`${API_BASE}/affiliate`);
+                const data = await res.json();
+
+                if (data.ok) {
+                    totalAffiliates.textContent = data.totalAffiliates || 0;
+                    totalTickets.textContent = data.totalTicketsSold || 0;
+
+                    if (data.affiliates && data.affiliates.length > 0) {
+                        leaderboard.innerHTML = data.affiliates.map((affiliate, index) => `
+                            <div class="leaderboard__item ${index === 0 ? 'leaderboard__item--top' : ''}">
+                                <div class="leaderboard__rank">${index + 1}</div>
+                                <div class="leaderboard__name">${escapeHtml(affiliate.name)}</div>
+                                <div class="leaderboard__stats">
+                                    <div class="leaderboard__tickets">${affiliate.ticketsSold} tickets</div>
+                                    <div class="leaderboard__earnings">$${(affiliate.earnings / 100).toLocaleString()} earned</div>
+                                </div>
+                            </div>
+                        `).join('');
+                    } else {
+                        leaderboard.innerHTML = `
+                            <div class="leaderboard__empty">
+                                <p>No affiliates yet. Be the first!</p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    leaderboard.innerHTML = '<div class="leaderboard__empty">Could not load leaderboard.</div>';
+                }
+            } catch (err) {
+                leaderboard.innerHTML = '<div class="leaderboard__empty">Could not load leaderboard.</div>';
+            }
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        loadLeaderboard();
+    </script>
+</body>
+</html>

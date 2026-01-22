@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schedule Builder — Reeguez Rocks</title>
+  <style>
+    :root{ --bg:#0b0b0f; --panel:#12121a; --text:#e8e8ef; --muted:#9aa1ad; --acc:#f7a602; --acc2:#8A2BE2; }
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    header{position:sticky;top:0;background:#0d0d14;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .wrap{max-width:1200px;margin:16px auto;padding:0 16px}
+    .panel{background:#14141e;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px}
+    .cols{display:grid;grid-template-columns:280px 1fr;gap:12px}
+    .list{background:#0f0f16;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px;max-height:70vh;overflow:auto}
+    .artist{padding:8px 10px;border:1px solid rgba(255,255,255,.16);border-radius:8px;margin:6px 0;cursor:grab;background:#161622}
+    .artist.dragging{opacity:.6}
+    .grid{display:grid;grid-template-columns:160px 1fr;gap:0}
+    .times{display:flex;flex-direction:column}
+    .time{height:44px;border-bottom:1px dashed rgba(255,255,255,.1);color:var(--muted);font-size:12px;display:flex;align-items:center;justify-content:center}
+    .tracks{display:grid;grid-template-columns:1fr 1fr}
+    .track{border-left:1px solid rgba(255,255,255,.12)}
+    .slot{height:44px;border-bottom:1px dashed rgba(255,255,255,.1);padding:4px;position:relative}
+    .entry{position:absolute;inset:4px;display:flex;align-items:center;justify-content:space-between;background:#1a1a2a;border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:6px}
+    .entry .name{font-weight:700}
+    .entry .actions{display:flex;gap:6px}
+    .btn{background:var(--acc);color:#000;border:0;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer}
+    .btn.secondary{background:#1b1b25;color:var(--text);border:1px solid rgba(255,255,255,.12)}
+    .muted{color:var(--muted)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+    input[type=number],select{padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.16);background:#0f0f16;color:#fff}
+  </style>
+  <script src="../config.js"></script>
+</head>
+<body>
+  <header>
+    <div><strong>Schedule Builder</strong> <span id="status" class="muted"></span></div>
+    <div class="controls">
+      <label>Duration (hours): <input id="duration" type="number" min="1" max="6" value="1" style="width:70px"></label>
+      <button class="btn secondary" id="clearAll">Clear all</button>
+      <button class="btn" id="save">Save</button>
+      <button class="btn secondary" id="exportJson">Export JSON</button>
+      <button class="btn secondary" id="exportCsv">Export CSV</button>
+      <label style="margin-left:8px"><input type="checkbox" id="published"> Publish to site</label>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="cols">
+      <div class="panel">
+        <div class="muted" style="margin-bottom:6px">Artists</div>
+        <div id="artistList" class="list"></div>
+      </div>
+      <div class="panel">
+        <div class="controls">
+          <div class="muted">Tracks:</div>
+          <select id="tracks">
+            <option>Main Stage|The Dome</option>
+            <option>Main Stage</option>
+            <option>The Dome</option>
+          </select>
+          <div class="muted">Slot size:</div>
+          <select id="slotSize">
+            <option value="60" selected>60 min</option>
+            <option value="30">30 min</option>
+          </select>
+        </div>
+        <div class="grid">
+          <div id="times" class="times"></div>
+          <div id="tracksGrid" class="tracks"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $=(s,d=document)=>d.querySelector(s);
+    const $$=(s,d=document)=>Array.from(d.querySelectorAll(s));
+    const status=$('#status');
+    const artistList=$('#artistList');
+    const timesCol=$('#times');
+    const tracksGrid=$('#tracksGrid');
+    const slotSizeSel=$('#slotSize');
+    const tracksSel=$('#tracks');
+    const durationEl=$('#duration');
+
+    const TZ='America/Los_Angeles';
+    const START=new Date('2025-10-23T12:00:00-07:00');
+    const END=new Date('2025-10-26T12:00:00-07:00');
+
+    let artists=[];
+    let schedule={ entries:[], meta:{ tz:TZ, published:false } };
+
+    function fmtTime(d){ return d.toLocaleString(undefined,{ hour:'numeric', minute:'2-digit' }); }
+    function fmtDay(d){ return d.toLocaleDateString(undefined,{ weekday:'short', month:'short', day:'numeric' }); }
+
+    function timeSlots(minutes){
+      const out=[]; let t=new Date(START); while(t<=END){ out.push(new Date(t)); t=new Date(t.getTime()+minutes*60000); }
+      return out;
+    }
+
+    function buildGrid(){
+      timesCol.innerHTML=''; tracksGrid.innerHTML='';
+      const minutes=parseInt(slotSizeSel.value,10);
+      const slots=timeSlots(minutes);
+      slots.forEach((t,i)=>{
+        const div=document.createElement('div'); div.className='time'; div.textContent = (i===0? fmtDay(t)+' • ':'') + fmtTime(t);
+        timesCol.appendChild(div);
+      });
+      const tracks=(tracksSel.value||'Main Stage|The Dome').split('|');
+      tracksGrid.style.gridTemplateColumns=`repeat(${tracks.length}, 1fr)`;
+      tracks.forEach(track=>{
+        const col=document.createElement('div'); col.className='track'; col.dataset.track=track;
+        slots.forEach((t)=>{
+          const slot=document.createElement('div'); slot.className='slot'; slot.dataset.time=t.toISOString(); slot.dataset.track=track;
+          slot.addEventListener('dragover', e=>{ e.preventDefault(); });
+          slot.addEventListener('drop', e=>{
+            e.preventDefault(); const artistName=e.dataTransfer.getData('text/plain');
+            placeEntry(track, t, artistName, parseInt(durationEl.value,10)||1);
+          });
+          col.appendChild(slot);
+        });
+        tracksGrid.appendChild(col);
+      });
+      renderEntries();
+    }
+
+    function renderArtists(){
+      artistList.innerHTML='';
+      artists.forEach(a=>{
+        const item=document.createElement('div'); item.className='artist'; item.textContent=a.name; item.draggable=true;
+        item.addEventListener('dragstart', e=>{ item.classList.add('dragging'); e.dataTransfer.setData('text/plain', a.name); });
+        item.addEventListener('dragend', ()=> item.classList.remove('dragging'));
+        artistList.appendChild(item);
+      });
+    }
+
+    function overlaps(a,b){ return a.start<b.end && b.start<a.end; }
+
+    function placeEntry(track, startDate, name, hours){
+      const start=new Date(startDate); const end=new Date(start.getTime()+hours*3600000);
+      schedule.entries = schedule.entries.filter(e=> !(e.track===track && e.start===start.toISOString()));
+      schedule.entries = schedule.entries.filter(e=> !(e.track===track && overlaps({start:new Date(e.start),end:new Date(e.end)}, {start,end})) );
+      schedule.entries.push({ track, start:start.toISOString(), end:end.toISOString(), artist:name });
+      renderEntries();
+    }
+
+    function clearEntry(track, startIso){
+      schedule.entries = schedule.entries.filter(e=> !(e.track===track && e.start===startIso));
+      renderEntries();
+    }
+
+    function renderEntries(){
+      // Clear visuals
+      $$('.entry').forEach(e=> e.remove());
+      // Render each entry as a block spanning N slots based on duration
+      const minutes=parseInt(slotSizeSel.value,10);
+      const slotHeight=44; // px
+      schedule.entries.sort((a,b)=> a.start.localeCompare(b.start));
+      for (const e of schedule.entries){
+        const start=new Date(e.start); const end=new Date(e.end);
+        const durMin=Math.max(minutes, Math.round((end-start)/60000));
+        const rows = Math.ceil(durMin / minutes);
+        const selector = `.slot[data-track=\"${e.track}\"][data-time=\"${start.toISOString()}\"]`;
+        const slot = document.querySelector(selector);
+        if (!slot) continue;
+        const div=document.createElement('div'); div.className='entry'; div.style.height = `${rows*slotHeight-8}px`;
+        const name=document.createElement('div'); name.className='name'; name.textContent = e.artist;
+        const actions=document.createElement('div'); actions.className='actions';
+        const del=document.createElement('button'); del.textContent='Clear'; del.className='btn secondary'; del.addEventListener('click', ()=> clearEntry(e.track, e.start));
+        actions.appendChild(del); div.appendChild(name); div.appendChild(actions);
+        slot.appendChild(div);
+      }
+      status.textContent = ` ${schedule.entries.length} entries`;
+    }
+
+    async function loadArtists(){
+      try{
+        const base = window.PAYMENTS_API_BASE || (window.parent && window.parent.PAYMENTS_API_BASE);
+        if (base){ const r=await fetch(`${base}/artists?t=${Date.now()}`); if(r.ok){ const j=await r.json(); artists=j.artists||[]; return; } }
+      }catch{}
+      try{ const r=await fetch('../assets/artists.json',{cache:'no-store'}); artists=await r.json(); }catch{ artists=[] }
+    }
+
+    async function authFetch(url, opts={}){
+      const base = window.PAYMENTS_API_BASE || (window.parent && window.parent.PAYMENTS_API_BASE);
+      if (!base) throw new Error('no_api');
+      let pwd = localStorage.getItem('rr_admin_pwd');
+      if (!pwd){ pwd = prompt('Enter admin password'); if (!pwd) throw new Error('no_pwd'); localStorage.setItem('rr_admin_pwd', pwd); }
+      const headers = Object.assign({ 'Authorization': `Bearer ${pwd}` }, opts.headers||{});
+      const res = await fetch(`${base}${url}`, Object.assign({}, opts, { headers }));
+      if (res.status===401){ localStorage.removeItem('rr_admin_pwd'); alert('Password incorrect or expired. Please try again.'); throw new Error('unauthorized'); }
+      return res;
+    }
+
+    async function loadSchedule(){
+      try{
+        const res = await authFetch('/schedule', { method:'GET', cache:'no-store' });
+        if (res.ok){ const j=await res.json(); if (j && typeof j==='object'){ schedule = j; if (!Array.isArray(schedule.entries)) schedule.entries=[]; if (!schedule.meta) schedule.meta={ tz:TZ, published:false }; if (typeof schedule.meta.published!== 'boolean') schedule.meta.published=false; } }
+      }catch(e){ /* leave empty schedule */ }
+    }
+
+    async function saveSchedule(){
+      try{
+        schedule.meta = Object.assign({ tz:TZ, published:false }, schedule.meta, { published: !!$('#published').checked });
+        const res = await authFetch('/schedule', { method:'PUT', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(schedule) });
+        if (!res.ok) throw new Error('save_failed');
+        alert('Schedule saved.');
+      }catch(e){ alert('Could not save schedule.'); }
+    }
+
+    function toCsv(rows){ return rows.map(r=> r.map(v=> '\"'+String(v).replace(/\"/g,'\"\"')+'\"').join(',')).join('\\n'); }
+    function exportData(){
+      const rows = [[ 'track','start','end','artist' ]];
+      schedule.entries.forEach(e=> rows.push([e.track,e.start,e.end,e.artist]));
+      return rows;
+    }
+    $('#exportJson').addEventListener('click', ()=>{
+      const blob=new Blob([JSON.stringify(schedule,null,2)],{type:'application/json'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='schedule.json'; a.click(); URL.revokeObjectURL(a.href);
+    });
+    $('#exportCsv').addEventListener('click', ()=>{
+      const csv=toCsv(exportData());
+      const blob=new Blob([csv],{type:'text/csv'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='schedule.csv'; a.click(); URL.revokeObjectURL(a.href);
+    });
+
+    $('#save').addEventListener('click', saveSchedule);
+    $('#clearAll').addEventListener('click', ()=>{ if (confirm('Clear all entries?')){ schedule.entries=[]; renderEntries(); } });
+    slotSizeSel.addEventListener('change', buildGrid);
+    tracksSel.addEventListener('change', buildGrid);
+
+    (async function init(){
+      await loadArtists(); renderArtists();
+      buildGrid();
+      await loadSchedule();
+      $('#published').checked = !!(schedule?.meta?.published);
+      renderEntries();
+    })();
+  </script>
+</body>
+</html>
+

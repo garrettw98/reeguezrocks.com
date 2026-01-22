@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gate Scanner - Reeguez Rocks 2026</title>
+    <style>
+        :root {
+            --accent: #f7a602;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --card-bg: rgba(20, 20, 20, 0.95);
+        }
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Full Screen Scanner */
+        #scanner-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: #000;
+        }
+        #reader {
+            width: 100%;
+            height: 100%;
+        }
+        #reader video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+        }
+
+        /* UI Overlays */
+        .ui-layer {
+            position: absolute;
+            z-index: 10;
+            width: 100%;
+            pointer-events: none; /* Let clicks pass through to camera/buttons */
+        }
+
+        /* Header */
+        .header {
+            top: 0;
+            left: 0;
+            padding: 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            text-align: center;
+        }
+        h1 { margin: 0; color: var(--accent); font-size: 18px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+        /* Bottom Controls */
+        .controls {
+            bottom: 0;
+            left: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, transparent);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        /* Result Card (Popup) */
+        #result-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+            margin-bottom: 20px;
+            display: none; /* Hidden by default */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .status-icon { font-size: 48px; margin-bottom: 10px; display: block; }
+        .status-text { font-size: 28px; font-weight: 800; margin-bottom: 8px; display: block; letter-spacing: -0.5px; }
+        .ticket-detail { color: #aaa; margin: 4px 0; font-size: 14px; }
+        .ticket-type { color: #fff; font-size: 20px; font-weight: bold; margin: 12px 0; padding: 8px; background: rgba(255,255,255,0.1); border-radius: 8px; }
+        
+        .result-valid { border-color: var(--success); }
+        .result-valid .status-text { color: var(--success); }
+        
+        .result-invalid { border-color: var(--error); }
+        .result-invalid .status-text { color: var(--error); }
+
+        /* Manual Input */
+        .manual-entry {
+            display: flex;
+            gap: 10px;
+            width: 90%;
+            max-width: 350px;
+        }
+        input {
+            flex: 1;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-family: monospace;
+            text-transform: uppercase;
+            font-size: 16px;
+            backdrop-filter: blur(5px);
+        }
+        input::placeholder { color: #bbb; }
+        button {
+            padding: 14px 20px;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button.next-btn {
+            width: 100%;
+            margin-top: 16px;
+            background: #333;
+            color: #fff;
+        }
+        
+        #error-msg { color: var(--error); margin-top: 10px; font-size: 14px; display: none; text-shadow: 0 1px 2px #000; }
+        #loading { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            display: none; color: #fff; font-size: 18px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8); z-index: 20;
+        }
+        
+        /* Laser Overlay */
+        .scan-region {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 250px; height: 250px;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 20px;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5); /* Dim outside */
+            pointer-events: none;
+            z-index: 5;
+        }
+        .scan-region::after {
+            content: ''; position: absolute; top: 50%; left: 10%; right: 10%; height: 2px;
+            background: var(--error); box-shadow: 0 0 4px var(--error);
+            animation: scan 2s infinite ease-in-out;
+        }
+        @keyframes scan { 0%, 100% { top: 10%; } 50% { top: 90%; } }
+
+    </style>
+    <!-- QR Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="../config.js"></script>
+</head>
+<body>
+
+    <div id="scanner-container">
+        <div id="reader"></div>
+    </div>
+
+    <!-- Darken outside scan area -->
+    <div class="scan-region"></div>
+
+    <div class="ui-layer header">
+        <h1>Gate Scanner</h1>
+        <div id="error-msg"></div>
+    </div>
+
+    <div id="loading">Verifying Ticket...</div>
+
+    <div class="ui-layer controls">
+        <div id="result-card">
+            <span class="status-icon" id="res-icon"></span>
+            <span class="status-text" id="res-status"></span>
+            <div class="ticket-type" id="res-tier"></div>
+            <p class="ticket-detail">Ticket ID: <span id="res-code"></span></p>
+            <p class="ticket-detail" id="res-msg"></p>
+            <button class="next-btn" onclick="resetScanner()">Scan Next</button>
+        </div>
+
+        <div class="manual-entry" id="manual-entry-box">
+            <input type="text" id="manual-code" placeholder="RR-XXXXXX">
+            <button onclick="checkTicket(document.getElementById('manual-code').value)">Check</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.PAYMENTS_API_BASE; // From config.js
+        let html5QrcodeScanner;
+        let isScanning = true;
+
+        // Auth Logic
+        function checkAuth() {
+            let pwd = localStorage.getItem('gate_pwd');
+            if (!pwd) {
+                pwd = prompt("Enter Gate Password to begin scanning:");
+                if (pwd) {
+                    localStorage.setItem('gate_pwd', pwd);
+                    startScanner();
+                } else {
+                    document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:50px;'>Access Denied. Refresh to retry.</h2>";
+                }
+            } else {
+                startScanner();
+            }
+        }
+
+        function startScanner() {
+            html5QrcodeScanner = new Html5Qrcode("reader");
+            // aspectRatio undefined allows it to fill the container
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+            html5QrcodeScanner.start({ facingMode: "environment" }, config, onScanSuccess).catch(err => {
+                document.getElementById('error-msg').innerText = "Camera Error: " + err;
+                document.getElementById('error-msg').style.display = 'block';
+            });
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            if (!isScanning) return;
+            isScanning = false;
+            // Play Beep
+            new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3').play().catch(()=>{});
+            checkTicket(decodedText);
+        }
+
+        async function checkTicket(code) {
+            code = code.trim().toUpperCase();
+            if (!code) return;
+
+            // UI Updates
+            document.getElementById('loading').style.display = 'block';
+            document.querySelector('.scan-region').style.display = 'none'; // Hide guide
+            document.getElementById('result-card').style.display = 'none';
+            document.getElementById('manual-entry-box').style.display = 'none'; // Hide input during check
+            document.getElementById('error-msg').style.display = 'none';
+            
+            if(html5QrcodeScanner) html5QrcodeScanner.pause();
+
+            const pwd = localStorage.getItem('gate_pwd');
+
+            try {
+                // Call API
+                const res = await fetch(`${API_URL}/scan`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: code, gatePassword: pwd })
+                });
+
+                const data = await res.json();
+                
+                if (res.status === 401) {
+                    localStorage.removeItem('gate_pwd'); 
+                    const newPwd = prompt("Invalid Password. Enter Gate Password:");
+                    if(newPwd) {
+                        localStorage.setItem('gate_pwd', newPwd);
+                        checkTicket(code); 
+                    } else {
+                        resetScanner();
+                    }
+                    return;
+                }
+
+                showResult(data);
+
+            } catch (err) {
+                document.getElementById('error-msg').textContent = "Network Error. Try again.";
+                document.getElementById('error-msg').style.display = 'block';
+                resetScanner();
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function showResult(data) {
+            const card = document.getElementById('result-card');
+            const icon = document.getElementById('res-icon');
+            const status = document.getElementById('res-status');
+            const tier = document.getElementById('res-tier');
+            const codeEl = document.getElementById('res-code');
+            const msg = document.getElementById('res-msg');
+
+            card.style.display = 'block';
+            codeEl.textContent = data.code || 'UNKNOWN';
+            
+            card.classList.remove('result-valid', 'result-invalid');
+
+            if (data.valid) {
+                card.classList.add('result-valid');
+                icon.textContent = '✅';
+                status.textContent = 'VALID';
+                tier.textContent = data.tierLabel || 'Ticket';
+                msg.textContent = `First Scan: ${new Date().toLocaleTimeString()}`;
+                
+                new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3').play().catch(()=>{});
+            } else {
+                card.classList.add('result-invalid');
+                icon.textContent = '❌';
+                status.textContent = data.status === 'already_scanned' ? 'ALREADY USED' : 'INVALID';
+                tier.textContent = data.tierLabel || 'Unknown Ticket';
+                msg.textContent = data.message || 'Ticket not found or already scanned.';
+                
+                new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3').play().catch(()=>{});
+            }
+        }
+
+        function resetScanner() {
+            isScanning = true;
+            document.getElementById('result-card').style.display = 'none';
+            document.querySelector('.scan-region').style.display = 'block';
+            document.getElementById('manual-entry-box').style.display = 'flex';
+            document.getElementById('manual-code').value = '';
+            if(html5QrcodeScanner) html5QrcodeScanner.resume();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

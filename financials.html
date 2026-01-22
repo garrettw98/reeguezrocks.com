@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Transparency | Reeguez Rocks 2026</title>
+
+    <!-- Icons and preview image -->
+    <link rel="icon" href="RR26Logo.png" type="image/png">
+    <link rel="shortcut icon" href="RR26Logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="RR26Logo.png" sizes="180x180">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <!-- Config -->
+    <script src="config.js"></script>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Financial Transparency | Reeguez Rocks 2026">
+    <meta name="description" content="Full transparency on where every dollar goes. See our complete budget breakdown.">
+    <meta property="og:description" content="Full transparency on where every dollar goes. See our complete budget breakdown.">
+    <meta property="og:image" content="https://reeguezrocks.com/RR26Logo.png">
+    <meta property="og:url" content="https://reeguezrocks.com/financials.html">
+    <meta property="og:type" content="website">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/main-v5.css?v=18">
+    <style>
+        .finance-page {
+            padding-top: calc(var(--nav-height) + var(--space-2xl));
+            padding-bottom: var(--space-3xl);
+        }
+
+        .finance-header {
+            text-align: center;
+            margin-bottom: var(--space-3xl);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+
+        .back-link:hover {
+            color: var(--color-accent);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .finance-header h1 {
+            font-size: clamp(var(--text-2xl), 5vw, var(--text-4xl));
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .finance-header p {
+            color: var(--color-text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Sections */
+        .finance-section {
+            margin-bottom: var(--space-3xl);
+        }
+
+        .finance-section h2 {
+            font-size: var(--text-xl);
+            color: var(--color-accent);
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        /* Ticket Breakdown */
+        .ticket-grid {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        @media (min-width: 640px) {
+            .ticket-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 900px) {
+            .ticket-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .ticket-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+        .ticket-card__name {
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+        }
+
+        .ticket-card__price {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .ticket-card__breakdown {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .ticket-card__breakdown span {
+            display: block;
+            padding: var(--space-xs) 0;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .ticket-card__breakdown span:first-child {
+            border-top: none;
+        }
+
+        .ticket-card__tiers {
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        /* Where Money Goes */
+        .expense-list {
+            display: grid;
+            gap: var(--space-sm);
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md);
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+        }
+
+        .expense-item__name {
+            color: var(--color-text-muted);
+        }
+
+        .expense-item__amount {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .expense-item--category {
+            background: rgba(247, 166, 2, 0.1);
+            border-color: transparent;
+        }
+
+        .expense-item--category .expense-item__name {
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+
+        .expense-item--total {
+            background: rgba(247, 166, 2, 0.15);
+            border-color: var(--color-accent);
+        }
+
+        .expense-item--total .expense-item__name,
+        .expense-item--total .expense-item__amount {
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        /* Tier Progress Visual */
+        .tier-visual {
+            margin-top: var(--space-xl);
+        }
+
+        .tier-visual__title {
+            font-size: var(--text-base);
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+            text-align: center;
+        }
+
+        .tier-bar {
+            display: flex;
+            height: 40px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tier-bar__segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xs);
+            font-weight: 600;
+            color: #000;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .tier-bar__segment--1 { background: #f7a602; flex: 6500; }
+        .tier-bar__segment--2 { background: #e8952f; flex: 14500; }
+        .tier-bar__segment--3 { background: #d97f3a; flex: 21000; }
+        .tier-bar__segment--4 { background: #c96a45; flex: 26000; }
+        .tier-bar__segment--5 { background: #ba5550; flex: 27000; }
+
+        .tier-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-top: var(--space-md);
+            font-size: var(--text-sm);
+        }
+
+        .tier-legend__item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            color: var(--color-text-muted);
+        }
+
+        .tier-legend__dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Community Fund */
+        .fund-note {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-top: var(--space-xl);
+        }
+
+        .fund-note__title {
+            font-weight: 600;
+            color: var(--color-accent);
+            margin-bottom: var(--space-sm);
+        }
+
+        .fund-note__text {
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+            line-height: 1.6;
+        }
+
+        /* Affiliate Section */
+        .affiliate-box {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+        }
+
+        .affiliate-box__value {
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .affiliate-box__label {
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-lg);
+        }
+
+        .affiliate-box__desc {
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-lg);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .affiliate-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .affiliate-form__row {
+            display: grid;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        @media (min-width: 480px) {
+            .affiliate-form__row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .affiliate-form input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text);
+            font-size: var(--text-sm);
+        }
+
+        .affiliate-form input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .affiliate-form button {
+            width: 100%;
+            padding: var(--space-md);
+            background: var(--color-accent);
+            color: #000;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .affiliate-form button:hover {
+            opacity: 0.9;
+        }
+
+        .affiliate-form button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .affiliate-result {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .affiliate-result h4 {
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .affiliate-result__link {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .affiliate-result__link input {
+            flex: 1;
+        }
+
+        .affiliate-result__link button {
+            width: auto;
+            padding: var(--space-sm) var(--space-md);
+        }
+
+        .affiliate-result__code {
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+
+        .affiliate-result__code strong {
+            color: var(--color-accent);
+            font-size: var(--text-lg);
+        }
+
+        .affiliate-cta {
+            margin-top: var(--space-lg);
+        }
+
+        .affiliate-cta a {
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+
+        .affiliate-cta a:hover {
+            color: var(--color-accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-layer" aria-hidden="true"></div>
+    <div class="bg-overlay" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <header class="nav" role="banner">
+        <a href="/" class="nav__logo">
+            <img src="assets/reeguez-rocks-2026-logo.png" alt="Reeguez Rocks 2026" width="140" height="auto">
+        </a>
+        <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <nav class="nav__menu" id="nav-menu" role="navigation">
+            <a href="/#tickets" class="nav__link">Tickets</a>
+            <a href="/#crowdfunding" class="nav__link">Progress</a>
+            <a href="/#lineup" class="nav__link">Lineup</a>
+            <a href="/#experience" class="nav__link">Experience</a>
+            <a href="/#info" class="nav__link">Info & FAQ</a>
+            <a href="https://www.instagram.com/reeguez_rocks_festival/" class="nav__link nav__link--external" target="_blank" rel="noopener">Instagram</a>
+        </nav>
+    </header>
+
+    <main class="finance-page">
+        <div class="container">
+            <!-- Header -->
+            <header class="finance-header">
+                <a href="/" class="back-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Back to Main Site
+                </a>
+                <h1>Financial Transparency</h1>
+                <p>Here's exactly where your ticket money goes. No hidden fees, no surprises.</p>
+            </header>
+
+            <!-- Ticket Breakdown -->
+            <section class="finance-section">
+                <h2>Ticket Breakdown</h2>
+                <div class="ticket-grid">
+                    <div class="ticket-card">
+                        <div class="ticket-card__name">4-Day Pass</div>
+                        <div class="ticket-card__price">$99</div>
+                        <div class="ticket-card__breakdown">
+                            <span>$40 → Venue</span>
+                            <span class="ticket-card__tiers">$59 → Tiers</span>
+                        </div>
+                    </div>
+                    <div class="ticket-card">
+                        <div class="ticket-card__name">3-Day Pass</div>
+                        <div class="ticket-card__price">$80</div>
+                        <div class="ticket-card__breakdown">
+                            <span>$30 → Venue</span>
+                            <span class="ticket-card__tiers">$50 → Tiers</span>
+                        </div>
+                    </div>
+                    <div class="ticket-card">
+                        <div class="ticket-card__name">2-Day Pass</div>
+                        <div class="ticket-card__price">$60</div>
+                        <div class="ticket-card__breakdown">
+                            <span>$20 → Venue</span>
+                            <span class="ticket-card__tiers">$40 → Tiers</span>
+                        </div>
+                    </div>
+                    <div class="ticket-card">
+                        <div class="ticket-card__name">1-Day Pass</div>
+                        <div class="ticket-card__price">$30</div>
+                        <div class="ticket-card__breakdown">
+                            <span>$10 → Venue</span>
+                            <span class="ticket-card__tiers">$20 → Tiers</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Where Money Goes -->
+            <section class="finance-section">
+                <h2>Where Tier Money Goes</h2>
+                <div class="expense-list">
+                    <div class="expense-item expense-item--category">
+                        <span class="expense-item__name">Production</span>
+                        <span class="expense-item__amount"></span>
+                    </div>
+                    <div class="expense-item">
+                                                        <span class="expense-item__name">Main Stage Production</span>                        <span class="expense-item__amount">$3k–$15k</span>
+                    </div>
+                    <div class="expense-item">
+                        <span class="expense-item__name">The Bowl + The Dome Sound</span>
+                        <span class="expense-item__amount">$900</span>
+                    </div>
+
+                    <div class="expense-item expense-item--category">
+                        <span class="expense-item__name">Talent</span>
+                        <span class="expense-item__amount"></span>
+                    </div>
+                    <div class="expense-item">
+                        <span class="expense-item__name">Headliners (up to 4)</span>
+                        <span class="expense-item__amount">$4k–$10k each</span>
+                    </div>
+                    <div class="expense-item">
+                        <span class="expense-item__name">Support Acts</span>
+                        <span class="expense-item__amount">$1k–$2k each</span>
+                    </div>
+
+                    <div class="expense-item expense-item--category">
+                        <span class="expense-item__name">Experience</span>
+                        <span class="expense-item__amount"></span>
+                    </div>
+                    <div class="expense-item">
+                        <span class="expense-item__name">Lighting, Decor, Projectors</span>
+                        <span class="expense-item__amount">up to $3k</span>
+                    </div>
+                    <div class="expense-item">
+                        <span class="expense-item__name">Art Installations</span>
+                        <span class="expense-item__amount">up to $5k</span>
+                    </div>
+                    <div class="expense-item">
+                        <span class="expense-item__name">Daytime Programming</span>
+                        <span class="expense-item__amount">up to $2.5k</span>
+                    </div>
+
+                    <div class="expense-item expense-item--category">
+                        <span class="expense-item__name">Operations</span>
+                        <span class="expense-item__amount"></span>
+                    </div>
+                    <div class="expense-item">
+                        <span class="expense-item__name">Safety & Medical (scaling)</span>
+                        <span class="expense-item__amount">$1k-$8k</span>
+                    </div>
+                    <div class="expense-item">
+                        <span class="expense-item__name">Contingency + Reserves</span>
+                        <span class="expense-item__amount">$7k-$15k</span>
+                    </div>
+
+                    <div class="expense-item expense-item--total">
+                        <span class="expense-item__name">Tier 1 Minimum</span>
+                        <span class="expense-item__amount">$6,500</span>
+                    </div>
+                    <div class="expense-item expense-item--total">
+                        <span class="expense-item__name">All 15 Tiers</span>
+                        <span class="expense-item__amount">$95,000</span>
+                    </div>
+                </div>
+
+                <!-- Tier Visual -->
+                <div class="tier-visual">
+                    <h3 class="tier-visual__title">How Tiers Scale</h3>
+                    <div class="tier-bar">
+                        <div class="tier-bar__segment tier-bar__segment--1">P1</div>
+                        <div class="tier-bar__segment tier-bar__segment--2">P2</div>
+                        <div class="tier-bar__segment tier-bar__segment--3">P3</div>
+                        <div class="tier-bar__segment tier-bar__segment--4">P4</div>
+                        <div class="tier-bar__segment tier-bar__segment--5">P5</div>
+                    </div>
+                    <div class="tier-legend">
+                        <div class="tier-legend__item"><span class="tier-legend__dot" style="background:#f7a602"></span> Phase 1: $6.5k</div>
+                        <div class="tier-legend__item"><span class="tier-legend__dot" style="background:#e8952f"></span> Phase 2: $14.5k</div>
+                        <div class="tier-legend__item"><span class="tier-legend__dot" style="background:#d97f3a"></span> Phase 3: $21k</div>
+                        <div class="tier-legend__item"><span class="tier-legend__dot" style="background:#c96a45"></span> Phase 4: $26k</div>
+                        <div class="tier-legend__item"><span class="tier-legend__dot" style="background:#ba5550"></span> Phase 5: $27k</div>
+                    </div>
+                </div>
+
+                <!-- Community Fund Note -->
+                <div class="fund-note">
+                    <h4 class="fund-note__title">Community Fund (10%)</h4>
+                    <p class="fund-note__text">Every tier includes a 10% contribution to the Community Fund. This rewards artists who played for free and volunteers who went above and beyond.</p>
+                </div>
+            </section>
+
+            <!-- Affiliate Program -->
+            <section class="finance-section" id="affiliate-signup">
+                <h2>Affiliate Program</h2>
+                <div class="affiliate-box">
+                    <div class="affiliate-box__value">$5</div>
+                    <div class="affiliate-box__label">Per Ticket Sold</div>
+                    <p class="affiliate-box__desc">Get your own link. Earn $5 for every ticket sold, and your referrals get 5% off.</p>
+
+                    <form class="affiliate-form" id="affiliate-form">
+                        <div class="affiliate-form__row">
+                            <input type="text" id="affiliate-name" placeholder="Your Name" required>
+                            <input type="email" id="affiliate-email" placeholder="Email" required>
+                        </div>
+                        <button type="submit">Get My Link</button>
+                    </form>
+
+                    <div class="affiliate-result" id="affiliate-result" style="display: none;">
+                        <h4>Your Affiliate Link</h4>
+                        <div class="affiliate-result__link">
+                            <input type="text" id="affiliate-link" readonly>
+                            <button type="button" onclick="copyAffiliateLink()">Copy</button>
+                        </div>
+                        <p class="affiliate-result__code">Promo Code: <strong id="affiliate-code"></strong></p>
+                    </div>
+
+                    <div class="affiliate-cta">
+                        <a href="affiliates.html">View Leaderboard →</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <p>&copy; 2026 Reeguez Rocks. All rights reserved.</p>
+            <div class="footer__links">
+                <a href="/">Back to Main Site</a>
+                <a href="mailto:reeguezrocks@gmail.com">Contact</a>
+                <a href="https://www.instagram.com/reeguez_rocks_festival/" target="_blank" rel="noopener">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Nav toggle
+        const toggle = document.getElementById('nav-toggle');
+        const menu = document.getElementById('nav-menu');
+        if (toggle && menu) {
+            toggle.addEventListener('click', () => {
+                const isOpen = menu.classList.toggle('is-open');
+                toggle.setAttribute('aria-expanded', isOpen);
+            });
+        }
+
+        // Nav scroll
+        const nav = document.querySelector('.nav');
+        if (nav) {
+            const handleScroll = () => nav.classList.toggle('nav--scrolled', window.scrollY > 20);
+            handleScroll();
+            window.addEventListener('scroll', handleScroll, { passive: true });
+        }
+
+        // Affiliate form
+        const API_BASE = window.PAYMENTS_API_BASE || 'https://gg9rf9hsf0.execute-api.us-east-1.amazonaws.com';
+        const affiliateForm = document.getElementById('affiliate-form');
+        const affiliateResult = document.getElementById('affiliate-result');
+
+        if (affiliateForm) {
+            affiliateForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = affiliateForm.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                btn.textContent = 'Creating...';
+
+                const name = document.getElementById('affiliate-name').value.trim();
+                const email = document.getElementById('affiliate-email').value.trim();
+
+                try {
+                    const res = await fetch(`${API_BASE}/affiliate`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email })
+                    });
+                    const data = await res.json();
+                    if (data.ok) {
+                        document.getElementById('affiliate-link').value = data.link;
+                        document.getElementById('affiliate-code').textContent = data.code;
+                        affiliateResult.style.display = 'block';
+                        affiliateForm.style.display = 'none';
+                    } else {
+                        alert(data.error || 'Something went wrong');
+                        btn.disabled = false;
+                        btn.textContent = 'Get My Link';
+                    }
+                } catch (err) {
+                    alert('Network error. Please try again.');
+                    btn.disabled = false;
+                    btn.textContent = 'Get My Link';
+                }
+            });
+        }
+
+        function copyAffiliateLink() {
+            const input = document.getElementById('affiliate-link');
+            input.select();
+            document.execCommand('copy');
+            event.target.textContent = 'Copied!';
+            setTimeout(() => event.target.textContent = 'Copy', 2000);
+        }
+    </script>
+</body>
+</html>

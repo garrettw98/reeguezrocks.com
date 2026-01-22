@@ -1,0 +1,778 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Stripe-powered checkout with inventory enforcement for Reeguez Rocks.
+
+Parameters:
+  ApiName:
+    Type: String
+    Default: reeguezrocks-payments
+  SiteOrigin:
+    Type: String
+    Description: Allowed CORS origin (e.g., https://reeguezrocks.com)
+  DomainName:
+    Type: String
+    Description: Public domain name (e.g., reeguezrocks.com)
+  CodeBucket:
+    Type: String
+    Description: S3 bucket containing Lambda deployment zips
+  CodeKeyPrefix:
+    Type: String
+    Description: S3 key prefix for Lambda zips (e.g., payments/dist)
+  StripeSecretParam:
+    Type: String
+    Description: SSM Parameter name for STRIPE_SECRET_KEY (SecureString)
+  StripeWebhookSecretParam:
+    Type: String
+    Description: SSM Parameter name for STRIPE_WEBHOOK_SECRET (SecureString)
+  SuccessUrl:
+    Type: String
+    Description: Success URL, e.g., https://reeguezrocks.com/success.html?session_id={CHECKOUT_SESSION_ID}
+  CancelUrl:
+    Type: String
+    Description: Cancel URL, e.g., https://reeguezrocks.com/cancel.html
+  AdminPasswordParam:
+    Type: String
+    Default: /reeguezrocks/admin/password
+    Description: SSM SecureString parameter path for admin password (artists admin)
+  TierConfigJson:
+    Type: String
+    Description: JSON array of tier configs with id,label,price,limit (0 or omit for unlimited)
+    Default: |
+      [
+        {"id":"ga-4-day","label":"GA — 4 Day (Thu–Mon)","price":99},
+        {"id":"ga-3-day","label":"GA — 3 Day (Fri–Mon)","price":80},
+        {"id":"ga-2-day","label":"GA — 2 Day (Sat–Mon)","price":60},
+        {"id":"ga-1-day","label":"GA — 1 Day","price":30},
+        {"id":"car-camping","label":"Car Camping Add-On","price":30},
+        {"id":"rv-camping","label":"RV Camping Add-On (Dry)","price":100,"limit":5},
+        {"id":"early-arrival","label":"Early Arrival (Wed)","price":20},
+        {"id":"cabin","label":"Cabin (Sleeps 9)","price":1000,"limit":6}
+      ]
+
+Resources:
+  InventoryTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${ApiName}-inventory
+      AttributeDefinitions:
+        - AttributeName: tier
+          AttributeType: S
+      KeySchema:
+        - AttributeName: tier
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  OrdersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${ApiName}-orders
+      AttributeDefinitions:
+        - AttributeName: sessionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: sessionId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  NewsletterTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${ApiName}-newsletter
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  AffiliateTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${ApiName}-affiliates
+      AttributeDefinitions:
+        - AttributeName: slug
+          AttributeType: S
+      KeySchema:
+        - AttributeName: slug
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  ContentBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${ApiName}-content-${AWS::AccountId}-${AWS::Region}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+
+  NewsletterBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${ApiName}-newsletter-${AWS::AccountId}-${AWS::Region}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+
+  CheckoutFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: payments-dynamo-ssm
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                Resource:
+                  - !GetAtt InventoryTable.Arn
+                  - !GetAtt OrdersTable.Arn
+                  - !GetAtt NewsletterTable.Arn
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt ContentBucket.Arn
+                  - !Sub ${ContentBucket.Arn}/*
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                Resource:
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${StripeSecretParam}
+
+  WebhookFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: webhook-dynamo-ssm
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:PutItem
+                  - dynamodb:Scan
+                Resource:
+                  - !GetAtt InventoryTable.Arn
+                  - !GetAtt OrdersTable.Arn
+                  - !GetAtt NewsletterTable.Arn
+                  - !GetAtt AffiliateTable.Arn
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt ContentBucket.Arn
+                  - !Sub ${ContentBucket.Arn}/*
+              - Effect: Allow
+                Action:
+                  - ses:SendEmail
+                  - ses:SendRawEmail
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                Resource:
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${StripeSecretParam}
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${StripeWebhookSecretParam}
+
+  ArtistsFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: artists-s3-ssm
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt ContentBucket.Arn
+                  - !Sub ${ContentBucket.Arn}/*
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                Resource:
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${AdminPasswordParam}
+
+  NewsletterFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: newsletter-write
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                Resource:
+                  - !GetAtt NewsletterTable.Arn
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt NewsletterBucket.Arn
+                  - !Sub ${NewsletterBucket.Arn}/*
+
+  AffiliateFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: affiliate-dynamo-ses
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Scan
+                Resource:
+                  - !GetAtt AffiliateTable.Arn
+              - Effect: Allow
+                Action:
+                  - ses:SendEmail
+                  - ses:SendRawEmail
+                Resource: '*'
+
+  CheckoutFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ApiName}-checkout
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      Role: !GetAtt CheckoutFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Sub ${CodeKeyPrefix}/checkout.zip
+      Timeout: 10
+      Environment:
+        Variables:
+          INVENTORY_TABLE: !Ref InventoryTable
+          ORDERS_TABLE: !Ref OrdersTable
+          STRIPE_SECRET_PARAM: !Ref StripeSecretParam
+          SUCCESS_URL: !Ref SuccessUrl
+          CANCEL_URL: !Ref CancelUrl
+          TIER_CONFIG: !Ref TierConfigJson
+          TIERS_BUCKET: !Ref ContentBucket
+          TIERS_KEY: tiers.json
+
+  WebhookFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ApiName}-webhook
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      Role: !GetAtt WebhookFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Sub ${CodeKeyPrefix}/webhook.zip
+      Timeout: 10
+      Environment:
+        Variables:
+          INVENTORY_TABLE: !Ref InventoryTable
+          ORDERS_TABLE: !Ref OrdersTable
+          STRIPE_SECRET_PARAM: !Ref StripeSecretParam
+          STRIPE_WEBHOOK_SECRET_PARAM: !Ref StripeWebhookSecretParam
+          TIER_CONFIG: !Ref TierConfigJson
+          NEWSLETTER_TABLE: !Ref NewsletterTable
+          FROM_EMAIL: !Sub orderconfirmation@${DomainName}
+          SITE_URL: !Sub https://${DomainName}
+          TIERS_BUCKET: !Ref ContentBucket
+          TIERS_KEY: tiers.json
+          AFFILIATE_TABLE: !Ref AffiliateTable
+
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: !Ref ApiName
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowOrigins:
+          - !Ref SiteOrigin
+          - https://www.reeguezrocks.com
+        AllowMethods: [ GET, POST, PUT, OPTIONS ]
+        AllowHeaders: [ Content-Type, Authorization ]
+
+  DefaultStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: '$default'
+      AutoDeploy: true
+
+  CheckoutIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CheckoutFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
+  WebhookIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WebhookFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
+  InventoryFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ApiName}-inventory
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      Role: !GetAtt CheckoutFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Sub ${CodeKeyPrefix}/inventory.zip
+      Timeout: 10
+      Environment:
+        Variables:
+          INVENTORY_TABLE: !Ref InventoryTable
+          TIER_CONFIG: !Ref TierConfigJson
+          TIERS_BUCKET: !Ref ContentBucket
+          TIERS_KEY: tiers.json
+
+  ArtistsFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ApiName}-artists
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      Role: !GetAtt ArtistsFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Sub ${CodeKeyPrefix}/artists.zip
+      Timeout: 10
+      Environment:
+        Variables:
+          ARTISTS_BUCKET: !Ref ContentBucket
+          ARTISTS_KEY: artists.json
+          ADMIN_PASSWORD_PARAM: !Ref AdminPasswordParam
+
+  ScheduleFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ApiName}-schedule
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      Role: !GetAtt ArtistsFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Sub ${CodeKeyPrefix}/schedule.zip
+      Timeout: 10
+      Environment:
+        Variables:
+          ARTISTS_BUCKET: !Ref ContentBucket
+          SCHEDULE_KEY: schedule.json
+          ADMIN_PASSWORD_PARAM: !Ref AdminPasswordParam
+
+  TiersFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ApiName}-tiers
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      Role: !GetAtt ArtistsFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Sub ${CodeKeyPrefix}/tiers.zip
+      Timeout: 10
+      Environment:
+        Variables:
+          TIERS_BUCKET: !Ref ContentBucket
+          TIERS_KEY: tiers.json
+          ADMIN_PASSWORD_PARAM: !Ref AdminPasswordParam
+          TIER_CONFIG: !Ref TierConfigJson
+
+  NewsletterFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ApiName}-newsletter
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      Role: !GetAtt NewsletterFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Sub ${CodeKeyPrefix}/newsletter.zip
+      Timeout: 10
+      Environment:
+        Variables:
+          NEWSLETTER_TABLE: !Ref NewsletterTable
+          NEWSLETTER_BUCKET: !Ref NewsletterBucket
+          NEWSLETTER_KEY: newsletter/subscribers.csv
+
+  AffiliateFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ApiName}-affiliate
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      Role: !GetAtt AffiliateFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Sub ${CodeKeyPrefix}/affiliate.zip
+      Timeout: 10
+      Environment:
+        Variables:
+          AFFILIATE_TABLE: !Ref AffiliateTable
+          FROM_EMAIL: !Sub affiliates@${DomainName}
+          SITE_URL: !Sub https://${DomainName}
+
+  AffiliatePayoutFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: affiliate-payout-policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Scan
+                Resource:
+                  - !GetAtt AffiliateTable.Arn
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                Resource:
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${StripeSecretParam}
+
+  AffiliatePayoutFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ApiName}-affiliate-payout
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      Role: !GetAtt AffiliatePayoutFunctionRole.Arn
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Sub ${CodeKeyPrefix}/affiliate-payout.zip
+      Timeout: 30
+      Environment:
+        Variables:
+          AFFILIATE_TABLE: !Ref AffiliateTable
+          STRIPE_SECRET_PARAM: !Ref StripeSecretParam
+          SITE_URL: !Sub https://${DomainName}
+
+  InventoryIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${InventoryFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
+  NewsletterIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${NewsletterFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
+  AffiliateIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AffiliateFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
+  AffiliatePayoutIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AffiliatePayoutFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
+  ArtistsIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ArtistsFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
+  ScheduleIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ScheduleFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
+  TiersIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TiersFunction.Arn}/invocations
+      PayloadFormatVersion: '2.0'
+
+  CheckoutRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'POST /checkout'
+      Target: !Sub integrations/${CheckoutIntegration}
+
+  WebhookRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'POST /webhook'
+      Target: !Sub integrations/${WebhookIntegration}
+
+  InventoryRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'GET /inventory'
+      Target: !Sub integrations/${InventoryIntegration}
+
+  NewsletterRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'POST /newsletter'
+      Target: !Sub integrations/${NewsletterIntegration}
+
+  AffiliatePostRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'POST /affiliate'
+      Target: !Sub integrations/${AffiliateIntegration}
+
+  AffiliateGetRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'GET /affiliate'
+      Target: !Sub integrations/${AffiliateIntegration}
+
+  AffiliatePayoutPostRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'POST /affiliate-payout/{proxy+}'
+      Target: !Sub integrations/${AffiliatePayoutIntegration}
+
+  AffiliatePayoutGetRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'GET /affiliate-payout/{proxy+}'
+      Target: !Sub integrations/${AffiliatePayoutIntegration}
+
+  AffiliatePayoutOptionsRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'OPTIONS /affiliate-payout/{proxy+}'
+      Target: !Sub integrations/${AffiliatePayoutIntegration}
+
+  ArtistsGetRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'GET /artists'
+      Target: !Sub integrations/${ArtistsIntegration}
+
+  ArtistsPutRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'PUT /artists'
+      Target: !Sub integrations/${ArtistsIntegration}
+
+  ScheduleGetRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'GET /schedule'
+      Target: !Sub integrations/${ScheduleIntegration}
+
+  SchedulePutRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'PUT /schedule'
+      Target: !Sub integrations/${ScheduleIntegration}
+
+  TiersGetRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'GET /tiers'
+      Target: !Sub integrations/${TiersIntegration}
+
+  TiersPutRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'PUT /tiers'
+      Target: !Sub integrations/${TiersIntegration}
+
+  CheckoutPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref CheckoutFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/POST/checkout
+
+  WebhookPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref WebhookFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/POST/webhook
+
+  InventoryPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref InventoryFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/GET/inventory
+
+  NewsletterPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref NewsletterFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/POST/newsletter
+
+  AffiliatePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref AffiliateFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/affiliate
+
+  AffiliatePayoutPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref AffiliatePayoutFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/affiliate-payout/*
+
+  ArtistsPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ArtistsFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/artists
+
+  SchedulePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ScheduleFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/schedule
+
+  TiersPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref TiersFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/tiers
+
+Outputs:
+  ApiEndpoint:
+    Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
+    Description: Base URL for the payments API
+  InventoryTableName:
+    Value: !Ref InventoryTable
+  OrdersTableName:
+    Value: !Ref OrdersTable
+  NewsletterBucketName:
+    Value: !Ref NewsletterBucket

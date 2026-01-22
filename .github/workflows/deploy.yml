@@ -1,0 +1,52 @@
+name: Deploy static site to S3 + CloudFront
+
+on:
+  push:
+    branches: [ main, master ]
+    paths-ignore:
+      - '**/.github/**'
+      - '**/deploy/**'
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+  S3_BUCKET: ${{ vars.S3_BUCKET }}
+  DISTRIBUTION_ID: ${{ vars.CF_DISTRIBUTION_ID }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        if: vars.AWS_ROLE_TO_ASSUME != ''
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Configure AWS credentials (static keys)
+        if: vars.AWS_ROLE_TO_ASSUME == ''
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sync site to S3
+        run: |
+          if [ -z "${S3_BUCKET}" ]; then echo "S3_BUCKET repo variable not set"; exit 1; fi
+          aws s3 sync . s3://${S3_BUCKET} \
+            --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude "deploy/*"
+
+      - name: Invalidate CloudFront cache
+        run: |
+          if [ -z "${DISTRIBUTION_ID}" ]; then echo "CF_DISTRIBUTION_ID repo variable not set"; exit 1; fi
+          aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"

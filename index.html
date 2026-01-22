@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Reeguez Rocks 2026</title>
+
+    <link rel="icon" href="RR26Logo.png" type="image/png">
+    <link rel="shortcut icon" href="RR26Logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="RR26Logo.png" sizes="180x180">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <meta property="og:title" content="Reeguez Rocks 2026">
+    <meta name="description" content="October 14-19, 2026 — Bass music festival at Camp Tahquitz, San Bernardino National Forest.">
+    <meta property="og:description" content="October 14-19, 2026 — Bass music festival at Camp Tahquitz, San Bernardino National Forest.">
+    <meta property="og:image" content="https://reeguezrocks.com/RR26Logo.png">
+    <meta property="og:url" content="https://reeguezrocks.com">
+    <meta property="og:type" content="website">
+
+    <link rel="stylesheet" href="assets/main-v5.css?v=18">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="config.js"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div class="bg-layer" aria-hidden="true"></div>
+    <div class="bg-overlay" aria-hidden="true"></div>
+
+    <header class="nav" role="banner">
+        <a href="index.html" class="nav__logo" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+            <img src="assets/reeguez-rocks-2026-logo.png" alt="Reeguez Rocks 2026" width="140" height="auto">
+        </a>
+        <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <nav class="nav__menu" id="nav-menu" role="navigation">
+            <a href="tickets.html" class="nav__link">Tickets & Progress</a>
+            <a href="lineup.html" class="nav__link">Lineup</a>
+            <a href="experience.html" class="nav__link">Experience</a>
+            <a href="info.html" class="nav__link">Info</a>
+            <a href="community.html" class="nav__link">Community</a>
+            <a href="https://www.instagram.com/reeguez_rocks_festival/" class="nav__link nav__link--external" target="_blank" rel="noopener">Instagram</a>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="hero__logo-wrapper">
+                <img src="assets/reeguez-rocks-2026-logo.png" alt="Reeguez Rocks 2026" class="hero__logo">
+            </div>
+
+            <div class="hero__info">
+                <h1 class="hero__tagline" style="margin: 0; font-size: var(--text-xl);">Community-Driven Wubz and Dubz</h1>
+                <div class="hero__badge">Year Six</div>
+                <div class="hero__details">
+                    <span class="hero__date">October 14-19, 2026</span>
+                    <span class="hero__divider"></span>
+                    <span class="hero__venue">Camp Tahquitz, San Bernardino National Forest</span>
+                </div>
+            </div>
+
+            <div class="hero__actions">
+                <a href="tickets.html" class="btn btn--primary btn--lg btn--pulse">Tickets & Progress</a>
+            </div>
+            
+            <div class="hero__scroll">
+                <span>Scroll</span>
+                <div class="hero__scroll-line"></div>
+            </div>
+        </section>
+
+        <!-- Lineup Teaser -->
+        <section class="section section--alt reveal-on-scroll" id="lineup-teaser">
+            <div class="container">
+                <header class="section__header">
+                    <h2 class="section__title">Lineup</h2>
+                    <p class="section__subtitle">Artists unlock as we hit funding goals.</p>
+                </header>
+                
+                <div class="lineup-grid" id="lineup-teaser-grid" style="margin-bottom: 2rem;">
+                    <!-- JS will populate limited items here -->
+                </div>
+                
+                <div style="text-align: center;">
+                    <a href="lineup.html" class="btn btn--primary">View Full Lineup</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Crowdfunding Teaser (Light) -->
+        <section class="section reveal-on-scroll" id="crowdfunding-teaser">
+            <div class="container">
+                <header class="section__header">
+                    <h2 class="section__title">Community Powered</h2>
+                    <p class="section__subtitle">We are 100% community-funded. Help us hit Tier 1 by <strong>June 1st</strong> to confirm the event!</p>
+                </header>
+
+                <div class="progress-card">
+                    <div class="progress-card__header">
+                        <span class="progress-card__label">Current Status</span>
+                        <span class="progress-card__tier" id="next-tier-name">Loading...</span>
+                    </div>
+                    <div class="progress-card__bar">
+                        <div class="progress-card__fill" id="funding-progress-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-card__stats">
+                         <span><strong id="funding-current">$0</strong> raised</span>
+                    </div>
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <a href="tickets.html#crowdfunding" class="btn btn--outline">See All Tiers & Perks</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Teaser -->
+        <section class="section section--alt reveal-on-scroll" id="experience-teaser">
+            <div class="container">
+                <header class="section__header">
+                    <h2 class="section__title">The Experience</h2>
+                    <p class="section__subtitle">640 Acres. 4 Days of Mountain Magic.</p>
+                </header>
+                
+                <div class="features" style="margin-bottom: 2rem;">
+                    <div class="feature">
+                        <h3 class="feature__title">The Bowl</h3>
+                        <p class="feature__desc">Our amphitheater hub. It serves as our primary Main Stage for intimate crowds, and a dedicated second stage and late-night afters spot as the festival grows.</p>
+                    </div>
+                    <div class="feature">
+                        <h3 class="feature__title">The Meadow</h3>
+                        <p class="feature__desc">Our spacious meadow stage. As we reach higher funding tiers, the Main Stage moves here to accommodate full festival production and larger crowds.</p>
+                    </div>
+                    <div class="feature">
+                        <h3 class="feature__title">The Dome</h3>
+                        <p class="feature__desc">A 28-foot geodesic sanctuary. Not just a stage, but an intimate chill experience with a live DJ and seating for late-night vibes.</p>
+                    </div>
+                    <div class="feature">
+                        <h3 class="feature__title">640 Acres</h3>
+                        <p class="feature__desc">Explore the vast landscape of Camp Tahquitz at 6,500ft. Featuring historic cabins, zip lines, climbing walls, and endless forest trails.</p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <a href="experience.html" class="btn btn--outline">Explore the Full Venue</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Teaser (Light) -->
+        <section class="section reveal-on-scroll" id="community-teaser">
+            <div class="container">
+                <header class="section__header">
+                    <h2 class="section__title">Join the Community</h2>
+                    <p class="section__subtitle">Connect with the fam, get early announcements, and <strong>earn $5 for every ticket</strong> you help sell.</p>
+                </header>
+                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                    <a href="community.html" class="btn btn--primary">Join Community</a>
+                    <a href="https://discord.gg/reeguezrocks" target="_blank" class="btn btn--discord">Discord</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer__inner">
+            <p>&copy; 2026 Reeguez Rocks. All rights reserved.</p>
+            <div class="footer__links">
+                <a href="financials.html">Financials</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+                <a href="mailto:reeguezrocks@gmail.com">Contact</a>
+                <a href="https://www.instagram.com/reeguez_rocks_festival/" target="_blank" rel="noopener">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Ticket Modal Placeholder -->
+    <div class="modal-overlay" id="modal-overlay" aria-hidden="true"></div>
+    <div class="modal modal--checkout" id="ticket-modal" role="dialog" aria-hidden="true">
+        <button class="modal__close" id="modal-close">&times;</button>
+        <div class="checkout-steps"><div class="checkout-step checkout-step--active" data-step="1"><span class="checkout-step__num">1</span></div><div class="checkout-step" data-step="2"><span class="checkout-step__num">2</span></div><div class="checkout-step" data-step="3"><span class="checkout-step__num">3</span></div></div>
+        <div class="checkout-panel checkout-panel--active" id="panel-step-1"><h2 class="modal__title">Tickets & Progress</h2><div class="ticket-list" id="ticket-list"></div><div class="checkout-quantity"><div class="qty-selector"><button type="button" class="qty-btn" id="qty-minus">-</button><input type="number" id="ticket-qty" value="1" readonly><button type="button" class="qty-btn" id="qty-plus">+</button></div></div><div class="checkout-actions"><button class="btn btn--primary btn--lg checkout-next" id="step1-next">Next</button></div></div>
+        <div class="checkout-panel" id="panel-step-2"><h2 class="modal__title">Camping</h2><div class="camping-options" id="camping-options"><label class="camping-option"><input type="radio" name="camping" value="ga-parking" checked></label></div><div class="checkout-addon" id="early-arrival-addon"><label><input type="checkbox" id="early-arrival-check"></label></div><div class="checkout-actions"><button class="btn btn--outline checkout-back" id="step2-back">Back</button><button class="btn btn--primary btn--lg checkout-next" id="step2-next">Review</button></div></div>
+        <div class="checkout-panel" id="panel-step-3"><h2 class="modal__title">Review</h2><div class="order-summary" id="order-summary"></div>
+            <!-- Promo/Affiliate Code -->
+            <div class="promo-code-wrap" style="margin-top: 1.5rem;">
+                <label for="manual-referral" style="display: block; font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">Promo / Affiliate Code</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="manual-referral" placeholder="Enter code" class="input" style="flex: 1; min-height: 40px;">
+                </div>
+            </div>
+
+            <!-- Digital Waiver -->
+            <div class="waiver-wrap" style="margin-top: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <label class="checkbox-label" style="display: flex; gap: 0.75rem; align-items: flex-start; cursor: pointer;">
+                    <input type="checkbox" id="waiver-check" style="margin-top: 0.25rem;">
+                    <span style="font-size: 0.9rem; line-height: 1.4; color: var(--color-text-muted);">
+                        I agree to the <a href="terms.html" target="_blank" style="color: var(--color-accent); text-decoration: underline;">Terms & Conditions</a> and <strong>Release of Liability Waiver</strong>. I understand that tickets are non-refundable unless the event is cancelled.
+                    </span>
+                </label>
+            </div>
+
+            <div class="checkout-actions"><button class="btn btn--outline checkout-back" id="step3-back">Back</button><button class="btn btn--primary btn--lg" id="checkout-btn" disabled>Proceed</button></div></div>
+    </div>
+
+    <script src="assets/main.js"></script>
+</body>
+</html>

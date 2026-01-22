@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Lineup - Reeguez Rocks 2026</title>
+
+    <!-- Icons and preview image -->
+    <link rel="icon" href="RR26Logo.png" type="image/png">
+    <link rel="shortcut icon" href="RR26Logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="RR26Logo.png" sizes="180x180">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Lineup - Reeguez Rocks 2026">
+    <meta name="description" content="See who's playing at Reeguez Rocks 2026. Artists unlock as we hit funding tiers.">
+    <meta property="og:description" content="See who's playing at Reeguez Rocks 2026. Artists unlock as we hit funding tiers.">
+    <meta property="og:image" content="https://reeguezrocks.com/RR26Logo.png">
+    <meta property="og:url" content="https://reeguezrocks.com/lineup.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Preloads -->
+    <link rel="preload" href="RR26BG.png" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/main-v5.css?v=18">
+    
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div class="bg-layer" aria-hidden="true"></div>
+    <div class="bg-overlay" aria-hidden="true"></div>
+
+    <header class="nav" role="banner">
+        <a href="index.html" class="nav__logo">
+            <img src="assets/reeguez-rocks-2026-logo.png" alt="Reeguez Rocks 2026" width="140" height="auto">
+        </a>
+        <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <nav class="nav__menu" id="nav-menu" role="navigation">
+            <a href="tickets.html" class="nav__link">Tickets & Progress</a>
+            <a href="lineup.html" class="nav__link nav__link--active">Lineup</a>
+            <a href="experience.html" class="nav__link">Experience</a>
+            <a href="info.html" class="nav__link">Info</a>
+            <a href="community.html" class="nav__link">Community</a>
+            <a href="https://www.instagram.com/reeguez_rocks_festival/" class="nav__link nav__link--external" target="_blank" rel="noopener">Instagram</a>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <!-- ========== LINEUP SECTION ========== -->
+        <section class="section section--alt" id="lineup" style="padding-top: 100px;">
+            <div class="container">
+                <header class="section__header">
+                    <h1 class="section__title">Lineup</h1>
+                    <p class="section__subtitle" id="lineup-updated">Artists unlock as we hit funding tiers</p>
+                </header>
+                <div class="lineup-grid" id="lineup-grid"></div>
+            </div>
+        </section>
+
+        <!-- ========== ARTIST TEASER SECTION ========== -->
+        <section class="section section--artists" id="artist-hints">
+            <div class="container">
+                <header class="section__header">
+                    <h2 class="section__title">Artists on Deck</h2>
+                    <p class="section__subtitle">We're in talks with some incredible acts. Help us reach our tiers to make it official.</p>
+                </header>
+
+                <div class="artist-teaser">
+                    <div class="artist-teaser__icon">?</div>
+                    <h3 class="artist-teaser__title">Tier 2 Headliner</h3>
+                    <p class="artist-teaser__hint">A bass music favorite who's played some of the biggest major festivals. 100k+ monthly Spotify listeners.</p>
+                    <p class="artist-teaser__cta">Unlock at 3,000</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer__inner">
+            <p>&copy; 2026 Reeguez Rocks. All rights reserved.</p>
+            <div class="footer__links">
+                <a href="financials.html">Financials</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+                <a href="mailto:reeguezrocks@gmail.com">Contact</a>
+                <a href="https://www.instagram.com/reeguez_rocks_festival/" target="_blank" rel="noopener">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Ticket Modal Placeholder for Scripts -->
+    <div class="modal-overlay" id="modal-overlay" aria-hidden="true"></div>
+    <div class="modal modal--checkout" id="ticket-modal" role="dialog" aria-hidden="true">
+        <!-- Content injected by main.js or just need structure for JS to find -->
+        <button class="modal__close" id="modal-close">&times;</button>
+        <div class="checkout-steps">
+             <div class="checkout-step checkout-step--active" data-step="1"><span class="checkout-step__num">1</span></div>
+             <div class="checkout-step" data-step="2"><span class="checkout-step__num">2</span></div>
+             <div class="checkout-step" data-step="3"><span class="checkout-step__num">3</span></div>
+        </div>
+        <div class="checkout-panel checkout-panel--active" id="panel-step-1">
+             <h2 class="modal__title">Choose Your Ticket</h2>
+             <div class="ticket-list" id="ticket-list"></div>
+             <div class="checkout-quantity">
+                <div class="qty-selector">
+                    <button type="button" class="qty-btn" id="qty-minus">-</button>
+                    <input type="number" id="ticket-qty" value="1" readonly>
+                    <button type="button" class="qty-btn" id="qty-plus">+</button>
+                </div>
+             </div>
+             <div class="checkout-actions"><button class="btn btn--primary btn--lg checkout-next" id="step1-next">Continue</button></div>
+        </div>
+        <div class="checkout-panel" id="panel-step-2">
+             <h2 class="modal__title">Choose Your Camping</h2>
+             <div class="camping-options" id="camping-options">
+                 <label class="camping-option"><input type="radio" name="camping" value="ga-parking" checked></label>
+             </div>
+             <div class="checkout-addon" id="early-arrival-addon"><label><input type="checkbox" id="early-arrival-check"></label></div>
+             <div class="checkout-actions">
+                 <button class="btn btn--outline checkout-back" id="step2-back">Back</button>
+                 <button class="btn btn--primary btn--lg checkout-next" id="step2-next">Review</button>
+             </div>
+        </div>
+        <div class="checkout-panel" id="panel-step-3">
+             <h2 class="modal__title">Review Order</h2>
+             <div class="order-summary" id="order-summary"></div>
+             <div class="checkout-actions">
+                 <button class="btn btn--outline checkout-back" id="step3-back">Back</button>
+                 <button class="btn btn--primary btn--lg" id="checkout-btn">Proceed</button>
+             </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="assets/main.js"></script>
+</body>
+</html>

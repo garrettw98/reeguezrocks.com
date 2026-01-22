@@ -1,0 +1,11 @@
+{
+  "name": "checkout",
+  "version": "1.0.0",
+  "main": "handler.mjs",
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "latest",
+    "@aws-sdk/client-s3": "latest",
+    "@aws-sdk/client-ssm": "latest"
+  }
+}

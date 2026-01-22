@@ -1,0 +1,17 @@
+{
+  "name": "Reeguez Rocks 2026",
+  "short_name": "RR2026",
+  "description": "Bass music festival at Camp Tahquitz, San Bernardino National Forest",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#f7a602",
+  "icons": [
+    {
+      "src": "/RR26Logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Console — Reeguez Rocks</title>
+  <style>
+    :root{ --bg:#0b0b0f; --panel:#12121a; --text:#e8e8ef; --muted:#9aa1ad; --acc:#f7a602; --acc2:#8A2BE2; }
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    header{position:sticky;top:0;background:#0d0d14;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .tabs{display:flex;gap:8px}
+    .tab{background:#1b1b25;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:8px 12px;cursor:pointer}
+    .tab.active{background:var(--acc);color:#000}
+    .wrap{max-width:1200px;margin:16px auto;padding:0 16px}
+    .panel{background:#14141e;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px;overflow:hidden}
+    .section{display:none}
+    .section.active{display:block}
+    .login{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:5}
+    .card{background:#12121a;border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:16px;max-width:360px;width:92%;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+    .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-left:6px;vertical-align:-2px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    input[type=password],input[type=text],input[type=number]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.16);background:#0f0f16;color:#fff}
+    .btn{background:var(--acc);color:#000;border:0;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer}
+    .btn.secondary{background:#1b1b25;color:var(--text);border:1px solid rgba(255,255,255,.12)}
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+    /* Lineup */
+    .lu-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+    .lu-card{display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;background:#161622;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px}
+    .lu-thumb{width:64px;height:64px;border-radius:10px;overflow:hidden;background:#0f0f16;border:1px solid rgba(255,255,255,.1)}
+    .lu-fields{display:grid;gap:6px}
+    .mini{width:86px}
+
+    /* Schedule */
+    .sched{display:grid;grid-template-columns:280px 1fr;gap:12px}
+    .s-list{background:#0f0f16;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px;max-height:70vh;overflow:auto;position:sticky;top:84px}
+    .s-artist{padding:8px 10px;border:1px solid rgba(255,255,255,.16);border-radius:8px;margin:6px 0;cursor:grab;background:#161622}
+    .s-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+    .s-grid{display:grid;grid-template-columns:160px 1fr;gap:0;max-height:70vh;overflow:auto}
+    .s-times{display:flex;flex-direction:column;background:#101018;position:sticky;left:0}
+    .s-time{height:44px;border-bottom:1px dashed rgba(255,255,255,.1);color:var(--muted);font-size:12px;display:flex;align-items:center;justify-content:center}
+    .s-tracks{display:grid;grid-template-columns:1fr 1fr}
+    .s-track{border-left:1px solid rgba(255,255,255,.12)}
+    .s-slot{height:44px;border-bottom:1px dashed rgba(255,255,255,.1);padding:4px;position:relative}
+    .s-entry{position:absolute;inset:4px;display:flex;align-items:center;justify-content:space-between;background:#1a1a2a;border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:6px}
+    .s-entry[draggable="true"]{cursor:grab}
+    .s-trash{position:sticky;top:84px;background:#2a1116;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px;color:#ffb3bd;text-align:center}
+
+    /* Financials */
+    table{width:100%;border-collapse:collapse;background:#0f0f16;border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden}
+    th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
+    th{color:#eaeaea;background:#11111a}
+    .right{text-align:right}
+  </style>
+  <script src="../config.js"></script>
+</head>
+<body>
+  <header>
+    <div><strong>Admin Console</strong> <span id="apiBase" class="muted"></span></div>
+    <div class="tabs">
+      <button class="tab active" data-id="lineup">Lineup</button>
+      <button class="tab" data-id="schedule">Schedule</button>
+      <button class="tab" data-id="financials">Financials</button>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="panel">
+      <!-- Lineup Tab -->
+      <div id="tab-lineup" class="section active">
+        <div class="row" style="justify-content:space-between">
+          <div class="muted">Edit lineup, drag to reorder, then save.</div>
+          <div class="row"><button id="lu-export" class="btn secondary">Export JSON</button><button id="lu-save" class="btn">Save</button></div>
+        </div>
+        <ul id="lu-list" class="lu-list"></ul>
+      </div>
+
+      <!-- Schedule Tab -->
+      <div id="tab-schedule" class="section">
+        <div class="row" style="justify-content:space-between">
+          <div class="s-tools">
+            <label>Duration (hrs): <input id="sc-duration" type="number" min="1" max="6" value="1" style="width:70px"></label>
+            <label>Slot size:
+              <select id="sc-slot">
+                <option value="60" selected>60 min</option>
+                <option value="30">30 min</option>
+              </select>
+            </label>
+            <label>Tracks:
+              <select id="sc-tracks">
+                <option>Main Stage|The Dome</option>
+                <option>Main Stage</option>
+                <option>The Dome</option>
+              </select>
+            </label>
+            <label><input type="checkbox" id="sc-published"> Publish to site</label>
+            <div class="row" style="gap:6px">
+              <span class="muted">Jump:</span>
+              <button class="btn secondary" data-jump="2025-10-23">Thu</button>
+              <button class="btn secondary" data-jump="2025-10-24">Fri</button>
+              <button class="btn secondary" data-jump="2025-10-25">Sat</button>
+              <button class="btn secondary" data-jump="2025-10-26">Sun</button>
+            </div>
+          </div>
+          <div class="row"><button id="sc-export-json" class="btn secondary">Export JSON</button><button id="sc-export-csv" class="btn secondary">Export CSV</button><button id="sc-save" class="btn">Save</button></div>
+        </div>
+        <div class="sched">
+          <div>
+            <input id="sc-filter" type="text" placeholder="Filter artists..." />
+            <div class="s-list" id="sc-list"></div>
+            <div id="sc-trash" class="s-trash" draggable="false">Drag here to remove</div>
+          </div>
+          <div class="s-grid">
+            <div id="sc-times" class="s-times"></div>
+            <div id="sc-tracks-grid" class="s-tracks"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financials Tab -->
+      <div id="tab-financials" class="section">
+        <div class="row" style="justify-content:space-between">
+          <div class="muted">Edit costs and simulate tiers; update live tiers when ready.</div>
+          <div class="row"><button id="fn-export" class="btn secondary">Export CSV</button></div>
+        </div>
+        <h3>Hard Costs</h3>
+        <table>
+          <thead><tr><th>Item</th><th class="right">Amount (USD)</th><th></th></tr></thead>
+          <tbody id="fn-costs"></tbody>
+          <tfoot><tr><th>Total</th><th class="right" id="fn-hard-total">$0</th><th></th></tr></tfoot>
+        </table>
+        <div class="row" style="margin:8px 0"><button id="fn-add-cost" class="btn secondary">Add cost</button></div>
+        <div class="row"><label>Capacity: <input id="fn-cap" type="number" min="1" value="110" style="width:100px"></label><div class="muted">Cost per person: <strong id="fn-per">—</strong></div></div>
+
+        <h3 style="margin-top:16px">Ticket Tiers</h3>
+        <div class="row" style="justify-content:space-between">
+          <div class="row">
+            <label><input type="radio" name="tiersMode" value="live" checked> Live</label>
+            <label><input type="radio" name="tiersMode" value="sim"> Simulation</label>
+          </div>
+          <div class="row">
+            <button id="fn-load-live" class="btn secondary">Reload Live</button>
+            <button id="fn-save-live" class="btn">Save Live</button>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>Tier</th><th class="right">Price</th><th class="right">Limit</th><th class="right">Sold</th><th class="right">Gross (sold)</th><th></th></tr></thead>
+          <tbody id="fn-tiers"></tbody>
+          <tfoot><tr><th>Totals</th><th></th><th class="right" id="fn-sum-limit">0</th><th class="right" id="fn-sum-sold">0</th><th class="right" id="fn-sum-gross">$0</th><th></th></tr></tfoot>
+        </table>
+        <div class="row" style="margin:8px 0"><button id="fn-add-tier" class="btn secondary">Add tier</button></div>
+        <div class="row">
+          <div class="muted">Max Gross: <strong id="fn-max">$0</strong></div>
+          <div class="muted">Break‑Even Tickets: <strong id="fn-breakeven">—</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="login" class="login" hidden>
+    <div class="card">
+      <div style="font-weight:800;margin-bottom:6px">Admin Login</div>
+      <div class="muted">Enter the admin password to continue.</div>
+      <input id="pwd" type="password" placeholder="Password" />
+      <button id="go" class="btn" style="width:100%">Continue</button>
+      <div id="msg" class="muted" style="margin-top:6px"></div>
+    </div>
+  </div>
+
+  <script>
+    const $=(s,d=document)=>d.querySelector(s);
+    const $$=(s,d=document)=>Array.from(d.querySelectorAll(s));
+    const apiBase = window.PAYMENTS_API_BASE || '';
+    $('#apiBase').textContent = apiBase? `(API: ${apiBase})` : '(No API)';
+
+    function setTab(id){
+      $$('.tab').forEach(t=> t.classList.toggle('active', t.dataset.id===id));
+      $$('.section').forEach(s=> s.classList.remove('active'));
+      const sec = $('#tab-'+id); if (sec) sec.classList.add('active');
+    }
+    $$('.tab').forEach(t=> t.addEventListener('click', ()=> setTab(t.dataset.id)) );
+
+    async function authFetch(url, opts={}){
+      if (!apiBase) throw new Error('no_api');
+      let pwd = localStorage.getItem('rr_admin_pwd');
+      if (!pwd){ throw new Error('no_pwd'); }
+      const headers = Object.assign({ 'Authorization': `Bearer ${pwd}` }, opts.headers||{});
+      const res = await fetch(`${apiBase}${url}`, Object.assign({}, opts, { headers }));
+      if (res.status===401){ localStorage.removeItem('rr_admin_pwd'); throw new Error('unauthorized'); }
+      return res;
+    }
+
+    async function ensureLogin(){
+      const login=$('#login');
+      const pwdInput=$('#pwd');
+      const btn=$('#go');
+      const msg=$('#msg');
+      pwdInput.value='';
+      msg.textContent='';
+      async function check(){
+        try{
+          const res = await authFetch('/schedule', { method:'GET', cache:'no-store' });
+          if (res.ok){ const j=await res.json(); if (j && j.admin===true){ login.hidden=true; return true; } }
+        }catch{}
+        return false;
+      }
+      if (await check()) return true;
+      login.hidden=false;
+      pwdInput.focus();
+
+      return new Promise((resolve)=>{
+        async function attempt(){
+          const pwd=pwdInput.value.trim();
+          if (!pwd){ msg.textContent=''; return; }
+          localStorage.setItem('rr_admin_pwd', pwd);
+          btn.disabled=true; msg.innerHTML='Checking... <span class="spinner"></span>';
+          if (await check()){
+            login.hidden=true; login.style.display='none'; login.setAttribute('aria-hidden','true');
+            btn.disabled=false; msg.textContent='';
+            resolve(true); return;
+          }
+          localStorage.removeItem('rr_admin_pwd');
+          btn.disabled=false; msg.textContent='Incorrect password — try again.';
+          pwdInput.select();
+        }
+        btn.addEventListener('click', attempt);
+        pwdInput.addEventListener('keydown', (e)=>{ if (e.key==='Enter') attempt(); });
+      });
+    }
+
+    /* ------- Lineup ------- */
+    const luList=$('#lu-list');
+    let luData=[];
+    const slugify=(n)=> (n||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    const localImage=(a)=>{ const s=slugify(a.name); return s? `../assets/lineup/${s}.png`: null };
+    const norm=(p)=>{ if(!p) return null; if(/^https?:\/\//.test(p)||p.startsWith('/')||p.startsWith('../')) return p; return '../'+p };
+    function luComputeThumb(a){ const src=a.imageSource||''; if (src==='upload') return norm(a.image) || localImage(a) || '../assets/artist-placeholder.svg'; return a.image || localImage(a) || '../assets/artist-placeholder.svg'; }
+    function luRender(){ luList.innerHTML=''; luData.forEach((a,idx)=>{ const li=document.createElement('li'); li.className='lu-card'; li.draggable=true; li.dataset.index=idx; li.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', idx); }); li.addEventListener('dragover', e=> e.preventDefault()); li.addEventListener('drop', e=>{ e.preventDefault(); const from=+e.dataTransfer.getData('text/plain'); const to=idx; if(from===to) return; const it=luData.splice(from,1)[0]; luData.splice(to,0,it); luRenumber(); luRender(); }); const th=document.createElement('div'); th.className='lu-thumb'; const img=new Image(); img.alt=a.name||'artist'; img.onerror=()=>{ img.src='../assets/artist-placeholder.svg' }; img.src=luComputeThumb(a); th.appendChild(img); const f=document.createElement('div'); f.className='lu-fields'; const r1=document.createElement('div'); r1.className='row'; const name=document.createElement('input'); name.type='text'; name.placeholder='Name'; name.value=a.name||''; name.addEventListener('input',e=> a.name=e.target.value ); const order=document.createElement('input'); order.type='number'; order.className='mini'; order.value=a.order??idx+1; order.addEventListener('input',e=>{ a.order=parseInt(e.target.value,10)||undefined; }); r1.appendChild(name); r1.appendChild(order); const sc=document.createElement('input'); sc.type='text'; sc.placeholder='SoundCloud URL'; sc.value=a.soundcloud||''; sc.addEventListener('input',e=>{ a.soundcloud=e.target.value||undefined; img.src=luComputeThumb(a); }); const ig=document.createElement('input'); ig.type='text'; ig.placeholder='Instagram URL'; ig.value=a.instagram||''; ig.addEventListener('input',e=>{ a.instagram=e.target.value||undefined; img.src=luComputeThumb(a); }); const im=document.createElement('input'); im.type='text'; im.placeholder='Image override (optional)'; im.value=a.image||''; im.addEventListener('input',e=>{ a.image=e.target.value||undefined; img.src=luComputeThumb(a); }); const del=document.createElement('button'); del.textContent='Remove'; del.className='btn secondary'; del.addEventListener('click',()=>{ luData.splice(idx,1); luRenumber(); luRender(); }); f.appendChild(r1); f.appendChild(sc); f.appendChild(ig); f.appendChild(im); f.appendChild(del); li.appendChild(th); li.appendChild(f); luList.appendChild(li); }); }
+    function luRenumber(){ luData.forEach((a,i)=> a.order=i+1 ); }
+    function luClean(a){ const o={}; ['name','soundcloud','instagram','image','imageSource','order'].forEach(k=>{ if(a[k]!=null&&a[k]!=='' ) o[k]=a[k]; }); return o; }
+    async function luLoad(){ try{ if(apiBase){ const r=await fetch(`${apiBase}/artists?t=${Date.now()}`); if(r.ok){ const j=await r.json(); luData=j.artists||[]; } } }catch{} if(!Array.isArray(luData)||!luData.length){ try{ const r=await fetch('../assets/artists.json',{cache:'no-store'}); luData=await r.json(); }catch{ luData=[] } } luData.sort((x,y)=> (x.order??9999)-(y.order??9999) || (x.name||'').localeCompare(y.name||'')); luRenumber(); luRender(); }
+    async function luSave(){ const out = luData.map(luClean); let pwd = localStorage.getItem('rr_admin_pwd'); if (!pwd) return alert('Not authenticated'); const res = await fetch(`${apiBase}/artists`, { method:'PUT', headers:{ 'Content-Type':'application/json', 'Authorization': `Bearer ${pwd}` }, body: JSON.stringify({ artists: out }) }); if (!res.ok) return alert('Save failed'); alert('Lineup saved'); }
+    $('#lu-export').addEventListener('click',()=>{ const blob=new Blob([JSON.stringify(luData.map(luClean),null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='artists.json'; a.click(); URL.revokeObjectURL(a.href); });
+    $('#lu-save').addEventListener('click', luSave);
+
+    /* ------- Schedule ------- */
+    const START=new Date('2025-10-23T12:00:00-07:00'); const END=new Date('2025-10-26T12:00:00-07:00');
+    const scList=$('#sc-list'); const scFilter=$('#sc-filter'); const scTimes=$('#sc-times'); const scTracksGrid=$('#sc-tracks-grid'); const scDuration=$('#sc-duration'); const scSlotSel=$('#sc-slot'); const scTracksSel=$('#sc-tracks'); const scTrash=$('#sc-trash'); const scPublished=$('#sc-published');
+    let scArtists=[]; let schedule={ entries:[], meta:{ tz:'America/Los_Angeles', published:false } };
+    function scTimeSlots(min){ const out=[]; let t=new Date(START); while(t<=END){ out.push(new Date(t)); t=new Date(t.getTime()+min*60000); } return out; }
+    function scRenderArtists(){ scList.innerHTML=''; const q=(scFilter.value||'').toLowerCase(); scArtists.filter(a=>!q|| (a.name||'').toLowerCase().includes(q)).forEach(a=>{ const el=document.createElement('div'); el.className='s-artist'; el.textContent=a.name; el.draggable=true; el.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain', a.name); }); scList.appendChild(el); }); }
+    function scOverlaps(a,b){ return a.start<b.end && b.start<a.end; }
+    function scPlace({track,start,artist,hours}){ const end=new Date(start.getTime()+hours*3600000); schedule.entries = schedule.entries.filter(e=> !(e.track===track && e.start===start.toISOString())); schedule.entries = schedule.entries.filter(e=> !(e.track===track && scOverlaps({start:new Date(e.start),end:new Date(e.end)}, {start,end})) ); schedule.entries.push({ track, start:start.toISOString(), end:end.toISOString(), artist }); scRenderEntries(); }
+    function scRemove(track,startIso){ schedule.entries = schedule.entries.filter(e=> !(e.track===track && e.start===startIso)); scRenderEntries(); }
+    function scMove(payload, track, toDate){ scRemove(payload.track, payload.start); scPlace({ track, start: toDate, artist: payload.artist, hours: payload.hours }); }
+    function scBuildGrid(){ scTimes.innerHTML=''; scTracksGrid.innerHTML=''; const min=parseInt(scSlotSel.value,10); const slots=scTimeSlots(min); slots.forEach((t,i)=>{ const d=document.createElement('div'); d.className='s-time'; d.textContent=(i===0? t.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+' • ':'')+ t.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}); scTimes.appendChild(d); }); const tracks=(scTracksSel.value||'Main Stage|The Dome').split('|'); scTracksGrid.style.gridTemplateColumns=`repeat(${tracks.length}, 1fr)`; tracks.forEach(track=>{ const col=document.createElement('div'); col.className='s-track'; col.dataset.track=track; slots.forEach(t=>{ const s=document.createElement('div'); s.className='s-slot'; s.dataset.time=t.toISOString(); s.dataset.track=track; s.addEventListener('dragover',e=>e.preventDefault()); s.addEventListener('drop',e=>{ e.preventDefault(); const data=e.dataTransfer.getData('text/plain'); try{ const obj=JSON.parse(data); if(obj.__entry){ return scMove(obj, track, new Date(t)); } }catch{} const name=data; scPlace({track,start:new Date(t),artist:name,hours:parseInt(scDuration.value,10)||1}); }); col.appendChild(s); }); scTracksGrid.appendChild(col); }); scRenderEntries(); }
+    function scRenderEntries(){
+      $$('.s-entry').forEach(e=> e.remove());
+      const min=parseInt(scSlotSel.value,10); const slotHeight=44;
+      schedule.entries.sort((a,b)=> a.start.localeCompare(b.start));
+      for(const e of schedule.entries){
+        const start=new Date(e.start); const end=new Date(e.end);
+        const durMin=Math.max(min, Math.round((end-start)/60000));
+        const rows=Math.ceil(durMin/min);
+        const sel=`.s-slot[data-track="${e.track}"][data-time="${start.toISOString()}"]`;
+        const slot=document.querySelector(sel); if(!slot) continue;
+        const div=document.createElement('div'); div.className='s-entry'; div.style.height=`${rows*slotHeight-8}px`; div.draggable=true;
+        div.addEventListener('dragstart',ev=>{ ev.dataTransfer.setData('text/plain', JSON.stringify({__entry:true, artist:e.artist, hours:Math.max(1,Math.round(durMin/60)), track:e.track, start:e.start})); });
+        const name=document.createElement('div'); name.textContent=e.artist; name.style.fontWeight='700';
+        const actions=document.createElement('div');
+        const minus=document.createElement('button'); minus.textContent='−'; minus.title='Shorter by one slot'; minus.className='btn secondary'; minus.addEventListener('click',()=>{ const newEnd=new Date(Math.max(start.getTime()+min*60000, end.getTime()-min*60000)); e.end=newEnd.toISOString(); scRenderEntries(); });
+        const plus=document.createElement('button'); plus.textContent='+'; plus.title='Longer by one slot'; plus.className='btn secondary'; plus.addEventListener('click',()=>{ const newEnd=new Date(end.getTime()+min*60000); e.end=newEnd.toISOString(); scRenderEntries(); });
+        const del=document.createElement('button'); del.textContent='×'; del.title='Remove'; del.className='btn secondary'; del.addEventListener('click',()=> scRemove(e.track,e.start));
+        actions.appendChild(minus); actions.appendChild(plus); actions.appendChild(del);
+        div.appendChild(name); div.appendChild(actions); slot.appendChild(div);
+      }
+    }
+    scTrash.addEventListener('dragover',e=>e.preventDefault()); scTrash.addEventListener('drop',e=>{ e.preventDefault(); const data=e.dataTransfer.getData('text/plain'); try{ const obj=JSON.parse(data); if(obj.__entry && obj.track && obj.start){ scRemove(obj.track, obj.start); } }catch{} });
+    async function scLoad(){ try{ if(apiBase){ const r=await fetch(`${apiBase}/artists?t=${Date.now()}`); if(r.ok){ const j=await r.json(); scArtists=j.artists||[]; } } }catch{} if(!scArtists.length){ try{ const r=await fetch('../assets/artists.json',{cache:'no-store'}); scArtists=await r.json(); }catch{ scArtists=[] } } scRenderArtists(); try{ const res=await authFetch('/schedule',{method:'GET',cache:'no-store'}); if(res.ok){ const j=await res.json(); if(j && typeof j==='object'){ schedule = j; if(!Array.isArray(schedule.entries)) schedule.entries=[]; if(!schedule.meta) schedule.meta={tz:'America/Los_Angeles',published:false}; scPublished.checked=!!schedule.meta.published; } } }catch{} }
+    function scToCsvRows(){ const rows=[[ 'track','start','end','artist' ]]; schedule.entries.forEach(e=> rows.push([e.track,e.start,e.end,e.artist])); return rows; }
+    function saveBlob(name, text, type){ const blob=new Blob([text],{type}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
+    $('#sc-export-json').addEventListener('click',()=> saveBlob('schedule.json', JSON.stringify(schedule,null,2), 'application/json'));
+    $('#sc-export-csv').addEventListener('click',()=>{ const rows=scToCsvRows(); const csv=rows.map(r=> r.map(v=> '"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'); saveBlob('schedule.csv', csv, 'text/csv'); });
+    $('#sc-save').addEventListener('click', async ()=>{ try{ schedule.meta=Object.assign({tz:'America/Los_Angeles',published:false}, schedule.meta, { published: !!scPublished.checked }); const res=await authFetch('/schedule',{ method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(schedule)}); if(!res.ok) throw new Error('save'); alert('Schedule saved'); }catch{ alert('Could not save'); } });
+    scFilter.addEventListener('input', scRenderArtists); scSlotSel.addEventListener('change', scBuildGrid); scTracksSel.addEventListener('change', scBuildGrid);
+    // Jump to day buttons
+    $$('.s-tools [data-jump]').forEach(btn=> btn.addEventListener('click', ()=>{
+      const day = btn.getAttribute('data-jump');
+      const slot = document.querySelector(`.s-slot[data-time^="${day}"]`);
+      if (slot) slot.scrollIntoView({behavior:'smooth', block:'start'});
+    }));
+
+    /* ------- Financials ------- */
+    const COSTS_DEFAULT=[
+      { name:'Venue (up to 110 people)', amount:1400 },
+      { name:'Production Costs', amount:2500 },
+      { name:'Production Costs U-Haul', amount:700 },
+      { name:'The Dome U-Haul/Expense', amount:700 },
+      { name:'Fun Shit', amount:1000 },
+    ];
+    let costs=[...COSTS_DEFAULT]; let tiers=[]; const fnCosts=$('#fn-costs'); const fnCap=$('#fn-cap');
+    function fmt(n){ return new Intl.NumberFormat(undefined,{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n||0); }
+    function fnRenderCosts(){ fnCosts.innerHTML=''; let total=0; costs.forEach((c,i)=>{ total+=Number(c.amount||0); const tr=document.createElement('tr'); const td1=document.createElement('td'); const td2=document.createElement('td'); td2.className='right'; const td3=document.createElement('td'); const n=document.createElement('input'); n.type='text'; n.value=c.name||''; n.addEventListener('input',e=> c.name=e.target.value ); const a=document.createElement('input'); a.type='number'; a.value=c.amount||0; a.addEventListener('input',e=>{ c.amount=parseFloat(e.target.value)||0; fnUpdateSums(); }); const rm=document.createElement('button'); rm.textContent='Remove'; rm.className='btn secondary'; rm.addEventListener('click',()=>{ costs.splice(i,1); fnRenderCosts(); fnUpdateSums(); }); td1.appendChild(n); td2.appendChild(a); td3.appendChild(rm); tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); fnCosts.appendChild(tr); }); $('#fn-hard-total').textContent=fmt(total); fnUpdatePer(); }
+    function fnUpdatePer(){ const total=costs.reduce((s,x)=>s+(Number(x.amount)||0),0); const cap=parseInt(fnCap.value,10)||0; const per=cap>0? total/cap : 0; $('#fn-per').textContent = per? new Intl.NumberFormat(undefined,{style:'currency',currency:'USD'}).format(per):'—'; }
+    function fnRenderTiers(){ const body=$('#fn-tiers'); body.innerHTML=''; let sumL=0,sumS=0,sumG=0,max=0; tiers.forEach((t,i)=>{ const tr=document.createElement('tr'); const td=[document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td')]; const name=document.createElement('input'); name.type='text'; name.value=t.label||t.id||''; name.addEventListener('input',e=> t.label=e.target.value ); const price=document.createElement('input'); price.type='number'; price.value=t.price||0; price.addEventListener('input',e=>{ t.price=parseFloat(e.target.value)||0; fnRenderTiers(); }); const limit=document.createElement('input'); limit.type='number'; limit.value=t.limit??0; limit.addEventListener('input',e=>{ t.limit=parseInt(e.target.value,10)||0; fnRenderTiers(); }); const sold=document.createElement('input'); sold.type='number'; sold.value=t.sold||0; sold.addEventListener('input',e=>{ t.sold=parseInt(e.target.value,10)||0; fnRenderTiers(); }); const rm=document.createElement('button'); rm.textContent='Remove'; rm.className='btn secondary'; rm.addEventListener('click',()=>{ tiers.splice(i,1); fnRenderTiers(); }); td[0].appendChild(name); td[1].className='right'; td[1].appendChild(price); td[2].className='right'; td[2].appendChild(limit); td[3].className='right'; td[3].appendChild(sold); const soldGross=(t.price||0)*(t.sold||0); td[4].className='right'; td[4].textContent=fmt(soldGross); td[5].appendChild(rm); tr.append(...td); body.appendChild(tr); sumL+=t.limit||0; sumS+=t.sold||0; sumG+=soldGross; max+= (t.price||0) * (t.limit||0); }); $('#fn-sum-limit').textContent=sumL; $('#fn-sum-sold').textContent=sumS; $('#fn-sum-gross').textContent=fmt(sumG); $('#fn-max').textContent=fmt(max); const hard=costs.reduce((s,x)=>s+(Number(x.amount)||0),0); const avg=sumL>0? (max/sumL):0; const be=avg>0? Math.ceil(hard/avg):null; $('#fn-breakeven').textContent= be!=null? be : '—'; }
+    $('#fn-add-cost').addEventListener('click',()=>{ costs.push({name:'New Cost',amount:0}); fnRenderCosts(); fnUpdateSums(); });
+    $('#fn-add-tier').addEventListener('click',()=>{ tiers.push({ id:'custom', label:'Custom', price:0, limit:0, sold:0 }); fnRenderTiers(); });
+    function fnUpdateSums(){ const total=costs.reduce((s,x)=>s+(Number(x.amount)||0),0); $('#fn-hard-total').textContent=fmt(total); fnUpdatePer(); fnRenderTiers(); }
+    $('#fn-cap').addEventListener('input', fnUpdatePer);
+    $('#fn-export').addEventListener('click',()=>{ const rows=[[ 'item','amount' ], ...costs.map(c=>[c.name,c.amount]), [], ['tier','price','limit','sold'] , ...tiers.map(t=>[t.label||t.id,t.price,t.limit,t.sold])]; const csv=rows.map(r=> r.map(v=> '"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'); saveBlob('financials.csv', csv, 'text/csv'); });
+
+    // Live tiers editing
+    async function fnLoadLive(){ try{ const r=await fetch(`${apiBase}/tiers`,{cache:'no-store'}); if(r.ok){ const j=await r.json(); if(Array.isArray(j?.tiers)) tiers=j.tiers.map(t=> ({ id:t.id, label:t.label, price:t.price, limit:t.limit==null?0:t.limit, sold:t.sold||0 })); fnRenderTiers(); } }catch{} }
+    async function fnSaveLive(){ try{ await authFetch('/tiers',{ method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ tiers: tiers.map(t=> ({ id:t.id, label:t.label, price:Number(t.price||0), limit: t.limit==null? null : Number(t.limit||0) })) }) }); alert('Live tiers saved'); }catch{ alert('Could not save live tiers'); } }
+    $('#fn-load-live').addEventListener('click', fnLoadLive);
+    $('#fn-save-live').addEventListener('click', fnSaveLive);
+    $$('input[name="tiersMode"]').forEach(r=> r.addEventListener('change', async ()=>{
+      const mode = $$('input[name="tiersMode"]').find(x=>x.checked)?.value;
+      if (mode==='live') await fnLoadLive();
+      if (mode==='sim') {/* keep simulation in memory */}
+    }));
+
+    async function init(){
+      await ensureLogin();
+      const overlay=document.getElementById('login'); if (overlay){ overlay.hidden=true; overlay.style.display='none'; overlay.setAttribute('aria-hidden','true'); }
+      setTab('lineup');
+      await luLoad();
+      scBuildGrid(); await scLoad();
+      try{ const inv=await fetch(`${apiBase}/inventory`); if(inv.ok){ const j=await inv.json(); if(Array.isArray(j?.tiers)) tiers=j.tiers.map(t=> ({ id:t.id, label:t.label, price:t.price, limit:t.limit||0, sold:t.sold||0 })); } }catch{}
+      fnRenderCosts(); fnRenderTiers();
+    }
+    init();
+  </script>
+</body>
+</html>

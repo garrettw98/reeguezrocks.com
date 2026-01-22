@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community-Driven Festival Experience</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50e3c2;
+            --background-color: #f5f5f5;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header, main, footer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+        }
+
+        #investmentAmount {
+            width: 100px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #ticketCost {
+            width: 100px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #totalInvestment {
+            width: 100px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #eventLength {
+            width: 50px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #artistCost, #equipmentCost, #miscCost {
+            width: 100px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #profitBreakdown table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        #profitBreakdown th, #profitBreakdown td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #profitBreakdown th {
+            background-color: #f2f2f2;
+        }
+
+        #about-and-how ol, #about-and-how ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        #about-and-how li {
+            margin-bottom: 10px;
+        }
+
+        #about-and-how h3 {
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .modern-table th, .modern-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modern-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .modern-table .section-header {
+            background-color: #e6e6e6;
+            font-weight: bold;
+        }
+
+        .modern-table .total-row {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+
+        .modern-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .event-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .event-ribbon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .event-content {
+            position: relative;
+            padding: 0 0 24px;
+        }
+
+        .event-image-container {
+            position: relative;
+            height: 290px; /* Increased by an additional 25% from 230px */
+            overflow: hidden;
+        }
+
+        .event-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .event-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .event-title {
+            color: white;
+            font-size: 2rem; /* Slightly increased for better visibility on larger image */
+            font-weight: 700;
+            margin: 0;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .event-details {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 24px 24px 0;
+        }
+
+        .event-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-label {
+            font-weight: 700; /* Increased from 600 to 700 */
+            color: #444; /* Slightly darker for better contrast */
+            font-size: 1rem; /* Increased from 0.9rem */
+            min-width: 80px;
+        }
+
+        .info-value {
+            color: #222; /* Darker color for better readability */
+            font-size: 1.1rem; /* Increased from 0.95rem */
+            font-weight: 600; /* Added font weight */
+        }
+
+        .event-stats {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px; /* Increased from 15px */
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.9rem; /* Increased from 0.8rem */
+            color: #555; /* Slightly darker for better contrast */
+            margin-bottom: 8px; /* Increased from 5px */
+            font-weight: 600; /* Added font weight */
+        }
+
+        .stat-value {
+            font-size: 1.3rem; /* Increased from 1.1rem */
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .invest-button-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .invest-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .invest-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .next-event {
+            margin-bottom: 30px;
+        }
+
+        .next-event .event-card {
+            display: block !important; /* Force display */
+            opacity: 1 !important; /* Ensure full opacity */
+            transform: none !important; /* Reset any transforms */
+            position: static !important; /* Ensure it's not positioned absolutely */
+        }
+
+        .event-carousel-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .event-carousel .event-card {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .event-card {
+            display: none;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        .event-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .event-card.prev {
+            display: block;
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+
+        .event-card.next {
+            display: block;
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none; /* This allows clicks to pass through to the card */
+        }
+
+        .prev-btn, .next-btn {
+            background-color: rgba(74, 144, 226, 0.7);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+            pointer-events: auto; /* This makes the buttons clickable */
+            opacity: 0.7;
+            z-index: 10;
+        }
+
+        .prev-btn {
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            padding-left: 20px;
+        }
+
+        .next-btn {
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+            padding-right: 20px;
+        }
+
+        .prev-btn:hover, .next-btn:hover {
+            background-color: rgba(80, 227, 194, 0.9);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .prev-btn, .next-btn {
+                padding: 15px 20px;
+                font-size: 24px;
+            }
+
+            .carousel-controls {
+                top: auto;
+                bottom: 20px;
+                transform: none;
+            }
+
+            .prev-btn {
+                left: 10px;
+            }
+
+            .next-btn {
+                right: 10px;
+            }
+        }
+
+        /* Adjust the event details padding to prevent overlap */
+        .event-details {
+            padding: 24px 60px 0; /* Increased side padding */
+        }
+
+        @media (max-width: 768px) {
+            .event-details {
+                padding: 24px 24px 60px; /* Added bottom padding for mobile */
+            }
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 1200px) {
+            header, main, footer {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profitability-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .event-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stat-item {
+                margin-bottom: 15px;
+            }
+
+            .event-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .event-title {
+                font-size: 1.5rem;
+            }
+
+            .invest-button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+        }
+
+        /* Make tables responsive */
+        .modern-table {
+            width: 100%;
+            overflow-x: auto;
+            display: block;
+        }
+
+        /* Adjust input sizes for smaller screens */
+        @media (max-width: 480px) {
+            input[type="number"],
+            input[type="range"] {
+                font-size: 14px;
+            }
+        }
+
+        /* Ensure images are responsive */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Adjust chart size for smaller screens */
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+        .financial-breakdown-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        #profitBreakdown {
+            max-width: 100%;
+        }
+
+        .modern-table {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+
+        .modern-table th, .modern-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modern-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .modern-table .section-header {
+            background-color: #e6e6e6;
+            font-weight: bold;
+        }
+
+        .modern-table .total-row {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+
+        .modern-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Responsive design improvements */
+        @media (max-width: 768px) {
+            .profitability-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .event-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stat-item {
+                margin-bottom: 15px;
+            }
+
+            .event-title {
+                font-size: 2rem;
+            }
+
+            .modern-table {
+                font-size: 14px;
+            }
+
+            .modern-table th, .modern-table td {
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .event-title {
+                font-size: 1.5rem;
+            }
+
+            .invest-button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+
+            .modern-table {
+                font-size: 12px;
+            }
+
+            .modern-table th, .modern-table td {
+                padding: 6px;
+            }
+
+            input[type="number"],
+            input[type="text"],
+            input[type="email"],
+            textarea,
+            select {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+        }
+
+        /* Ensure all content is responsive */
+        img, video, iframe {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Improve input responsiveness */
+        input[type="number"], 
+        input[type="text"], 
+        input[type="email"], 
+        textarea, 
+        select {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .next-event {
+            margin-bottom: 30px;
+        }
+
+        .next-event .event-card {
+            display: block; /* Ensure it's always visible */
+        }
+
+        .event-carousel-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .event-carousel .event-card {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .event-card {
+            display: none;
+        }
+
+        .event-card.active {
+            display: block;
+        }
+
+        .event-card.prev, .event-card.next {
+            display: block;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            z-index: 3;
+        }
+
+        .prev-btn, .next-btn {
+            background-color: rgba(74, 144, 226, 0.7);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .prev-btn:hover, .next-btn:hover {
+            background-color: rgba(80, 227, 194, 0.9);
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .info-label, .info-value {
+                font-size: 1rem; /* Slightly smaller on mobile, but still larger than before */
+            }
+
+            .stat-label {
+                font-size: 0.85rem;
+            }
+
+            .stat-value {
+                font-size: 1.2rem;
+            }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .profitability-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #444;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin-right: 1rem;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        #ticketSalesValue {
+            font-weight: 600;
+            color: var(--primary-color);
+            min-width: 40px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .profitability-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .profitability-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Community-Driven Festival Experience</h1>
+        <p>Be an early bird member and share in the festival's success!</p>
+    </header>
+
+    <main>
+        <section id="about-and-how" class="card">
+            <h2>Revolutionizing Festival Participation</h2>
+            <p>Welcome to our Community-Driven Festival Experience, where music lovers become part of the festival's success. We're revolutionizing the festival experience by offering early bird memberships with revenue sharing opportunities.</p>
+            
+            <h3>Early Bird Membership Process</h3>
+            <ol>
+                <li><strong>Early Bird Ticket Release:</strong> We announce a limited number of early bird tickets for our curated festival experience.</li>
+                <li><strong>Community Participation:</strong> Members purchase early bird tickets, securing their attendance and a stake in the festival's success.</li>
+                <li><strong>Milestone-Based Execution:</strong> As ticket sales thresholds are met, we collaboratively secure venues, artists, and enhance the event experience.</li>
+                <li><strong>Festival Realization:</strong> Together, we bring the community-backed festival to life, with early bird members enjoying VIP status.</li>
+                <li><strong>Revenue Sharing:</strong> Post-festival, profits are calculated and 50% is distributed evenly among early bird members, on top of the unforgettable experience.</li>
+            </ol>
+
+            <p>By participating as an early bird member, you're not just buying a ticket – you're becoming part of a unique festival experience you help create. Enjoy potential financial returns, exclusive perks, and a stronger community connection. Join us in shaping the future of live events while potentially benefiting from the festival's success.</p>
+        </section>
+
+        <section id="example-event" class="card">
+            <div class="next-event">
+                <div class="event-card">
+                    <div class="event-content">
+                        <div class="event-ribbon">Next Event</div>
+                        <div class="event-image-container">
+                            <img src="BMEC-Photo.webp" alt="Blue Mountain Event Center" class="event-image">
+                            <div class="event-overlay">
+                                <h2 class="event-title">Among Wooks Festival 2025</h2>
+                            </div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-info">
+                                <div class="info-item">
+                                    <span class="info-label">Date:</span>
+                                    <span class="info-value">April 25-27, 2025</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Location:</span>
+                                    <span class="info-value">Blue Mountain Event Center, Wilseyville, California</span>
+                                </div>
+                            </div>
+                            <div class="event-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Early Bird Tickets</span>
+                                    <span class="stat-value">100</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Ticket Price</span>
+                                    <span class="stat-value">$200</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Target Attendance</span>
+                                    <span class="stat-value">550</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="invest-button-container">
+                            <button class="invest-button" onclick="showInvestmentForm()">Become an Early Bird</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-carousel-container">
+                <div class="event-carousel">
+                    <div class="event-card">
+                        <div class="event-ribbon">Future Event</div>
+                        <div class="event-content">
+                            <div class="event-image-container">
+                                <img src="RR25Patch.png" alt="Reeguez Rocks 2025" class="event-image">
+                                <div class="event-overlay">
+                                    <h2 class="event-title">Reeguez Rocks 2025</h2>
+                                </div>
+                            </div>
+                            <div class="event-details">
+                                <div class="event-info">
+                                    <div class="info-item">
+                                        <span class="info-label">Date:</span>
+                                        <span class="info-value">November 2025</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Location:</span>
+                                        <span class="info-value">Lone Pine, California</span>
+                                    </div>
+                                </div>
+                                <div class="event-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Early Bird Tickets</span>
+                                        <span class="stat-value">100</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Ticket Price</span>
+                                        <span class="stat-value">$200</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Target Attendance</span>
+                                        <span class="stat-value">600</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="invest-button-container">
+                                <button class="invest-button" onclick="showInvestmentForm()">Become an Early Bird</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card">
+                        <div class="event-ribbon">Future Event</div>
+                        <div class="event-content">
+                            <div class="event-image-container">
+                                <img src="PCPhoto.webp" alt="Primetime Campout 2025" class="event-image">
+                                <div class="event-overlay">
+                                    <h2 class="event-title">Primetime Campout 2025</h2>
+                                </div>
+                            </div>
+                            <div class="event-details">
+                                <div class="event-info">
+                                    <div class="info-item">
+                                        <span class="info-label">Date:</span>
+                                        <span class="info-value">August 29 - September 1, 2025</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Location:</span>
+                                        <span class="info-value">Southern California</span>
+                                    </div>
+                                </div>
+                                <div class="event-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Early Bird Tickets</span>
+                                        <span class="stat-value">100</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Ticket Price</span>
+                                        <span class="stat-value">$200</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Target Attendance</span>
+                                        <span class="stat-value">600</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="invest-button-container">
+                                <button class="invest-button" onclick="showInvestmentForm()">Become an Early Bird</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="profitability" class="card">
+            <h2 class="section-title">Festival Success Sharing</h2>
+            <p class="section-description">Explore how the festival's success could benefit early bird ticket holders:</p>
+            
+            <div class="profitability-inputs">
+                <div class="input-group">
+                    <label for="earlyBirdTickets">Early Bird Tickets</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="earlyBirdTickets" min="50" max="1000" value="100" step="10">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="ticketSales">Total Ticket Sales</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="ticketSales" min="0" max="800" value="550" step="10">
+                        <span id="ticketSalesValue">550</span>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="ticketCost">Ticket Cost ($)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="ticketCost" min="50" max="500" value="200" step="10">
+                    </div>
+                </div>
+            </div>
+            <div class="financial-breakdown-wrapper">
+                <div id="profitBreakdown"></div>
+            </div>
+            <div class="chart-container-wrapper">
+                <div class="chart-container">
+                    <canvas id="earningsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="card">
+            <h2>Frequently Asked Questions</h2>
+            <h3>What happens if the event doesn't make a profit?</h3>
+            <p>In the unlikely event that we don't make a profit, early bird members will receive a proportional share of the remaining funds after event costs are covered.</p>
+            <h3>How do I receive my share of the profits?</h3>
+            <p>Profits will be distributed electronically to the payment method you used for your early bird ticket purchase within 30 days after the event.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Community-Driven Festival Experience. All rights reserved.</p>
+        <p>Disclaimer: Early bird membership involves risks. Please consult with a financial advisor before making any investment decisions.</p>
+    </footer>
+
+    <script>
+        function showInvestmentForm() {
+            alert('Investment form coming soon!');
+        }
+
+        const ctx = document.getElementById('earningsChart').getContext('2d');
+        let chart;
+
+        function createChart() {
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Your Potential Earnings',
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                        data: [],
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Total Ticket Sales'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Your Potential Earnings ($)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function calculateFixedCosts(ticketSales) {
+            const venueCost = 10 * ticketSales * 3; // $10 per day, 3-day event
+            return {
+                venueCost,
+                artistCost: 30000,
+                equipmentCost: 15000,
+                miscCost: 10000,
+                total: venueCost + 30000 + 15000 + 10000
+            };
+        }
+
+        function updateChart() {
+            const earlyBirdTickets = parseInt(document.getElementById('earlyBirdTickets').value);
+            const ticketPrice = parseFloat(document.getElementById('ticketCost').value);
+            const variableCost = 25; // Assuming $25 per ticket for food, drinks, etc.
+
+            const labels = [];
+            const earningsData = [];
+
+            for (let ticketSales = 0; ticketSales <= 800; ticketSales += 25) {
+                const fixedCosts = calculateFixedCosts(ticketSales);
+                const totalRevenue = ticketSales * ticketPrice;
+                const eventCosts = fixedCosts.total + (variableCost * ticketSales);
+                let totalProfit = Math.max(0, totalRevenue - eventCosts);
+                
+                const earlyBirdShare = totalProfit * 0.5;
+                const yourEarnings = (1 / earlyBirdTickets) * earlyBirdShare;
+
+                labels.push(ticketSales);
+                earningsData.push(yourEarnings);
+            }
+
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = earningsData;
+            chart.update();
+
+            updateProfitBreakdown(earlyBirdTickets, ticketPrice, variableCost);
+        }
+
+        function updateProfitBreakdown(earlyBirdTickets, ticketPrice, variableCost) {
+            const ticketSales = parseInt(document.getElementById('ticketSales').value);
+            
+            const fixedCosts = calculateFixedCosts(ticketSales);
+            
+            const ticketRevenue = ticketSales * ticketPrice;
+            const eventCosts = fixedCosts.total + (variableCost * ticketSales);
+            
+            let totalProfit = Math.max(0, ticketRevenue - eventCosts);
+            let earlyBirdShare = totalProfit * 0.5;
+            let organizerShare = totalProfit * 0.5;
+            
+            const yourEarnings = (1 / earlyBirdTickets) * earlyBirdShare;
+            
+            const breakdownHTML = `
+                <h3>Festival Financial Breakdown</h3>
+                <p>${ticketSales} tickets sold for a 3-day event</p>
+                <table class="modern-table">
+                    <tr>
+                        <th>Category</th>
+                        <th>Item</th>
+                        <th>Amount</th>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Revenue</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Ticket Sales (${ticketSales} @ $${ticketPrice})</td>
+                        <td>$${ticketRevenue.toLocaleString()}</td>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Costs</td>
+                    </tr>
+                    <tr>
+                        <td>Fixed Costs</td>
+                        <td>Venue Cost ($10/day/ticket)</td>
+                        <td>$${fixedCosts.venueCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Artist Cost</td>
+                        <td>$${fixedCosts.artistCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Equipment Cost</td>
+                        <td>$${fixedCosts.equipmentCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Miscellaneous Cost</td>
+                        <td>$${fixedCosts.miscCost.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td>Variable Costs</td>
+                        <td>Per Ticket ($${variableCost} × ${ticketSales})</td>
+                        <td>$${(variableCost * ticketSales).toLocaleString()}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td></td>
+                        <td>Total Event Costs</td>
+                        <td>$${eventCosts.toLocaleString()}</td>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Profit Distribution</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Total Profit</td>
+                        <td>$${totalProfit.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Organizer Share (50%)</td>
+                        <td>$${organizerShare.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Early Bird Ticket Holders Total Share (50%)</td>
+                        <td>$${earlyBirdShare.toLocaleString()}</td>
+                    </tr>
+                    <tr class="section-header">
+                        <td colspan="3">Your Early Bird Ticket</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Your Potential Earnings</td>
+                        <td>$${yourEarnings.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Percentage of Ticket Cost Earned Back</td>
+                        <td>${((yourEarnings / ticketPrice) * 100).toFixed(2)}%</td>
+                    </tr>
+                </table>
+                <p>Note: This breakdown is based on the current inputs. Actual results may vary.</p>
+            `;
+
+            document.getElementById('profitBreakdown').innerHTML = breakdownHTML;
+        }
+
+        // Add this function to set initial values
+        function setInitialValues() {
+            const ticketPrice = 200;
+            
+            document.getElementById('ticketSales').value = 550;
+            document.getElementById('ticketSalesValue').textContent = 550;
+            document.getElementById('ticketCost').value = ticketPrice;
+            
+            // Set early bird tickets input limits and initial value
+            const earlyBirdTicketsInput = document.getElementById('earlyBirdTickets');
+            earlyBirdTicketsInput.min = 50;
+            earlyBirdTicketsInput.max = 1000;
+            earlyBirdTicketsInput.value = 100;
+        }
+
+        function adjustLayout() {
+            const width = window.innerWidth;
+            const profitBreakdown = document.getElementById('profitBreakdown');
+            
+            if (width <= 768) {
+                profitBreakdown.style.fontSize = '14px';
+            } else {
+                profitBreakdown.style.fontSize = '16px';
+            }
+            
+            // Redraw the chart to fit the new size
+            if (chart) {
+                chart.resize();
+            }
+        }
+
+        function sortEventsByDate() {
+            const carousel = document.querySelector('.event-carousel');
+            const cards = Array.from(carousel.querySelectorAll('.event-card'));
+
+            cards.sort((a, b) => {
+                const dateA = new Date(a.querySelector('.info-value').textContent);
+                const dateB = new Date(b.querySelector('.info-value').textContent);
+                return dateA - dateB;
+            });
+
+            cards.forEach(card => carousel.appendChild(card));
+        }
+
+        // Call this function before initializing the carousel
+        function initializeCarousel() {
+            sortEventsByDate();
+
+            const carousel = document.querySelector('.event-carousel');
+            const cards = carousel.querySelectorAll('.event-card');
+            let currentIndex = 0;
+            let intervalId;
+            let isTransitioning = false;
+
+            function showCard(index) {
+                if (isTransitioning) return;
+                isTransitioning = true;
+                
+                const prevIndex = (index - 1 + cards.length) % cards.length;
+                const nextIndex = (index + 1) % cards.length;
+                
+                cards.forEach((card, i) => {
+                    card.classList.remove('active', 'prev', 'next');
+                    if (i === index) {
+                        card.classList.add('active');
+                    } else if (i === prevIndex) {
+                        card.classList.add('prev');
+                    } else if (i === nextIndex) {
+                        card.classList.add('next');
+                    }
+                });
+                
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 500); // Match this to your transition duration
+            }
+
+            function nextCard() {
+                currentIndex = (currentIndex + 1) % cards.length;
+                showCard(currentIndex);
+            }
+
+            function prevCard() {
+                currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+                showCard(currentIndex);
+            }
+
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            const debouncedNextCard = debounce(nextCard, 300);
+            const debouncedPrevCard = debounce(prevCard, 300);
+
+            function startAutoSlide() {
+                stopAutoSlide();
+                intervalId = setInterval(debouncedNextCard, 5000);
+            }
+
+            function stopAutoSlide() {
+                clearInterval(intervalId);
+            }
+
+            const nextBtn = document.querySelector('.next-btn');
+            const prevBtn = document.querySelector('.prev-btn');
+            const carouselContainer = document.querySelector('.event-carousel-container');
+
+            nextBtn.addEventListener('click', () => {
+                debouncedNextCard();
+                stopAutoSlide();
+                startAutoSlide();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                debouncedPrevCard();
+                stopAutoSlide();
+                startAutoSlide();
+            });
+
+            carouselContainer.addEventListener('mouseenter', stopAutoSlide);
+            carouselContainer.addEventListener('mouseleave', startAutoSlide);
+
+            // Initialize the carousel
+            showCard(currentIndex);
+            startAutoSlide();
+        }
+
+        // Call initializeCarousel when the page loads
+        window.addEventListener('load', function() {
+            setInitialValues();
+            createChart();
+            updateChart();
+            adjustLayout();
+            initializeCarousel();
+        });
+
+        window.addEventListener('resize', adjustLayout);
+
+        // Update the existing event listeners
+        const earlyBirdTicketsInput = document.getElementById('earlyBirdTickets');
+        const ticketSalesSlider = document.getElementById('ticketSales');
+        const ticketCostInput = document.getElementById('ticketCost');
+
+        earlyBirdTicketsInput.addEventListener('change', updateChart);
+        ticketSalesSlider.addEventListener('input', function() {
+            document.getElementById('ticketSalesValue').textContent = this.value;
+        });
+        ticketSalesSlider.addEventListener('change', updateChart);
+        ticketCostInput.addEventListener('change', updateChart);
+    </script>
+</body>
+</html>

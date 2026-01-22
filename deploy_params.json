@@ -1,0 +1,34 @@
+[
+  {
+    "ParameterKey": "SiteOrigin",
+    "ParameterValue": "https://reeguezrocks.com"
+  },
+  {
+    "ParameterKey": "DomainName",
+    "ParameterValue": "reeguezrocks.com"
+  },
+  {
+    "ParameterKey": "CodeBucket",
+    "ParameterValue": "reeguezrocks-deploy-code-641532809901"
+  },
+  {
+    "ParameterKey": "CodeKeyPrefix",
+    "ParameterValue": "payments/dist"
+  },
+  {
+    "ParameterKey": "StripeSecretParam",
+    "ParameterValue": "/reeguezrocks/stripe/secret"
+  },
+  {
+    "ParameterKey": "StripeWebhookSecretParam",
+    "ParameterValue": "/reeguezrocks/stripe/webhook-secret"
+  },
+  {
+    "ParameterKey": "SuccessUrl",
+    "ParameterValue": "https://reeguezrocks.com/success.html?session_id={CHECKOUT_SESSION_ID}"
+  },
+  {
+    "ParameterKey": "CancelUrl",
+    "ParameterValue": "https://reeguezrocks.com/cancel.html"
+  }
+]

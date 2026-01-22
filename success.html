@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Order Confirmed - Reeguez Rocks 2026</title>
+    <link rel="icon" href="RR26Logo.png" type="image/png">
+    <link rel="stylesheet" href="assets/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 2rem;
+        }
+        .success-card {
+            background: var(--color-bg-elevated);
+            border: 1px solid var(--color-border-accent);
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            animation: hero-fade-in 0.8s ease both;
+        }
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        h1 { color: var(--color-accent); margin-bottom: 1rem; }
+        p { color: var(--color-text-muted); margin-bottom: 2rem; line-height: 1.6; }
+        .order-id {
+            background: rgba(255,255,255,0.05);
+            padding: 0.75rem;
+            border-radius: var(--radius-sm);
+            font-family: monospace;
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-layer"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="success-card">
+        <span class="success-icon">✨</span>
+        <h1>You're In!</h1>
+        <p>Thank you for powering Reeguez Rocks 2026. Your purchase is confirmed and you've helped us unlock the next tier.</p>
+        
+        <div class="order-id">
+            Order Ref: <span id="sid">Loading...</span>
+        </div>
+
+        <a href="index.html" class="btn btn--primary btn--lg">Back to Homepage</a>
+    </div>
+
+    <script>
+        const u = new URL(window.location.href);
+        document.getElementById('sid').textContent = u.searchParams.get('session_id') || 'Verified';
+    </script>
+</body>
+</html>

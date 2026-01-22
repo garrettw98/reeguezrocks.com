@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Financials — Reeguez Rocks</title>
+  <style>
+    :root{ --bg:#0b0b0f; --panel:#12121a; --text:#e8e8ef; --muted:#9aa1ad; --acc:#f7a602; --acc2:#8A2BE2; --glass:#0f0f16; }
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    header{position:sticky;top:0;background:#0d0d14;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .wrap{max-width:1100px;margin:16px auto;padding:0 16px}
+    .panel{background:var(--panel);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px}
+    h1{margin:0;font-size:20px}
+    .muted{color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:900px){ .grid{grid-template-columns:1fr 1fr} }
+    table{width:100%;border-collapse:collapse;background:var(--glass);border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden}
+    th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
+    th{color:#eaeaea;background:#11111a}
+    tr:last-child td{border-bottom:0}
+    .right{text-align:right}
+    .kpi{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .kpi .item{background:#161622;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px}
+    .kpi .label{color:var(--muted);font-size:12px}
+    .kpi .value{font-weight:800;font-size:20px}
+    .hint{color:var(--muted);font-size:12px;margin-top:6px}
+    input[type=number]{width:100%;max-width:140px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.16);background:#0f0f16;color:#fff}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  </style>
+  <script src="../config.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Financials <span class="muted" id="source"></span></h1>
+    <div class="muted">Admin view</div>
+  </header>
+  <div class="wrap">
+    <div class="grid">
+      <div class="panel">
+        <h2 style="margin:0 0 8px">Hard Costs</h2>
+        <table id="hardcosts">
+          <thead>
+            <tr><th>Item</th><th class="right">Amount (USD)</th></tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr><th>Total</th><th class="right" id="hard-total">$0</th></tr>
+          </tfoot>
+        </table>
+        <div class="row" style="margin-top:10px">
+          <div>Capacity (people): <input type="number" id="capacity" min="1" value="110"></div>
+          <div class="hint">Venue supports up to 110 people</div>
+        </div>
+        <div class="kpi" style="margin-top:12px">
+          <div class="item"><div class="label">Hard Costs Total</div><div class="value" id="kpi-hard">$0</div></div>
+          <div class="item"><div class="label">Cost per Person (at capacity)</div><div class="value" id="kpi-per">$0</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 style="margin:0 0 8px">Tickets & Revenue</h2>
+        <div class="row">
+          <div class="muted" id="api-status">Loading inventory…</div>
+        </div>
+        <table id="tiers" style="margin-top:10px">
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th class="right">Price</th>
+              <th class="right">Limit</th>
+              <th class="right">Sold</th>
+              <th class="right">Gross (sold)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <th>Totals</th>
+              <th></th>
+              <th class="right" id="sum-limit">0</th>
+              <th class="right" id="sum-sold">0</th>
+              <th class="right" id="sum-sold-gross">$0</th>
+            </tr>
+          </tfoot>
+        </table>
+        <div class="kpi" style="margin-top:12px">
+          <div class="item"><div class="label">Max Gross (limited tiers)</div><div class="value" id="kpi-max">$0</div></div>
+          <div class="item"><div class="label">Approx. Break‑Even Tickets</div><div class="value" id="kpi-breakeven">—</div></div>
+        </div>
+        <div class="hint" style="margin-top:6px">Break‑even uses average price = (max gross ÷ total limited tickets).</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (s,d=document)=>d.querySelector(s);
+
+    const HARD_COSTS = [
+      { name:'Venue (up to 110 people)', amount: 1400 },
+      { name:'Production Costs', amount: 2500 },
+      { name:'Production Costs U-Haul', amount: 700 },
+      { name:'The Dome U-Haul/Expense', amount: 700 },
+      { name:'Fun Shit', amount: 1000 },
+    ];
+
+    function fmt(n){
+      return new Intl.NumberFormat(undefined,{ style:'currency', currency:'USD', maximumFractionDigits:0 }).format(n||0);
+    }
+
+    function renderHardCosts(){
+      const tbody = $('#hardcosts tbody'); tbody.innerHTML='';
+      let total=0;
+      for (const row of HARD_COSTS){
+        total += row.amount||0;
+        const tr=document.createElement('tr');
+        const td1=document.createElement('td'); td1.textContent=row.name; tr.appendChild(td1);
+        const td2=document.createElement('td'); td2.className='right'; td2.textContent=fmt(row.amount); tr.appendChild(td2);
+        tbody.appendChild(tr);
+      }
+      $('#hard-total').textContent = fmt(total);
+      $('#kpi-hard').textContent = fmt(total);
+      updatePerPerson();
+    }
+
+    function updatePerPerson(){
+      const total = HARD_COSTS.reduce((s,x)=>s+(x.amount||0),0);
+      const cap = parseInt($('#capacity').value,10)||0;
+      const per = cap>0 ? total/cap : 0;
+      $('#kpi-per').textContent = per? new Intl.NumberFormat(undefined,{ style:'currency', currency:'USD' }).format(per) : '—';
+    }
+
+    async function loadInventory(){
+      const base = window.PAYMENTS_API_BASE || (window.parent && window.parent.PAYMENTS_API_BASE);
+      const status = $('#api-status');
+      if (!base){ status.textContent='API base not configured'; return; }
+      try{
+        const res = await fetch(`${base}/inventory`, { method:'GET', cache:'no-store' });
+        if (!res.ok) throw new Error('http_'+res.status);
+        const j = await res.json();
+        const tiers = Array.isArray(j?.tiers)? j.tiers : [];
+        status.textContent = `Loaded ${tiers.length} tiers`;
+        renderTiers(tiers);
+      }catch(e){ status.textContent='Could not load inventory'; }
+    }
+
+    function renderTiers(tiers){
+      const tbody = $('#tiers tbody'); tbody.innerHTML='';
+      let sumLimit=0, sumSold=0, sumSoldGross=0, maxGross=0;
+      for (const t of tiers){
+        const price = Number(t.price||0); const limit = (t.limit==null? null : Number(t.limit)); const sold = Number(t.sold||0);
+        const soldGross = price * sold; sumSoldGross += soldGross; sumSold += sold; if (limit!=null){ sumLimit += limit; maxGross += price * limit; }
+        const tr=document.createElement('tr');
+        tr.innerHTML = `
+          <td>${t.label||t.id||''}</td>
+          <td class="right">${fmt(price)}</td>
+          <td class="right">${limit!=null? limit: '∞'}</td>
+          <td class="right">${sold}</td>
+          <td class="right">${fmt(soldGross)}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+      $('#sum-limit').textContent = sumLimit;
+      $('#sum-sold').textContent = sumSold;
+      $('#sum-sold-gross').textContent = fmt(sumSoldGross);
+      $('#kpi-max').textContent = fmt(maxGross);
+
+      const hard = HARD_COSTS.reduce((s,x)=>s+(x.amount||0),0);
+      const avgPrice = sumLimit>0 ? (maxGross / sumLimit) : 0;
+      const breakeven = avgPrice>0 ? Math.ceil(hard / avgPrice) : null;
+      $('#kpi-breakeven').textContent = breakeven!=null? breakeven : '—';
+    }
+
+    (function init(){
+      $('#capacity').addEventListener('input', updatePerPerson);
+      renderHardCosts();
+      loadInventory();
+      const base = window.PAYMENTS_API_BASE || (window.parent && window.parent.PAYMENTS_API_BASE);
+      if (base) $('#source').textContent = `(API: ${base})`;
+    })();
+  </script>
+</body>
+</html>
+

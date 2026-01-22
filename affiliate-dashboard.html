@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Affiliate Dashboard | Reeguez Rocks 2026</title>
+
+    <!-- Icons and preview image -->
+    <link rel="icon" href="RR26Logo.png" type="image/png">
+    <link rel="shortcut icon" href="RR26Logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="RR26Logo.png" sizes="180x180">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <!-- Config -->
+    <script src="config.js"></script>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Affiliate Dashboard | Reeguez Rocks 2026">
+    <meta name="description" content="Track your affiliate earnings and stats for Reeguez Rocks 2026.">
+    <meta property="og:description" content="Track your affiliate earnings and stats for Reeguez Rocks 2026.">
+    <meta property="og:image" content="https://reeguezrocks.com/RR26Logo.png">
+    <meta property="og:url" content="https://reeguezrocks.com/affiliate-dashboard.html">
+    <meta property="og:type" content="website">
+
+    <!-- Preloads -->
+    <link rel="preload" href="RR26BG.png" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/main.css">
+    <style>
+        .dashboard-hero {
+            padding: calc(var(--nav-height) + var(--space-3xl)) var(--space-lg) var(--space-2xl);
+            text-align: center;
+        }
+
+        .dashboard-hero__title {
+            font-size: clamp(var(--text-2xl), 5vw, var(--text-4xl));
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .dashboard-hero__subtitle {
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+
+        .back-link:hover {
+            color: var(--color-accent);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .dashboard-section {
+            padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Login form */
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+        }
+
+        .login-form__title {
+            font-size: var(--text-lg);
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+            text-align: center;
+        }
+
+        .login-form__fields {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .login-form__hint {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-align: center;
+            margin-top: var(--space-md);
+        }
+
+        .login-form__error {
+            color: var(--color-error);
+            font-size: var(--text-sm);
+            text-align: center;
+            margin-top: var(--space-md);
+        }
+
+        /* Dashboard content */
+        .dashboard-content {
+            display: none;
+        }
+
+        .dashboard-content.is-visible {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            gap: var(--space-md);
+            margin-bottom: var(--space-2xl);
+        }
+
+        @media (min-width: 480px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+        .stat-card--highlight {
+            border-color: var(--color-accent);
+            background: rgba(247, 166, 2, 0.05);
+        }
+
+        .stat-card__value {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-card__label {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* Link section */
+        .link-section {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        .link-section__title {
+            font-size: var(--text-lg);
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+        }
+
+        .link-section__row {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .link-section__row input {
+            flex: 1;
+        }
+
+        .link-section__code {
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+
+        .link-section__code strong {
+            color: var(--color-accent);
+            font-size: var(--text-md);
+        }
+
+        /* Payout section */
+        .payout-section {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        .payout-section__title {
+            font-size: var(--text-lg);
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+        }
+
+        .payout-section__desc {
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .payout-section__balance {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .payout-section__status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+        }
+
+        .payout-section__status-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payout-section__status-icon--pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .payout-section__status-icon--complete {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .payout-section__status-text {
+            flex: 1;
+            font-size: var(--text-sm);
+            color: var(--color-text);
+        }
+
+        .payout-section__note {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            margin-top: var(--space-md);
+        }
+
+        /* Tips section */
+        .tips-section {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+        }
+
+        .tips-section__title {
+            font-size: var(--text-lg);
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tips-list li {
+            padding: var(--space-sm) 0;
+            padding-left: var(--space-lg);
+            position: relative;
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+            line-height: 1.6;
+        }
+
+        .tips-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 6px;
+            height: 6px;
+            background: var(--color-accent);
+            border-radius: 50%;
+        }
+
+        /* Logout */
+        .logout-btn {
+            display: block;
+            width: 100%;
+            margin-top: var(--space-xl);
+            padding: var(--space-md);
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text-muted);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .logout-btn:hover {
+            border-color: var(--color-text-muted);
+            color: var(--color-text);
+        }
+
+        /* Password setup form */
+        .password-setup {
+            display: none;
+            max-width: 400px;
+            margin: 0 auto;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+        }
+
+        .password-setup.is-visible {
+            display: block;
+        }
+
+        .password-setup__title {
+            font-size: var(--text-lg);
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+            text-align: center;
+        }
+
+        .password-setup__desc {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-align: center;
+            margin-bottom: var(--space-lg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-layer" aria-hidden="true"></div>
+    <div class="bg-overlay" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <header class="nav" role="banner">
+        <a href="/" class="nav__logo">
+            <img src="assets/reeguez-rocks-2026-logo.png" alt="Reeguez Rocks 2026" width="140" height="auto">
+        </a>
+        <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <nav class="nav__menu" id="nav-menu" role="navigation">
+            <a href="/#tickets" class="nav__link">Tickets</a>
+            <a href="/#crowdfunding" class="nav__link">Progress</a>
+            <a href="/#lineup" class="nav__link">Lineup</a>
+            <a href="/#experience" class="nav__link">Experience</a>
+            <a href="/#info" class="nav__link">Info & FAQ</a>
+            <a href="https://www.instagram.com/reeguez_rocks_festival/" class="nav__link nav__link--external" target="_blank" rel="noopener">Instagram</a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="dashboard-hero">
+        <div class="container">
+            <a href="/" class="back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Main Site
+            </a>
+            <h1 class="dashboard-hero__title">Your Affiliate Dashboard</h1>
+            <p class="dashboard-hero__subtitle">Track your earnings, clicks, and sales. Share your link to earn $5 per ticket!</p>
+        </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section class="dashboard-section">
+        <!-- Login Form -->
+        <div class="login-form" id="login-form">
+            <h2 class="login-form__title">Access Your Dashboard</h2>
+            <form id="lookup-form">
+                <div class="login-form__fields">
+                    <input type="email" id="lookup-email" placeholder="Your email address" required class="input">
+                    <input type="password" id="lookup-password" placeholder="Password (if set)" class="input">
+                </div>
+                <button type="submit" class="btn btn--primary" style="width: 100%;">Sign In</button>
+            </form>
+            <p class="login-form__hint">Enter the email you used to sign up as an affiliate.</p>
+            <p class="login-form__error" id="login-error" style="display: none;"></p>
+        </div>
+
+        <!-- Password Setup Form -->
+        <div class="password-setup" id="password-setup">
+            <h2 class="password-setup__title">Welcome, <span id="setup-name"></span>!</h2>
+            <p class="password-setup__desc">Create a password to secure your dashboard. This will be required for future logins.</p>
+            <form id="password-form">
+                <div class="login-form__fields">
+                    <input type="password" id="new-password" placeholder="New password (min 8 characters)" required minlength="8" class="input">
+                    <input type="password" id="confirm-password" placeholder="Confirm password" required class="input">
+                </div>
+                <button type="submit" class="btn btn--primary" style="width: 100%;">Set Password & Continue</button>
+            </form>
+            <p class="login-form__error" id="password-error" style="display: none;"></p>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content" id="dashboard-content">
+            <!-- Welcome -->
+            <h2 style="font-size: var(--text-xl); color: var(--color-text); margin-bottom: var(--space-lg);">
+                Welcome back, <span id="affiliate-name" style="color: var(--color-accent);"></span>!
+            </h2>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card stat-card--highlight">
+                    <div class="stat-card__value" id="stat-earnings">$0</div>
+                    <div class="stat-card__label">Total Earned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__value" id="stat-tickets">0</div>
+                    <div class="stat-card__label">Tickets Sold</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__value" id="stat-clicks">0</div>
+                    <div class="stat-card__label">Link Clicks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__value" id="stat-conversion">0%</div>
+                    <div class="stat-card__label">Conversion Rate</div>
+                </div>
+            </div>
+
+            <!-- Your Link -->
+            <div class="link-section">
+                <h3 class="link-section__title">Your Affiliate Link</h3>
+                <div class="link-section__row">
+                    <input type="text" id="your-link" readonly class="input">
+                    <button type="button" class="btn btn--outline" onclick="copyLink()">Copy</button>
+                </div>
+                <p class="link-section__code">Promo Code: <strong id="your-code"></strong></p>
+            </div>
+
+            <!-- Payout Info -->
+            <div class="payout-section">
+                <h3 class="payout-section__title">Payout Setup</h3>
+                <p class="payout-section__desc">Connect your bank account to receive your earnings after the event.</p>
+
+                <div class="payout-section__balance">
+                    Balance: <span id="payout-balance">$0.00</span>
+                </div>
+
+                <div class="payout-section__status" id="payout-status">
+                    <div class="payout-section__status-icon payout-section__status-icon--pending" id="status-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    </div>
+                    <div class="payout-section__status-text" id="status-text">Loading payout status...</div>
+                </div>
+
+                <div id="payout-actions">
+                    <!-- Populated by JS -->
+                </div>
+
+                <p class="payout-section__note">Payouts are processed after the event ends (after October 2026). If there are refunds, they will be deducted from your balance before payout.</p>
+            </div>
+
+            <!-- Tips -->
+            <div class="tips-section">
+                <h3 class="tips-section__title">Tips to Boost Sales</h3>
+                <ul class="tips-list">
+                    <li>Share your link on social media with a personal message about why you're excited for Reeguez Rocks</li>
+                    <li>Post in relevant communities and groups (check the rules first!)</li>
+                    <li>Text your friends directly - personal invites work best</li>
+                    <li>Remind people they get 5% off when using your link</li>
+                    <li>Share lineup announcements and updates with your link</li>
+                </ul>
+            </div>
+
+            <button type="button" class="logout-btn" onclick="logout()">Sign Out</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <p>&copy; 2026 Reeguez Rocks. All rights reserved.</p>
+            <div class="footer__links">
+                <a href="/">Back to Main Site</a>
+                <a href="affiliates.html">Leaderboard</a>
+                <a href="mailto:reeguezrocks@gmail.com">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Nav toggle
+        const toggle = document.getElementById('nav-toggle');
+        const menu = document.getElementById('nav-menu');
+        if (toggle && menu) {
+            toggle.addEventListener('click', () => {
+                const isOpen = menu.classList.toggle('is-open');
+                toggle.setAttribute('aria-expanded', isOpen);
+            });
+        }
+
+        // Nav scroll behavior
+        const nav = document.querySelector('.nav');
+        if (nav) {
+            const handleScroll = () => {
+                nav.classList.toggle('nav--scrolled', window.scrollY > 20);
+            };
+            handleScroll();
+            window.addEventListener('scroll', handleScroll, { passive: true });
+        }
+
+        const API_BASE = window.PAYMENTS_API_BASE || 'https://gg9rf9hsf0.execute-api.us-east-1.amazonaws.com';
+        const loginForm = document.getElementById('login-form');
+        const passwordSetup = document.getElementById('password-setup');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const lookupForm = document.getElementById('lookup-form');
+        const passwordForm = document.getElementById('password-form');
+
+        let currentToken = null;
+        let currentAffiliate = null;
+
+        // Check URL for setup token or onboarding status
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.get('onboard') === 'complete') {
+            // Clear the URL param and reload dashboard
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+
+        // Handle setup token from welcome email
+        const setupToken = urlParams.get('setup');
+        if (setupToken) {
+            verifySetupToken(setupToken);
+        } else {
+            // Check if already logged in
+            const savedToken = localStorage.getItem('rr_affiliate_token');
+            if (savedToken) {
+                currentToken = savedToken;
+                loadDashboardWithToken();
+            }
+        }
+
+        async function verifySetupToken(token) {
+            loginForm.style.display = 'none';
+
+            try {
+                const res = await fetch(`${API_BASE}/affiliate-payout/verify-setup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json();
+
+                if (data.ok) {
+                    currentToken = data.token;
+
+                    if (data.hasPassword) {
+                        // Already has password, go to dashboard
+                        localStorage.setItem('rr_affiliate_token', currentToken);
+                        window.history.replaceState({}, '', window.location.pathname);
+                        await loadDashboardWithToken();
+                    } else {
+                        // Show password setup form
+                        document.getElementById('setup-name').textContent = data.name;
+                        passwordSetup.classList.add('is-visible');
+                        window.history.replaceState({}, '', window.location.pathname);
+                    }
+                } else {
+                    // Invalid token, show login form with error
+                    loginForm.style.display = 'block';
+                    const errorEl = document.getElementById('login-error');
+                    errorEl.textContent = data.error || 'Invalid or expired setup link. Please log in with your email and password.';
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                loginForm.style.display = 'block';
+                const errorEl = document.getElementById('login-error');
+                errorEl.textContent = 'Could not verify setup link. Please try again or log in.';
+                errorEl.style.display = 'block';
+            }
+        }
+
+        lookupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('lookup-email').value.trim();
+            const password = document.getElementById('lookup-password').value;
+
+            const errorEl = document.getElementById('login-error');
+            errorEl.style.display = 'none';
+
+            if (!email) return;
+
+            const btn = lookupForm.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = 'Signing in...';
+
+            try {
+                const res = await fetch(`${API_BASE}/affiliate-payout/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+
+                if (data.ok) {
+                    currentToken = data.token;
+                    localStorage.setItem('rr_affiliate_token', currentToken);
+                    await loadDashboardWithToken();
+                } else {
+                    errorEl.textContent = data.error || 'Login failed';
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                errorEl.textContent = 'Could not connect. Please try again.';
+                errorEl.style.display = 'block';
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Sign In';
+        });
+
+        passwordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('new-password').value;
+            const confirm = document.getElementById('confirm-password').value;
+
+            const errorEl = document.getElementById('password-error');
+            errorEl.style.display = 'none';
+
+            if (password !== confirm) {
+                errorEl.textContent = 'Passwords do not match';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 8) {
+                errorEl.textContent = 'Password must be at least 8 characters';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const btn = passwordForm.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = 'Setting password...';
+
+            try {
+                const res = await fetch(`${API_BASE}/affiliate-payout/set-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify({ password })
+                });
+                const data = await res.json();
+
+                if (data.ok) {
+                    currentToken = data.token;
+                    localStorage.setItem('rr_affiliate_token', currentToken);
+                    passwordSetup.classList.remove('is-visible');
+                    await loadDashboardWithToken();
+                } else {
+                    errorEl.textContent = data.error || 'Failed to set password';
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                errorEl.textContent = 'Could not connect. Please try again.';
+                errorEl.style.display = 'block';
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Set Password';
+        });
+
+        async function loadDashboardWithToken() {
+            if (!currentToken) return;
+
+            try {
+                // Get affiliate data
+                const email = localStorage.getItem('rr_affiliate_email');
+                const res = await fetch(`${API_BASE}/affiliate/dashboard?email=${encodeURIComponent(email || '')}`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+
+                // Also try the simple email lookup for now
+                const slug = currentToken.split(':')[0];
+                const emailFromToken = await getEmailFromSlug(slug);
+
+                const dataRes = await fetch(`${API_BASE}/affiliate/dashboard?email=${encodeURIComponent(emailFromToken)}`);
+                const data = await dataRes.json();
+
+                if (data.ok && data.affiliate) {
+                    currentAffiliate = data.affiliate;
+                    displayDashboard(data.affiliate);
+                    loginForm.style.display = 'none';
+                    dashboardContent.classList.add('is-visible');
+
+                    // Load payout status
+                    await loadPayoutStatus();
+                } else {
+                    logout();
+                }
+            } catch (err) {
+                console.error('Failed to load dashboard:', err);
+                logout();
+            }
+        }
+
+        async function getEmailFromSlug(slug) {
+            // For now, we'll use the stored email
+            return localStorage.getItem('rr_affiliate_email') || '';
+        }
+
+        function displayDashboard(a) {
+            document.getElementById('affiliate-name').textContent = a.name;
+            document.getElementById('stat-earnings').textContent = `$${(a.earnings / 100).toFixed(0)}`;
+            document.getElementById('stat-tickets').textContent = a.ticketsSold;
+            document.getElementById('stat-clicks').textContent = a.clicks;
+
+            const conversion = a.clicks > 0 ? ((a.ticketsSold / a.clicks) * 100).toFixed(1) : 0;
+            document.getElementById('stat-conversion').textContent = `${conversion}%`;
+
+            document.getElementById('your-link').value = a.link;
+            document.getElementById('your-code').textContent = a.code;
+            document.getElementById('payout-balance').textContent = `$${((a.earnings - (a.paidOut || 0)) / 100).toFixed(2)}`;
+
+            // Store email for future use
+            localStorage.setItem('rr_affiliate_email', a.email);
+        }
+
+        async function loadPayoutStatus() {
+            const statusIcon = document.getElementById('status-icon');
+            const statusText = document.getElementById('status-text');
+            const payoutActions = document.getElementById('payout-actions');
+
+            try {
+                const res = await fetch(`${API_BASE}/affiliate-payout/status`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const data = await res.json();
+
+                if (data.ok) {
+                    if (!data.stripeAccountId) {
+                        // No Stripe account yet
+                        statusIcon.className = 'payout-section__status-icon payout-section__status-icon--pending';
+                        statusIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
+                        statusText.textContent = 'Bank account not connected';
+                        payoutActions.innerHTML = '<button class="btn btn--primary" onclick="connectStripe()">Connect Bank Account</button>';
+                    } else if (data.stripeStatus && !data.stripeStatus.detailsSubmitted) {
+                        // Account created but onboarding incomplete
+                        statusIcon.className = 'payout-section__status-icon payout-section__status-icon--pending';
+                        statusIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
+                        statusText.textContent = 'Onboarding incomplete - please finish setup';
+                        payoutActions.innerHTML = '<button class="btn btn--primary" onclick="continueOnboarding()">Complete Setup</button>';
+                    } else if (data.stripeStatus && data.stripeStatus.payoutsEnabled) {
+                        // All set!
+                        statusIcon.className = 'payout-section__status-icon payout-section__status-icon--complete';
+                        statusIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 6L9 17l-5-5"/></svg>';
+                        statusText.textContent = 'Bank account connected - ready for payouts!';
+                        payoutActions.innerHTML = '<button class="btn btn--outline" onclick="viewStripe()">View Stripe Dashboard</button>';
+                    } else {
+                        // Account exists but may need verification
+                        statusIcon.className = 'payout-section__status-icon payout-section__status-icon--pending';
+                        statusIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
+                        statusText.textContent = 'Verification pending';
+                        payoutActions.innerHTML = '<button class="btn btn--outline" onclick="viewStripe()">Check Status</button>';
+                    }
+                }
+            } catch (err) {
+                statusText.textContent = 'Could not load payout status';
+            }
+        }
+
+        async function connectStripe() {
+            const payoutActions = document.getElementById('payout-actions');
+            payoutActions.innerHTML = '<button class="btn btn--primary" disabled>Connecting...</button>';
+
+            try {
+                const res = await fetch(`${API_BASE}/affiliate-payout/connect`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const data = await res.json();
+
+                if (data.ok && data.onboardingUrl) {
+                    window.location.href = data.onboardingUrl;
+                } else {
+                    alert(data.error || 'Could not connect to Stripe');
+                    await loadPayoutStatus();
+                }
+            } catch (err) {
+                alert('Could not connect. Please try again.');
+                await loadPayoutStatus();
+            }
+        }
+
+        async function continueOnboarding() {
+            const payoutActions = document.getElementById('payout-actions');
+            payoutActions.innerHTML = '<button class="btn btn--primary" disabled>Loading...</button>';
+
+            try {
+                const res = await fetch(`${API_BASE}/affiliate-payout/onboarding`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const data = await res.json();
+
+                if (data.ok && data.url) {
+                    window.location.href = data.url;
+                } else {
+                    alert(data.error || 'Could not load onboarding');
+                    await loadPayoutStatus();
+                }
+            } catch (err) {
+                alert('Could not connect. Please try again.');
+                await loadPayoutStatus();
+            }
+        }
+
+        async function viewStripe() {
+            try {
+                const res = await fetch(`${API_BASE}/affiliate-payout/dashboard-link`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const data = await res.json();
+
+                if (data.ok && data.url) {
+                    window.open(data.url, '_blank');
+                } else {
+                    alert(data.error || 'Could not open Stripe dashboard');
+                }
+            } catch (err) {
+                alert('Could not connect. Please try again.');
+            }
+        }
+
+        function copyLink() {
+            const input = document.getElementById('your-link');
+            input.select();
+            document.execCommand('copy');
+            const btn = input.nextElementSibling;
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        }
+
+        function logout() {
+            localStorage.removeItem('rr_affiliate_token');
+            localStorage.removeItem('rr_affiliate_email');
+            currentToken = null;
+            currentAffiliate = null;
+            dashboardContent.classList.remove('is-visible');
+            passwordSetup.classList.remove('is-visible');
+            loginForm.style.display = 'block';
+            document.getElementById('lookup-email').value = '';
+            document.getElementById('lookup-password').value = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Lineup — Reeguez Rocks</title>
+  <style>
+    :root{ --bg:#0b0b0f; --panel:#12121a; --text:#e8e8ef; --muted:#9aa1ad; --acc:#f7a602; --acc2:#8A2BE2; }
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    header{position:sticky;top:0;background:#0d0d14;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+    header .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{background:var(--acc);color:#000;border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}
+    .btn.secondary{background:#1b1b25;color:var(--text);border:1px solid rgba(255,255,255,.12)}
+    .btn.danger{background:#dc3545;color:#fff}
+    .wrap{max-width:1100px;margin:16px auto;padding:0 16px}
+    .panel{background:var(--panel);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px}
+    #status{color:var(--muted);font-size:14px;margin-left:10px}
+    ul#artists{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+    .card{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:center;background:#161622;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px}
+    .card.dragging{opacity:.6;border-color:var(--acc)}
+    .thumb{width:72px;height:72px;border-radius:10px;overflow:hidden;background:#0f0f16;border:1px solid rgba(255,255,255,.1)}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .fields{display:grid;grid-template-columns:1fr;gap:6px}
+    .row{display:flex;gap:6px}
+    input[type=text]{width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.16);background:#0f0f16;color:#fff}
+    .mini{width:86px}
+    .name{font-weight:700}
+    .controls{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+    .handle{cursor:grab;background:#0f0f16;border:1px dashed rgba(255,255,255,.2);padding:6px 8px;border-radius:8px;color:var(--muted)}
+    textarea#export{width:100%;min-height:220px;margin-top:12px;background:#0f0f16;color:#cfd1d6;border-radius:10px;border:1px solid rgba(255,255,255,.16);padding:10px}
+    .hint{color:var(--muted);font-size:12px;margin-top:6px}
+    @media (max-width:640px){ .row{flex-direction:column} .mini{width:100%} .card{grid-template-columns:56px 1fr} .thumb{width:56px;height:56px} }
+  </style>
+  <script src="../config.js"></script>
+</head>
+<body>
+  <header>
+    <div><strong>Manage Lineup</strong><span id="status"></span></div>
+    <div class="actions">
+      <button class="btn secondary" id="sort">Sort by order</button>
+      <button class="btn secondary" id="add">Add artist</button>
+      <button class="btn" id="exportBtn">Export JSON</button>
+      <button class="btn secondary" id="copyBtn">Copy</button>
+      <button class="btn secondary" id="downloadBtn">Download</button>
+      <button class="btn" id="saveBtn">Save (API)</button>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="panel">
+      <ul id="artists"></ul>
+      <textarea id="export" placeholder="Exported JSON will appear here…"></textarea>
+      <div class="hint">Save the exported JSON as <code>assets/artists.json</code> in your repo, then deploy.</div>
+    </div>
+  </div>
+  <script>
+    const status = document.getElementById('status');
+    const list = document.getElementById('artists');
+    const exportBox = document.getElementById('export');
+    let data = [];
+
+    function igHandleFrom(input){
+      try{
+        if(!input) return null; let v=String(input).trim();
+        if (v.startsWith('@')) v = v.slice(1);
+        if (!/^https?:\/\//i.test(v) && /^[A-Za-z0-9._-]+$/.test(v)) return v.toLowerCase();
+        if (!/^https?:\/\//i.test(v)) v = 'https://' + v;
+        const u = new URL(v);
+        if (!/instagram\.com$/i.test(u.hostname) && !/www\.instagram\.com$/i.test(u.hostname)) return null;
+        const segs = u.pathname.split('/').filter(Boolean);
+        if (!segs.length) return null;
+        const first = segs[0].toLowerCase();
+        if (['p','reel','reels','stories','tv','explore'].includes(first)) return null;
+        return first;
+      }catch{ return null }
+    }
+    function scHandleFrom(url){ try{ const u=new URL(url); const p=u.pathname.split('/').filter(Boolean); return p[0]||null }catch{return null} }
+    function slugify(name){ return (name||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
+    function scAvatar(a){ const u=scHandleFrom(a.soundcloud||''); return u? `https://unavatar.io/soundcloud/${encodeURIComponent(u)}`: null }
+    function igAvatar(a){ const h=igHandleFrom(a.instagram||''); return h? `https://unavatar.io/instagram/${encodeURIComponent(h)}`: null }
+    function localImage(a){ const s=slugify(a.name); return s? `../assets/lineup/${s}.png`: null }
+    function normPath(p){ if(!p) return null; if (/^https?:\/\//.test(p) || p.startsWith('/') || p.startsWith('../')) return p; return '../'+p; }
+    function computeThumb(a){
+      const src=a.imageSource||'';
+      if (src==='upload') return normPath(a.image) || localImage(a) || '../assets/artist-placeholder.svg';
+      if (src==='soundcloud') return scAvatar(a) || a.image || localImage(a) || '../assets/artist-placeholder.svg';
+      if (src==='instagram') return igAvatar(a) || a.image || localImage(a) || '../assets/artist-placeholder.svg';
+      // default/auto
+      return a.image || scAvatar(a) || igAvatar(a) || localImage(a) || '../assets/artist-placeholder.svg';
+    }
+
+    // Try to resolve a local asset for the artist slug.
+    // Checks extensions in order: .webp, .png, .jpg, .jpeg
+    function tryLocalAsset(slug){
+      const exts = ['webp','png','jpg','jpeg'];
+      const base = `../assets/lineup/${slug}`;
+      return new Promise(resolve=>{
+        let i=0; const img=new Image();
+        img.onload=()=> resolve(`assets/lineup/${slug}.${exts[i-1]}`);
+        img.onerror=()=>{ if (i<exts.length){ img.src = `${base}.${exts[i++]}`; } else { resolve(null); } };
+        // kick off
+        img.src = `${base}.${exts[i++]}`;
+      });
+    }
+
+    function render(){
+      list.innerHTML='';
+      data.forEach((a,idx)=>{
+        const li=document.createElement('li'); li.className='card'; li.draggable=true; li.dataset.index=idx;
+        li.addEventListener('dragstart', e=>{ li.classList.add('dragging'); e.dataTransfer.setData('text/plain', idx); });
+        li.addEventListener('dragend', ()=> li.classList.remove('dragging'));
+        li.addEventListener('dragover', e=> e.preventDefault());
+        li.addEventListener('drop', e=>{ e.preventDefault(); const from=+e.dataTransfer.getData('text/plain'); const to=idx; if(from===to) return; const item=data.splice(from,1)[0]; data.splice(to,0,item); renumber(); render(); });
+
+        const th=document.createElement('div'); th.className='thumb'; const img=new Image(); img.alt=a.name||'artist'; img.onerror=()=>{ img.src='../assets/artist-placeholder.svg'; }; img.src=computeThumb(a); th.appendChild(img);
+
+        const fields=document.createElement('div'); fields.className='fields';
+        const r1=document.createElement('div'); r1.className='row';
+        const name=document.createElement('input'); name.type='text'; name.placeholder='Name'; name.value=a.name||''; name.className='name'; name.addEventListener('input',e=>{ a.name=e.target.value; });
+        const order=document.createElement('input'); order.type='text'; order.placeholder='Order'; order.value=a.order??''; order.className='mini'; order.addEventListener('input',e=>{ const v=parseInt(e.target.value,10); a.order=isNaN(v)?undefined:v; });
+        r1.appendChild(name); r1.appendChild(order);
+
+        const sc=document.createElement('input'); sc.type='text'; sc.placeholder='SoundCloud URL'; sc.value=a.soundcloud||''; sc.addEventListener('input',e=>{ a.soundcloud=e.target.value||undefined; img.src=computeThumb(a); });
+        const ig=document.createElement('input'); ig.type='text'; ig.placeholder='Instagram URL'; ig.value=a.instagram||''; ig.addEventListener('input',e=>{ a.instagram=e.target.value||undefined; img.src=computeThumb(a); });
+        const im=document.createElement('input'); im.type='text'; im.placeholder='Image override (optional)'; im.value=a.image||''; im.addEventListener('input',e=>{ a.image=e.target.value||undefined; img.src=computeThumb(a); });
+        // Source selection
+        const selRow=document.createElement('div'); selRow.className='row';
+        const source=document.createElement('select'); source.className='mini';
+        const optUpload=new Option('Photo (uploaded)','upload');
+        const optSC=new Option('SoundCloud','soundcloud');
+        const optIG=new Option('Instagram','instagram');
+        source.append(optUpload,optSC,optIG);
+        if (!a.soundcloud) optSC.disabled=true; if (!a.instagram) optIG.disabled=true;
+        if (!a.imageSource){ a.imageSource = a.image? "upload" : (a.soundcloud? "soundcloud" : (a.instagram? "instagram" : "upload")); }
+        source.value = a.imageSource;
+        source.addEventListener('change',()=>{
+          a.imageSource = source.value;
+          if (a.imageSource==='upload' && !a.image){ const s=slugify(a.name); if (s) a.image=`assets/lineup/${s}.png`; }
+          if (a.imageSource==='soundcloud'){ const u=scAvatar(a); if (u) a.image=u; }
+          if (a.imageSource==='instagram'){ const u=igAvatar(a); if (u) a.image=u; }
+          img.src=computeThumb(a);
+        });
+        const srcLabel=document.createElement('span'); srcLabel.textContent='Image source:'; srcLabel.style.color='var(--muted)'; srcLabel.style.minWidth='120px';
+        selRow.appendChild(srcLabel); selRow.appendChild(source);
+
+        const ctr=document.createElement('div'); ctr.className='controls';
+        const handle=document.createElement('span'); handle.textContent='Drag'; handle.className='handle';
+        const up=document.createElement('button'); up.textContent='Up'; up.className='btn secondary'; up.addEventListener('click',()=>{ if(idx>0){ const t=data[idx-1]; data[idx-1]=data[idx]; data[idx]=t; renumber(); render(); }});
+        const down=document.createElement('button'); down.textContent='Down'; down.className='btn secondary'; down.addEventListener('click',()=>{ if(idx<data.length-1){ const t=data[idx+1]; data[idx+1]=data[idx]; data[idx]=t; renumber(); render(); }});
+        const useLocal=document.createElement('button'); useLocal.textContent='Use local image'; useLocal.className='btn secondary'; useLocal.addEventListener('click', async ()=>{
+          const s = slugify(a.name||''); if (!s){ alert('Enter a name first to derive the local image filename.'); return; }
+          // Prefer uploaded source when overriding
+          a.imageSource = 'upload'; source.value='upload';
+          const found = await tryLocalAsset(s);
+          const path = found || `assets/lineup/${s}.png`;
+          a.image = path; im.value = path; img.src = computeThumb(a);
+          if (!found){ console.warn('No local asset found for', s); }
+        });
+        const del=document.createElement('button'); del.textContent='Remove'; del.className='btn danger'; del.addEventListener('click',()=>{ data.splice(idx,1); renumber(); render(); });
+        ctr.appendChild(handle); ctr.appendChild(up); ctr.appendChild(down); ctr.appendChild(useLocal); ctr.appendChild(del);
+
+        fields.appendChild(r1); fields.appendChild(sc); fields.appendChild(ig); fields.appendChild(im); fields.appendChild(selRow); fields.appendChild(ctr);
+        li.appendChild(th); li.appendChild(fields); list.appendChild(li);
+      });
+      status.textContent = ` ${data.length} artists`;
+    }
+
+    function renumber(){ data.forEach((a,i)=>{ a.order = i+1; }); }
+    function sortByOrder(){ data.sort((x,y)=> (x.order??9999)-(y.order??9999) || (x.name||'').localeCompare(y.name||'')); }
+    function clean(obj){ const o={}; for (const k of ['name','soundcloud','instagram','image','imageSource','order']){ if (obj[k]!=null && obj[k]!=='' ) o[k]=obj[k]; } return o; }
+
+    async function load(){
+      try{
+        const base = window.PAYMENTS_API_BASE || (window.parent && window.parent.PAYMENTS_API_BASE);
+        if (base){
+          const r = await fetch(`${base}/artists?t=${Date.now()}`);
+          if (r.ok){ const j=await r.json(); data=j.artists||[]; status.textContent = ` (loaded from API)`; }
+        }
+      }catch{}
+      if (!Array.isArray(data) || !data.length){
+        try{ const r=await fetch('../assets/artists.json',{cache:'no-store'}); data=await r.json(); status.textContent = ` (loaded from file)`; }catch{ data=[] }
+      }
+      sortByOrder(); renumber(); render();
+    }
+
+    document.getElementById('sort').addEventListener('click',()=>{ sortByOrder(); renumber(); render(); });
+    document.getElementById('add').addEventListener('click',()=>{ data.push({ name:'', order:data.length+1 }); render(); });
+    document.getElementById('exportBtn').addEventListener('click',()=>{
+      const out = data.map(clean);
+      exportBox.value = JSON.stringify(out, null, 2);
+      exportBox.scrollIntoView({behavior:'smooth'});
+    });
+    document.getElementById('copyBtn').addEventListener('click',()=>{ exportBox.select(); document.execCommand('copy'); });
+    document.getElementById('downloadBtn').addEventListener('click',()=>{
+      const out = data.map(clean);
+      const blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='artists.json'; a.click(); URL.revokeObjectURL(a.href);
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', async ()=>{
+      const base = window.PAYMENTS_API_BASE || (window.parent && window.parent.PAYMENTS_API_BASE);
+      if (!base){ alert('API base not configured'); return; }
+      let pwd = localStorage.getItem('rr_admin_pwd');
+      if (!pwd){ pwd = prompt('Enter admin password (stored locally)'); if (!pwd) return; localStorage.setItem('rr_admin_pwd', pwd); }
+      const out = data.map(clean);
+      try{
+        let res = await fetch(`${base}/artists`, { method:'PUT', headers:{ 'Content-Type':'application/json', 'Authorization': `Bearer ${pwd}` }, body: JSON.stringify({ artists: out }) });
+        if (res.status === 401){
+          localStorage.removeItem('rr_admin_pwd');
+          pwd = prompt('Password incorrect or expired. Enter admin password:');
+          if (!pwd) return;
+          localStorage.setItem('rr_admin_pwd', pwd);
+          res = await fetch(`${base}/artists`, { method:'PUT', headers:{ 'Content-Type':'application/json', 'Authorization': `Bearer ${pwd}` }, body: JSON.stringify({ artists: out }) });
+        }
+        if (!res.ok){ const t=await res.text().catch(()=>'' ); throw new Error(`save_failed:${res.status}:${t}`); }
+        alert('Saved. Refresh the site to see changes.');
+      }catch(e){
+        console.error(e);
+        alert('Save failed. Click OK to retry, or use Export JSON.');
+      }
+    });
+
+    load();
+  </script>
+</body>
+</html>

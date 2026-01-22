@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://reeguezrocks.com/sitemap.xml
+
+# Disallow admin/private pages
+Disallow: /affiliate-dashboard.html
