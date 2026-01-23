@@ -48,6 +48,12 @@
     "limit": 10
   },
   {
+    "id": "glamping",
+    "label": "Glamping Package (2 Person)",
+    "price": 500,
+    "limit": 10
+  },
+  {
     "id": "cabin",
     "label": "Historic Cabin (Flat Rate)",
     "price": 1000,
