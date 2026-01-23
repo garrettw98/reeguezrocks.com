@@ -36,10 +36,15 @@ const checkoutState = {
 // --- Logic Helpers ---
 function getCurrentPhase(raised) {
   if (!CROWDFUNDING_TIERS.length) return 1;
-  for (let i = CROWDFUNDING_TIERS.length - 1; i >= 0; i--) {
-    if (raised >= CROWDFUNDING_TIERS[i].cumulative) return Math.min(5, CROWDFUNDING_TIERS[i].phase + 1);
+  // If we haven't hit the first goal, we are in Tier 1 (Index 0 + 1)
+  // Logic: Find the first tier where raised < goal.
+  for (let i = 0; i < CROWDFUNDING_TIERS.length; i++) {
+      if (raised < CROWDFUNDING_TIERS[i].goal) {
+          return CROWDFUNDING_TIERS[i].id;
+      }
   }
-  return 1;
+  // If we exceeded all goals, return the last tier
+  return CROWDFUNDING_TIERS[CROWDFUNDING_TIERS.length - 1].id;
 }
 
 function getPhaseMultiplier(phase) {
@@ -314,7 +319,7 @@ const initCheckout = () => {
     // 2. Camping / Accommodations
     if (checkoutState.camping === "car-camping") {
         const qty = checkoutState.addonQtys["car-camping"];
-        const p = 30 * qty;
+        const p = 40 * qty;
         total += p;
         html += `<div class="order-item"><span>Car Camping x${qty}</span><span>$${p.toLocaleString()}</span></div>`;
     } else if (checkoutState.camping === "rv-camping") {
@@ -322,10 +327,6 @@ const initCheckout = () => {
         const p = 100 * qty;
         total += p;
         html += `<div class="order-item"><span>RV Camping x${qty}</span><span>$${p.toLocaleString()}</span></div>`;
-    } else if (checkoutState.camping === "cabin") {
-        const p = 1000;
-        total += p;
-        html += `<div class="order-item"><span>Historic Cabin (Flat)</span><span>$${p.toLocaleString()}</span></div>`;
     } else {
         html += `<div class="order-item"><span>GA Parking</span><span>Included</span></div>`;
     }
@@ -333,7 +334,7 @@ const initCheckout = () => {
     // 3. Early Arrival Add-on
     if (checkoutState.earlyArrival) {
         const qty = checkoutState.addonQtys["early-arrival"];
-        const p = 20 * qty;
+        const p = 30 * qty;
         total += p;
         html += `<div class="order-item"><span>Early Arrival Add-on x${qty}</span><span>$${p.toLocaleString()}</span></div>`;
     }
@@ -392,11 +393,29 @@ const initFunding = async () => {
         const r = await fetch(API_BASE + "/inventory?t=" + Date.now());
         const data = await r.json();
         const raised = data.totalRaised || 0;
-        const goal = 3000; // Tier 1 Foundation
-        const pct = Math.min(100, (raised / goal) * 100);
+        
+        // Find current tier target
+        let currentTier = CROWDFUNDING_TIERS[0];
+        let prevGoal = 0;
+        
+        for (let i = 0; i < CROWDFUNDING_TIERS.length; i++) {
+            if (raised < CROWDFUNDING_TIERS[i].goal) {
+                currentTier = CROWDFUNDING_TIERS[i];
+                prevGoal = i > 0 ? CROWDFUNDING_TIERS[i-1].goal : 0;
+                break;
+            }
+        }
+        
+        // Calculate % within this tier (not total 0-100%)
+        // Example: Tier 2 starts at 4500 (Tier 1 goal) and ends at 9500. Raised 7000.
+        // Progress = (7000 - 4500) / (9500 - 4500)
+        const tierSpan = currentTier.goal - prevGoal;
+        const progressInTier = raised - prevGoal;
+        const pct = Math.min(100, Math.max(0, (progressInTier / tierSpan) * 100));
+        
         progressBar.style.width = `${pct}%`;
         $("#funding-current").textContent = `$${raised.toLocaleString()}`;
-        $("#next-tier-name").textContent = raised >= goal ? "Tier 1 Unlocked!" : "Next: Tier 1 (Event Confirmed)";
+        $("#next-tier-name").textContent = `Current: ${currentTier.name} ($${currentTier.goal.toLocaleString()} Goal)`;
     } catch (e) {}
 };
 

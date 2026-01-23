@@ -6,26 +6,26 @@
    CSS Custom Properties
    -------------------------------------------------------------------------- */
 :root {
-  /* Colors */
-  --color-bg: #0a0a0f;
-  --color-bg-elevated: rgba(15, 15, 20, 0.95);
-  --color-bg-card: rgba(0, 0, 0, 0.5);
-  --color-bg-card-hover: rgba(0, 0, 0, 0.6);
+  /* Colors - Forest/Nature Theme */
+  --color-bg: #0d120f; /* Deep Forest Black/Green */
+  --color-bg-elevated: rgba(20, 26, 22, 0.95);
+  --color-bg-card: rgba(15, 25, 15, 0.6);
+  --color-bg-card-hover: rgba(25, 35, 25, 0.7);
 
-  --color-text: #ffffff;
-  --color-text-muted: #e0e0e0;
-  --color-text-subtle: #c0c0c0;
+  --color-text: #e8ece9;
+  --color-text-muted: #aebcb0;
+  --color-text-subtle: #7a8c7d;
 
-  --color-accent: #f7a602;
-  --color-accent-light: #ffd36a;
-  --color-accent-purple: #8A2BE2;
-  --color-success: #4ade80;
-  --color-error: #ff6b6b;
+  --color-accent: #d4a017; /* Earthy Gold */
+  --color-accent-light: #e6c66b;
+  --color-accent-secondary: #bf5e30; /* Rust/Clay (was Purple) */
+  --color-success: #5c9e6f;
+  --color-error: #cc5e5e;
   --color-discord: #5865F2;
   --color-instagram: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
 
   --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-accent: rgba(247, 166, 2, 0.3);
+  --color-border-accent: rgba(212, 160, 23, 0.3);
 
   /* Spacing */
   --space-xs: 0.25rem;
@@ -38,7 +38,7 @@
 
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Space Grotesk', var(--font-sans);
+  --font-display: 'Space Grotesk', var(--font-sans); /* Keeping Space Grotesk for now, it's clean enough */
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -544,7 +544,7 @@ button {
 }
 
 .btn--secondary {
-  background: var(--color-accent-purple);
+  background: var(--color-accent-secondary);
   color: #fff;
 }
 
@@ -676,7 +676,7 @@ button {
 
 .progress-card__fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-accent-light), var(--color-accent), var(--color-accent-purple));
+  background: linear-gradient(90deg, var(--color-accent-light), var(--color-accent), var(--color-accent-secondary));
   border-radius: var(--radius-full);
   transition: width var(--transition-slow);
 }
