@@ -48,6 +48,12 @@
     "limit": 10
   },
   {
+    "id": "cabin",
+    "label": "Historic Cabin (Sleeps 9)",
+    "price": 1000,
+    "limit": 6
+  },
+  {
     "id": "early-arrival",
     "label": "Early Arrival (Wed)",
     "price": 30,
