@@ -17,7 +17,7 @@ window.TIER_SCHEDULE_FALLBACK = [
   { id: 'ga-4-day', label: '4-Day Pass (Thu-Sun)', basePrice: 119, price: 119, startAt: '2026-01-17T00:00:00-08:00', endAt: null },
   { id: 'car-camping', label: 'Car Camping (Assigned Spot)', price: 40, isAddon: true, startAt: null, endAt: null },
   { id: 'rv-camping', label: 'RV Camping (No Hookups)', price: 100, isAddon: true, limit: 10, startAt: null, endAt: null },
-  { id: 'cabin', label: 'Historic Cabin (Sleeps 9)', price: 1000, isAddon: true, limit: 6, startAt: null, endAt: null },
+  { id: 'cabin', label: 'Historic Cabin (Flat Rate)', price: 1000, isAddon: true, limit: 6, startAt: null, endAt: null },
   { id: 'early-arrival', label: 'Early Arrival (Wed)', price: 30, isAddon: true, startAt: null, endAt: null }
 ];
 
