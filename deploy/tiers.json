@@ -2,8 +2,8 @@
   {
     "id": "ga-4-day",
     "label": "4-Day Pass (Thu-Sun)",
-    "price": 99,
-    "basePrice": 99,
+    "price": 119,
+    "basePrice": 119,
     "limit": null,
     "startAt": "2026-01-17T00:00:00-08:00",
     "endAt": null
@@ -11,8 +11,8 @@
   {
     "id": "ga-3-day",
     "label": "3-Day Pass (Fri-Sun)",
-    "price": 80,
-    "basePrice": 80,
+    "price": 99,
+    "basePrice": 99,
     "limit": null,
     "startAt": "2026-01-17T00:00:00-08:00",
     "endAt": null
@@ -20,8 +20,8 @@
   {
     "id": "ga-2-day",
     "label": "2-Day Pass (Sat-Sun)",
-    "price": 60,
-    "basePrice": 60,
+    "price": 69,
+    "basePrice": 69,
     "limit": null,
     "startAt": "2026-01-17T00:00:00-08:00",
     "endAt": null
@@ -29,8 +29,8 @@
   {
     "id": "ga-1-day",
     "label": "1-Day Pass (Sun Only)",
-    "price": 30,
-    "basePrice": 30,
+    "price": 39,
+    "basePrice": 39,
     "limit": null,
     "startAt": "2026-01-17T00:00:00-08:00",
     "endAt": null
@@ -38,8 +38,8 @@
   {
     "id": "car-camping",
     "label": "Car Camping Add-On",
-    "price": 30,
-    "limit": 200
+    "price": 40,
+    "limit": 150
   },
   {
     "id": "rv-camping",
@@ -50,13 +50,7 @@
   {
     "id": "early-arrival",
     "label": "Early Arrival (Wed)",
-    "price": 20,
+    "price": 30,
     "limit": null
-  },
-  {
-    "id": "cabin",
-    "label": "Historic Cabin (Sleeps 9)",
-    "price": 1000,
-    "limit": 6
   }
 ]
