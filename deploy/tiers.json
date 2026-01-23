@@ -51,7 +51,7 @@
     "id": "glamping",
     "label": "Glamping Package (2 Person)",
     "price": 500,
-    "limit": 10
+    "limit": null
   },
   {
     "id": "cabin",
