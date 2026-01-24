@@ -37,7 +37,7 @@ window.CROWDFUNDING_TIERS = [
   { id: 7, price: 179, goal: 52150, name: 'Headliner 3 Unlock', desc: 'Third major artist secured and announced.' },
   { id: 8, price: 189, goal: 61600, name: 'Daytime Magic', desc: 'Yoga, workshops, and daytime forest vibes.' },
   { id: 9, price: 199, goal: 71550, name: 'Final Reveal', desc: 'Full support lineup and set times released.' },
-  { id: 10, price: 209, goal: 82000, name: 'The Full Send', desc: 'Lasers, Aftermovie production, and Artist bonuses.' }
+  { id: 10, price: 209, goal: 82000, name: 'The Full Send', desc: 'Lasers and Aftermovie production.' }
 ];
 
 window.BACKER_TIERS = {

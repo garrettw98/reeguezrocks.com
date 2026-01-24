@@ -94,16 +94,16 @@
 
 | Tier | Price | Milestones / Unlocks |
 | :--- | :--- | :--- |
-| **Tier 1** | $99 | **Event Confirmed** (Foundation costs covered) |
-| **Tier 2** | $109 | **Headliner 1 Announced** (Or "Help unlock [Artist]" if LOI secured) |
-| **Tier 3** | $119 | Production Upgrade (Base -> Medium) |
-| **Tier 4** | $129 | **Headliner 2 Announced** |
-| **Tier 5** | $139 | The Dome Upgrade (Comfy furniture/decor) |
-| **Tier 6** | $149 | **Headliner 3 Announced** |
-| **Tier 7** | $159 | Art Installation Unlock |
-| **Tier 8** | $169 | Interactive Game/Activity Unlock |
-| **Tier 9** | $179 | **Full Lineup Drop** |
-| **Tier 10** | $189 | Final Stretch (Production Max Out) |
+| **Tier 1** | $119 | **Foundation Set** (Insurance, permits, and core ops secured) |
+| **Tier 2** | $129 | **Event Confirmed** (100% committed to October) |
+| **Tier 3** | $139 | **Headliner 1 Unlock** (First major artist secured) |
+| **Tier 4** | $149 | **Immersive Forest** (Visual decor and custom lighting) |
+| **Tier 5** | $159 | **Headliner 2 Unlock** (Second major artist secured) |
+| **Tier 6** | $169 | **Local Art Grants** (Funding interactive installations) |
+| **Tier 7** | $179 | **Headliner 3 Unlock** (Third major artist secured) |
+| **Tier 8** | $189 | **Daytime Magic** (Yoga, workshops, forest vibes) |
+| **Tier 9** | $199 | **Final Reveal** (Full support lineup & set times) |
+| **Tier 10** | $209 | **The Full Send** (Lasers and Aftermovie production) |
 
 **Announcement Logic:**
 *   **Standard:** Artist name revealed *after* tier sells out (Reward).
