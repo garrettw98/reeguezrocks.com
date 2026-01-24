@@ -11,8 +11,8 @@
   {
     "id": "ga-3-day",
     "label": "3-Day Pass (Fri-Sun)",
-    "price": 99,
-    "basePrice": 99,
+    "price": 109,
+    "basePrice": 109,
     "limit": null,
     "startAt": "2026-01-17T00:00:00-08:00",
     "endAt": null
@@ -20,8 +20,8 @@
   {
     "id": "ga-2-day",
     "label": "2-Day Pass (Sat-Sun)",
-    "price": 69,
-    "basePrice": 69,
+    "price": 89,
+    "basePrice": 89,
     "limit": null,
     "startAt": "2026-01-17T00:00:00-08:00",
     "endAt": null
@@ -29,8 +29,8 @@
   {
     "id": "ga-1-day",
     "label": "1-Day Pass (Sun Only)",
-    "price": 39,
-    "basePrice": 39,
+    "price": 79,
+    "basePrice": 79,
     "limit": null,
     "startAt": "2026-01-17T00:00:00-08:00",
     "endAt": null
