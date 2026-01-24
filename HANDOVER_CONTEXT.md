@@ -8,7 +8,7 @@ The website is fully updated to reflect the **499 Capacity "Back to Roots" Plan*
 ### A. Core Strategy (Implemented)
 *   **Capacity:** 499 Total Bodies (Strict Permit Limit).
 *   **Venue:** Camp Tahquitz (640 Acres).
-*   **Financial Goal:** $92,000 Stretch Goal (Breaks even at ~$5,355).
+*   **Financial Goal:** $92,000 Stretch Goal (Breaks even at ~$5,950).
 *   **Pricing:**
     *   **Tickets:** 10 Tiers, starting at **$119** (Net ~$79 after venue fees).
     *   **Car Camping:** **$40** (Limit 200).

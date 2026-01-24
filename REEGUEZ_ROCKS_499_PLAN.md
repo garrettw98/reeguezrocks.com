@@ -13,18 +13,18 @@
     *   **Staff / Artists / Guest List:** ~50
     *   *Policy:* Strict Guest List. The buffer between 499 and 550 is primarily for essential staff and artists to ensure we don't oversell public tickets.
 
-## 2. Financials (Revised)
-*   **Total Budget Goal:** ~$60,000
-*   **Ticket Pricing:** $99 - $189 (Confirmed)
-    *   *Justification:* The $189 price point is validated by the 4-day duration and multi-artist lineup.
-*   **Estimated Revenue:**
-    *   Tickets (450 avg @ $120): ~$54,000
-    *   Car Camping (150 @ $40): ~$6,000
-*   **Key Expense Priorities:**
-    *   **Production:** **$3,500 (Base) -> $10,000 (Target)**
-        *   *Priority:* "Great Bass" is non-negotiable. We will scale up lighting/decor from the base fee as ticket sales increase.
-    *   **Talent:** ~$20,000 - $25,000
-    *   **Operations:** Remaining balance (~$25k).
+## 2. Financial Model (Scaling)
+*   **Total Budget Goal:** ~$92,000 (Full 10-Tier sellout + Add-ons)
+*   **Break-Even Point:** ~$5,950 (Tier 1 / 50 Tickets)
+*   **Revenue streams:**
+    *   Tickets (499 cap, avg price ~$160): ~$80,000
+    *   Car Camping (200 @ $40): ~$8,000
+    *   Glamping/Cabins/RV: ~$15,000
+*   **Key Expense Scaling:**
+    *   **Venue:** **$40 per ticket sold**
+    *   **Production:** **$30 per ticket sold** (Target ~$15,000 total)
+    *   **Talent:** ~$25,000 - $35,000
+    *   **Ops/Safety:** ~$10,000 - $15,000
 
 ## 3. Venue & Infrastructure
 ### Stages

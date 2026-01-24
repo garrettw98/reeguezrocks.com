@@ -5,7 +5,7 @@ window.PAYMENTS_API_BASE = "https://6n6czuvav1.execute-api.us-east-1.amazonaws.c
 window.RR_CONFIG = {
   launchDate: '2026-01-17T00:00:00-08:00', 
   eventDate: '2026-10-14', // 4-Day Event
-  tierGoal: 45, // Tickets per tier
+  tierGoal: 50, // Tickets per tier
   totalTiers: 10,
   discordUrl: 'https://discord.gg/reeguezrocks',
   instagramUrl: 'https://www.instagram.com/reeguez_rocks_festival/',
@@ -23,18 +23,18 @@ window.TIER_SCHEDULE_FALLBACK = [
 ];
 
 // Crowdfunding Tier Structure (10 Tiers)
-// Amount = Cumulative Revenue Goal (45 tix * Price)
+// Amount = Cumulative Revenue Goal (50 tix * Price)
 window.CROWDFUNDING_TIERS = [
-  { id: 1, price: 119, goal: 5355,  name: 'Event Confirmed', desc: 'Foundation costs & Venue Deposit covered.' },
-  { id: 2, price: 129, goal: 11160, name: 'Headliner 1 Unlock', desc: 'First major artist announcement.' },
-  { id: 3, price: 139, goal: 17415, name: 'Production Upgrade', desc: 'Base audio/visuals secured.' },
-  { id: 4, price: 149, goal: 24120, name: 'Headliner 2 Unlock', desc: 'Second major artist announcement.' },
-  { id: 5, price: 159, goal: 31275, name: 'The Dome Upgrade', desc: 'Comfy furniture & decor for the late night zone.' },
-  { id: 6, price: 169, goal: 38880, name: 'Headliner 3 Unlock', desc: 'Third major artist announcement.' },
-  { id: 7, price: 179, goal: 46935, name: 'Art Installations', desc: 'Interactive art funding unlocked.' },
-  { id: 8, price: 189, goal: 55440, name: 'Interactive Games', desc: 'Group activities and games unlocked.' },
-  { id: 9, price: 199, goal: 64395, name: 'Full Lineup Drop', desc: 'Every artist revealed.' },
-  { id: 10, price: 209, goal: 73800, name: 'Production Max Out', desc: 'Lasers, massive sound, full send.' }
+  { id: 1, price: 119, goal: 5950,  name: 'Event Confirmed', desc: 'Foundation costs & Venue Deposit covered.' },
+  { id: 2, price: 129, goal: 12400, name: 'Headliner 1 Unlock', desc: 'First major artist announcement.' },
+  { id: 3, price: 139, goal: 19350, name: 'Production Upgrade', desc: 'Base audio/visuals secured.' },
+  { id: 4, price: 149, goal: 26800, name: 'Headliner 2 Unlock', desc: 'Second major artist announcement.' },
+  { id: 5, price: 159, goal: 34750, name: 'The Dome Upgrade', desc: 'Comfy furniture & decor for the late night zone.' },
+  { id: 6, price: 169, goal: 43200, name: 'Headliner 3 Unlock', desc: 'Third major artist announcement.' },
+  { id: 7, price: 179, goal: 52150, name: 'Art Installations', desc: 'Interactive art funding unlocked.' },
+  { id: 8, price: 189, goal: 61600, name: 'Interactive Games', desc: 'Group activities and games unlocked.' },
+  { id: 9, price: 199, goal: 71550, name: 'Full Lineup Drop', desc: 'Every artist revealed.' },
+  { id: 10, price: 209, goal: 82000, name: 'Production Max Out', desc: 'Lasers, massive sound, full send.' }
 ];
 
 window.BACKER_TIERS = {
