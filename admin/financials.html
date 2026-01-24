@@ -50,6 +50,7 @@
         </table>
         <div class="row" style="margin-top:10px">
           <div>Capacity (people): <input type="number" id="capacity" min="1" value="499"></div>
+          <div>Avg Days/Guest: <input type="number" id="avg-days" min="1" max="4" step="0.1" value="3.5"></div>
           <div class="hint">Venue supports up to 499 people</div>
         </div>
         <div class="kpi" style="margin-top:12px">
@@ -97,7 +98,7 @@
     const $ = (s,d=document)=>d.querySelector(s);
 
     const HARD_COSTS = [
-      { name:'Venue Fee ($40/head)', perHead: 40 },
+      { name:'Venue Fee ($10/day/head)', perHeadDay: 10 },
       { name:'The Bowl Production ($30/head)', perHead: 30 },
       { name:'The Dome Production ($7/head)', perHead: 7 },
       { name:'Production Costs U-Haul', amount: 700 },
@@ -112,8 +113,13 @@
       const tbody = $('#hardcosts tbody'); tbody.innerHTML='';
       let total=0;
       const cap = parseInt($('#capacity').value,10)||0;
+      const days = parseFloat($('#avg-days').value)||1;
       for (const row of HARD_COSTS){
-        const amount = row.perHead ? row.perHead * cap : (row.amount||0);
+        let amount = 0;
+        if (row.perHeadDay) amount = row.perHeadDay * days * cap;
+        else if (row.perHead) amount = row.perHead * cap;
+        else amount = (row.amount||0);
+        
         total += amount;
         const tr=document.createElement('tr');
         const td1=document.createElement('td'); td1.textContent=row.name; tr.appendChild(td1);
@@ -127,7 +133,12 @@
 
     function updatePerPerson(totalOverride){
       const cap = parseInt($('#capacity').value,10)||0;
-      const total = totalOverride !== undefined ? totalOverride : HARD_COSTS.reduce((s,x)=>s+(x.perHead? x.perHead*cap : (x.amount||0)),0);
+      const days = parseFloat($('#avg-days').value)||1;
+      const total = totalOverride !== undefined ? totalOverride : HARD_COSTS.reduce((s,x)=>{
+          if (x.perHeadDay) return s + (x.perHeadDay * days * cap);
+          if (x.perHead) return s + (x.perHead * cap);
+          return s + (x.amount||0);
+      }, 0);
       const per = cap>0 ? total/cap : 0;
       $('#kpi-per').textContent = per? new Intl.NumberFormat(undefined,{ style:'currency', currency:'USD' }).format(per) : '—';
     }
@@ -168,7 +179,12 @@
       $('#kpi-max').textContent = fmt(maxGross);
 
       const cap = parseInt($('#capacity').value,10)||0;
-      const hard = HARD_COSTS.reduce((s,x)=>s+(x.perHead? x.perHead*cap : (x.amount||0)),0);
+      const days = parseFloat($('#avg-days').value)||1;
+      const hard = HARD_COSTS.reduce((s,x)=>{
+          if (x.perHeadDay) return s + (x.perHeadDay * days * cap);
+          if (x.perHead) return s + (x.perHead * cap);
+          return s + (x.amount||0);
+      }, 0);
       const avgPrice = sumLimit>0 ? (maxGross / sumLimit) : 0;
       const breakeven = avgPrice>0 ? Math.ceil(hard / avgPrice) : null;
       $('#kpi-breakeven').textContent = breakeven!=null? breakeven : '—';
@@ -176,6 +192,7 @@
 
     (function init(){
       $('#capacity').addEventListener('input', renderHardCosts);
+      $('#avg-days').addEventListener('input', renderHardCosts);
       renderHardCosts();
       loadInventory();
       const base = window.PAYMENTS_API_BASE || (window.parent && window.parent.PAYMENTS_API_BASE);

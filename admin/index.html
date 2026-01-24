@@ -131,7 +131,11 @@
           <tfoot><tr><th>Total</th><th class="right" id="fn-hard-total">$0</th><th></th></tr></tfoot>
         </table>
         <div class="row" style="margin:8px 0"><button id="fn-add-cost" class="btn secondary">Add cost</button></div>
-        <div class="row"><label>Capacity: <input id="fn-cap" type="number" min="1" value="499" style="width:100px"></label><div class="muted">Cost per person: <strong id="fn-per">—</strong></div></div>
+        <div class="row">
+          <label>Capacity: <input id="fn-cap" type="number" min="1" value="499" style="width:100px"></label>
+          <label>Avg Days/Guest: <input id="fn-days" type="number" min="1" max="4" step="0.1" value="3.5" style="width:80px"></label>
+          <div class="muted">Cost per person: <strong id="fn-per">—</strong></div>
+        </div>
 
         <h3 style="margin-top:16px">Ticket Tiers</h3>
         <div class="row" style="justify-content:space-between">
@@ -293,41 +297,56 @@
 
     /* ------- Financials ------- */
     const COSTS_DEFAULT=[
-      { name:'Venue Fee ($40/head)', perHead:40 },
+      { name:'Venue Fee ($10/day/head)', perHeadDay:10 },
       { name:'The Bowl Production ($30/head)', perHead:30 },
       { name:'The Dome Production ($7/head)', perHead:7 },
       { name:'Production Costs U-Haul', amount:700 },
       { name:'Fun Shit', amount:1000 },
     ];
-    let costs=[...COSTS_DEFAULT]; let tiers=[]; const fnCosts=$('#fn-costs'); const fnCap=$('#fn-cap');
+    let costs=[...COSTS_DEFAULT]; let tiers=[]; const fnCosts=$('#fn-costs'); const fnCap=$('#fn-cap'); const fnDays=$('#fn-days');
     function fmt(n){ return new Intl.NumberFormat(undefined,{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n||0); }
     function fnRenderCosts(){
       fnCosts.innerHTML='';
       let total=0;
       const cap=parseInt(fnCap.value,10)||0;
+      const days=parseFloat(fnDays.value)||1;
       costs.forEach((c,i)=>{
-        const amount = c.perHead ? c.perHead * cap : (Number(c.amount)||0);
+        let amount = 0;
+        if (c.perHeadDay) amount = c.perHeadDay * days * cap;
+        else if (c.perHead) amount = c.perHead * cap;
+        else amount = (Number(c.amount)||0);
+        
         total+=amount;
         const tr=document.createElement('tr');
         const td1=document.createElement('td');
         const td2=document.createElement('td'); td2.className='right';
         const td3=document.createElement('td');
         const n=document.createElement('input'); n.type='text'; n.value=c.name||''; n.addEventListener('input',e=> c.name=e.target.value );
-        const a=document.createElement('input'); a.type='number'; a.value=c.perHead ? c.perHead : (c.amount||0);
-        if (c.perHead) a.title = "Per-head rate";
+        const a=document.createElement('input'); a.type='number';
+        a.value=c.perHeadDay ? c.perHeadDay : (c.perHead ? c.perHead : (c.amount||0));
+        
         a.addEventListener('input',e=>{
-          if (c.perHead) c.perHead = parseFloat(e.target.value)||0;
+          if (c.perHeadDay) c.perHeadDay = parseFloat(e.target.value)||0;
+          else if (c.perHead) c.perHead = parseFloat(e.target.value)||0;
           else c.amount=parseFloat(e.target.value)||0;
           fnUpdateSums();
         });
         const rm=document.createElement('button'); rm.textContent='Remove'; rm.className='btn secondary'; rm.addEventListener('click',()=>{ costs.splice(i,1); fnRenderCosts(); fnUpdateSums(); });
-        td1.appendChild(n); td2.appendChild(a); if(c.perHead) td2.appendChild(document.createTextNode(' /head')); td3.appendChild(rm); tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); fnCosts.appendChild(tr);
+        td1.appendChild(n); td2.appendChild(a); 
+        if(c.perHeadDay) td2.appendChild(document.createTextNode(' /day/head'));
+        else if(c.perHead) td2.appendChild(document.createTextNode(' /head'));
+        td3.appendChild(rm); tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); fnCosts.appendChild(tr);
       });
       $('#fn-hard-total').textContent=fmt(total); fnUpdatePer();
     }
     function fnUpdatePer(){
       const cap=parseInt(fnCap.value,10)||0;
-      const total=costs.reduce((s,x)=>s+(x.perHead? x.perHead*cap : (Number(x.amount)||0)),0);
+      const days=parseFloat(fnDays.value)||1;
+      const total=costs.reduce((s,x)=>{
+          if (x.perHeadDay) return s + (x.perHeadDay * days * cap);
+          if (x.perHead) return s + (x.perHead * cap);
+          return s + (Number(x.amount)||0);
+      }, 0);
       const per=cap>0? total/cap : 0;
       $('#fn-per').textContent = per? new Intl.NumberFormat(undefined,{style:'currency',currency:'USD'}).format(per):'—';
       $('#fn-hard-total').textContent=fmt(total);
@@ -335,7 +354,12 @@
     function fnRenderTiers(){
       const body=$('#fn-tiers'); body.innerHTML=''; let sumL=0,sumS=0,sumG=0,max=0;
       const cap=parseInt(fnCap.value,10)||0;
-      const hard=costs.reduce((s,x)=>s+(x.perHead? x.perHead*cap : (Number(x.amount)||0)),0);
+      const days=parseFloat(fnDays.value)||1;
+      const hard=costs.reduce((s,x)=>{
+          if (x.perHeadDay) return s + (x.perHeadDay * days * cap);
+          if (x.perHead) return s + (x.perHead * cap);
+          return s + (Number(x.amount)||0);
+      }, 0);
       tiers.forEach((t,i)=>{
         const tr=document.createElement('tr');
         const td=[document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td')];
@@ -355,6 +379,7 @@
     $('#fn-add-tier').addEventListener('click',()=>{ tiers.push({ id:'custom', label:'Custom', price:0, limit:0, sold:0 }); fnRenderTiers(); });
     function fnUpdateSums(){ fnRenderCosts(); fnRenderTiers(); }
     $('#fn-cap').addEventListener('input', fnUpdateSums);
+    $('#fn-days').addEventListener('input', fnUpdateSums);
     $('#fn-export').addEventListener('click',()=>{ const rows=[[ 'item','amount' ], ...costs.map(c=>[c.name,c.amount]), [], ['tier','price','limit','sold'] , ...tiers.map(t=>[t.label||t.id,t.price,t.limit,t.sold])]; const csv=rows.map(r=> r.map(v=> '"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'); saveBlob('financials.csv', csv, 'text/csv'); });
 
     // Live tiers editing
