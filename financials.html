@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Financial Transparency | Reeguez Rocks 2026</title>
 
-    <!-- Icons and preview image -->
     <link rel="icon" href="RR26Logo.png" type="image/png">
     <link rel="shortcut icon" href="RR26Logo.png" type="image/png">
     <link rel="apple-touch-icon" href="RR26Logo.png" sizes="180x180">
@@ -23,102 +22,68 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="assets/main-v5.css?v=21">
+    <link rel="stylesheet" href="assets/main-v5.css?v=23">
     
     <style>
         .finance-hero {
             padding-top: calc(var(--nav-height) + var(--space-xl));
-            padding-bottom: var(--space-3xl);
+            padding-bottom: var(--space-2xl);
+            text-align: center;
         }
 
-        .pillar-grid {
-            display: grid;
-            gap: var(--space-md);
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            margin-bottom: var(--space-2xl);
+        .finance-hero__subtitle {
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--color-text-muted);
+            font-size: var(--text-lg);
         }
 
-        .pillar {
+        /* The Visual Breakdown */
+        .visual-breakdown {
             background: var(--color-bg-elevated);
             border: 1px solid var(--color-border);
             border-radius: var(--radius-lg);
             padding: var(--space-xl);
-            text-align: center;
-            transition: border-color var(--transition-base);
+            margin-bottom: var(--space-3xl);
         }
 
-        .pillar:hover { border-color: var(--color-accent); }
-
-        .pillar__icon {
-            font-size: 2rem;
-            margin-bottom: var(--space-md);
-            display: block;
-        }
-
-        .pillar__title {
-            color: var(--color-accent);
-            font-family: var(--font-display);
-            font-size: var(--text-lg);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: var(--space-sm);
-        }
-
-        .pillar__value {
-            font-size: var(--text-2xl);
-            font-weight: 700;
-            display: block;
-            margin-bottom: var(--space-sm);
-        }
-
-        .pillar__desc {
-            font-size: var(--text-sm);
-            color: var(--color-text-muted);
-            line-height: 1.5;
-        }
-
-        /* Interactive Splitter */
-        .calculator {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-lg);
-            padding: var(--space-xl);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .calc-header {
+        .bar-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-xl);
-            flex-wrap: wrap;
-            gap: var(--space-md);
-        }
-
-        .split-bar {
-            display: flex;
-            height: 48px;
+            height: 60px;
             border-radius: var(--radius-md);
             overflow: hidden;
+            margin: var(--space-lg) 0;
             background: rgba(255,255,255,0.05);
-            margin-bottom: var(--space-xl);
         }
 
-        .split-segment {
+        .bar-segment {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
-            font-weight: 700;
             color: #000;
-            transition: width 0.4s ease;
+            font-weight: 700;
+            font-size: 12px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .bar-segment::after {
+            content: attr(data-value);
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--color-text);
+            font-size: 11px;
+            white-space: nowrap;
         }
 
-        .split-legend {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: var(--space-md);
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-lg);
+            justify-content: center;
+            margin-top: var(--space-xl);
         }
 
         .legend-item {
@@ -126,10 +91,118 @@
             align-items: center;
             gap: var(--space-sm);
             font-size: var(--text-sm);
-            color: var(--color-text-muted);
         }
 
-        .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Detail Cards */
+        .details-grid {
+            display: grid;
+            gap: var(--space-lg);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            margin-bottom: var(--space-3xl);
+        }
+
+        .detail-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+        }
+
+        .detail-card__header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .detail-card__icon {
+            font-size: 1.5rem;
+        }
+
+        .detail-card__title {
+            font-size: var(--text-lg);
+            color: var(--color-text);
+            margin: 0;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-sm);
+            font-size: var(--text-sm);
+        }
+
+        .detail-item__label { color: var(--color-text-muted); }
+        .detail-item__value { font-weight: 600; color: var(--color-text); }
+
+        /* Tier Impact Section */
+        .tier-impact {
+            margin-top: var(--space-3xl);
+        }
+
+        .impact-grid {
+            display: grid;
+            gap: var(--space-md);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            margin-top: var(--space-lg);
+        }
+
+        .impact-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--color-border-accent);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .impact-card:hover {
+            transform: translateY(-5px);
+            background: rgba(247, 166, 2, 0.1);
+        }
+
+        .impact-card__tier {
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-subtle);
+            margin-bottom: var(--space-xs);
+        }
+
+        .impact-card__margin {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--color-success);
+            display: block;
+            margin-bottom: var(--space-xs);
+        }
+
+        .impact-card__desc {
+            font-size: 11px;
+            color: var(--color-text-muted);
+        }
+        
+        .addon-section {
+            margin-top: var(--space-3xl);
+            padding: var(--space-xl);
+            background: var(--color-bg-elevated);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+        }
     </style>
 </head>
 <body>
@@ -156,118 +229,130 @@
     <main class="finance-page">
         <section class="section finance-hero">
             <div class="container">
-                <header class="section__header" style="margin-bottom: var(--space-3xl);">
-                    <h1 class="section__title">Financial Transparency</h1>
-                    <p class="section__subtitle">We are 100% community-funded. No corporate sponsors, just us.</p>
-                </header>
+                <a href="index.html" class="back-link" style="justify-content: center; margin-bottom: 2rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Back to Home
+                </a>
+                <h1 class="section__title">Every Dollar Accounted For</h1>
+                <p class="finance-hero__subtitle">We operate on a <strong>"Body Cost" + "Show Fund"</strong> model. Your ticket covers your presence first, then funds the art and music.</p>
+            </div>
+        </section>
 
-                <!-- THE 3 PILLARS -->
-                <div class="pillar-grid">
-                    <div class="pillar">
-                        <span class="pillar__icon">👤</span>
-                        <h2 class="pillar__title">The Body Cost</h2>
-                        <span class="pillar__value">$77 - $118</span>
-                        <p class="pillar__desc">Non-negotiable costs to have a guest on site. Includes Venue ($10/day), Pro Sound ($37), Medical, and Safety.</p>
-                    </div>
-                    <div class="pillar">
-                        <span class="pillar__icon">🎵</span>
-                        <h2 class="pillar__title">The Show Fund</h2>
-                        <span class="pillar__value">The Margin</span>
-                        <p class="pillar__desc">Every dollar above the body cost goes directly into the crowdfunding buckets for Talent, Art, and Lasers.</p>
-                    </div>
-                    <div class="pillar">
-                        <span class="pillar__icon">🚀</span>
-                        <h2 class="pillar__title">The Vision</h2>
-                        <span class="pillar__value">$92,000</span>
-                        <p class="pillar__desc">Our stretch goal for a fully maxed-out production, 3+ Headliners, and professional aftermovie.</p>
-                    </div>
-                </div>
-
-                <!-- INTERACTIVE CALCULATOR -->
-                <div class="calculator">
-                    <div class="calc-header">
-                        <h3 style="margin:0;">Select a Ticket to see the split:</h3>
-                        <select id="ticket-selector" class="input" style="width: auto; min-width: 200px;">
-                            <option value="119" data-days="4">4-Day Pass ($119)</option>
+        <section class="section">
+            <div class="container">
+                <!-- Interactive Ticket Slicer -->
+                <div class="visual-breakdown">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="font-size: 1.25rem; margin: 0;">Where does my money go?</h2>
+                        <select id="ticket-selector" class="input" style="width: auto; min-width: 180px;">
+                            <option value="119" data-days="4" selected>4-Day Pass ($119)</option>
                             <option value="109" data-days="3">3-Day Pass ($109)</option>
                             <option value="89" data-days="2">2-Day Pass ($89)</option>
                             <option value="79" data-days="1">1-Day Pass ($79)</option>
                         </select>
                     </div>
 
-                    <div class="split-bar">
-                        <div id="seg-venue" class="split-segment" style="background: var(--color-accent-secondary); width: 33%;">VENUE</div>
-                        <div id="seg-prod" class="split-segment" style="background: var(--color-accent); width: 31%;">SOUND</div>
-                        <div id="seg-ops" class="split-segment" style="background: #444; width: 24%;">OPS</div>
-                        <div id="seg-fund" class="split-segment" style="background: var(--color-success); width: 12%;">FUND</div>
+                    <div class="bar-container">
+                        <div id="seg-venue" class="bar-segment" style="background: #8A2BE2; width: 33%;" data-value="$40">VENUE</div>
+                        <div id="seg-prod" class="bar-segment" style="background: #f7a602; width: 31%;" data-value="$37">SOUND</div>
+                        <div id="seg-ops" class="bar-segment" style="background: #444; width: 24%;" data-value="$29">OPS</div>
+                        <div id="seg-fund" class="bar-segment" style="background: #4ade80; width: 12%;" data-value="$13">ART</div>
                     </div>
 
-                    <div class="split-legend">
-                        <div class="legend-item"><span class="legend-dot" style="background: var(--color-accent-secondary);"></span> <strong>Venue:</strong> <span id="val-venue">$40</span></div>
-                        <div class="legend-item"><span class="legend-dot" style="background: var(--color-accent);"></span> <strong>Sound:</strong> <span id="val-prod">$37</span></div>
-                        <div class="legend-item"><span class="legend-dot" style="background: #444;"></span> <strong>Ops & Fees:</strong> <span id="val-ops">$28.75</span></div>
-                        <div class="legend-item"><span class="legend-dot" style="background: var(--color-success);"></span> <strong>To Show Fund:</strong> <span id="val-fund">$13.25</span></div>
-                    </div>
-
-                    <details style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
-                        <summary style="font-size: 13px; color: var(--color-text-muted); cursor: pointer;">Show detailed fee math</summary>
-                        <div style="font-size: 12px; color: var(--color-text-subtle); margin-top: 1rem; line-height: 1.6;">
-                            • <strong>Venue:</strong> $10.00 per guest per day.<br>
-                            • <strong>Production:</strong> $30 (The Bowl) + $7 (The Dome) flat per ticket.<br>
-                            • <strong>Operations:</strong> Scaled $10 - $30 based on crowd size.<br>
-                            • <strong>Stripe:</strong> 2.9% + $0.30 per transaction.<br>
-                            • <strong>Affiliate:</strong> $5.00 per referral.
-                        </div>
-                    </details>
-                </div>
-
-                <!-- Budget Allocation (Restored) -->
-                <div class="transparency-card" style="margin-top: var(--space-xl);">
-                    <h2 class="transparency-card__title">Crowdfund Allocation</h2>
-                    <p class="fund-note__text" style="margin-bottom: 1.5rem;">After body costs are covered, here is where the margin goes to build the show:</p>
-                    
-                    <div class="breakdown-list">
-                        <div class="breakdown-item">
-                            <span class="breakdown-item__name">Headliners & Support Acts</span>
-                            <span class="breakdown-item__amount">$15k–$35k total</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span class="breakdown-item__name">Visuals & Forest Decor</span>
-                            <span class="breakdown-item__amount">up to $5k</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span class="breakdown-item__name">Interactive Art Installations</span>
-                            <span class="breakdown-item__amount">up to $5k</span>
-                        </div>
-                        <div class="breakdown-item breakdown-item--category" style="margin-top: 1rem;">
-                            <span class="breakdown-item__name">Tier 1 Goal (Confirm Milestone)</span>
-                            <span class="breakdown-item__amount">$8,925</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span class="breakdown-item__name">Total Budget Goal</span>
-                            <span class="breakdown-item__amount">$79,455</span>
-                        </div>
-                    </div>
-
-                    <!-- Tier Visual -->
-                    <div class="tier-visual" style="margin-top: 2rem;">
-                        <h3 class="tier-visual__title" style="font-size: 14px; text-transform: uppercase; color: var(--color-text-subtle); margin-bottom: 1rem;">Funding Milestones</h3>
-                        <div class="tier-bar">
-                            <div class="tier-bar__segment tier-bar__segment--1" style="background: #f7a602; flex: 8925;">P1</div>
-                            <div class="tier-bar__segment tier-bar__segment--2" style="background: #e8952f; flex: 13400;">P2</div>
-                            <div class="tier-bar__segment tier-bar__segment--3" style="background: #d97f3a; flex: 30265;">P3</div>
-                            <div class="tier-bar__segment tier-bar__segment--4" style="background: #c96a45; flex: 16460;">P4</div>
-                            <div class="tier-bar__segment tier-bar__segment--5" style="background: #ba5550; flex: 10405;">P5</div>
-                        </div>
-                        <div class="tier-legend">
-                            <div class="tier-legend__item"><span class="tier-legend__dot" style="background:#f7a602"></span> Phase 1: $8.9k</div>
-                            <div class="tier-legend__item"><span class="tier-legend__dot" style="background:#e8952f"></span> Phase 2: $22.3k</div>
-                            <div class="tier-legend__item"><span class="tier-legend__dot" style="background:#d97f3a"></span> Phase 3: $52.6k</div>
-                            <div class="tier-legend__item"><span class="tier-legend__dot" style="background:#c96a45"></span> Phase 4: $69k</div>
-                            <div class="tier-legend__item"><span class="tier-legend__dot" style="background:#ba5550"></span> Phase 5: $79.5k</div>
-                        </div>
+                    <div class="legend">
+                        <div class="legend-item"><span class="legend-dot" style="background: #8A2BE2;"></span> Venue ($10/day)</div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #f7a602;"></span> Production ($37 Flat)</div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #444;"></span> Ops & Fees (~$29)</div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #4ade80;"></span> <strong>The Show Fund (Margin)</strong></div>
                     </div>
                 </div>
+
+                <!-- Detailed Breakdown Grid -->
+                <div class="details-grid">
+                    <div class="detail-card">
+                        <div class="detail-card__header">
+                            <span class="detail-card__icon">🏕️</span>
+                            <h3 class="detail-card__title">Venue & Ops</h3>
+                        </div>
+                        <ul class="detail-list">
+                            <li class="detail-item"><span class="detail-item__label">Venue Fee</span><span class="detail-item__value">$10.00 / day</span></li>
+                            <li class="detail-item"><span class="detail-item__label">Safety & Medical</span><span class="detail-item__value">$10 - $30</span></li>
+                            <li class="detail-item"><span class="detail-item__label">Sanitation</span><span class="detail-item__value">Included in Ops</span></li>
+                            <li class="detail-item"><span class="detail-item__label">Insurance</span><span class="detail-item__value">Funded by Tier 1</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="detail-card__header">
+                            <span class="detail-card__icon">🔊</span>
+                            <h3 class="detail-card__title">Production</h3>
+                        </div>
+                        <ul class="detail-list">
+                            <li class="detail-item"><span class="detail-item__label">The Bowl Sound</span><span class="detail-item__value">$30.00 / tix</span></li>
+                            <li class="detail-item"><span class="detail-item__label">The Dome Sound</span><span class="detail-item__value">$7.00 / tix</span></li>
+                            <li class="detail-item"><span class="detail-item__label">Lighting</span><span class="detail-item__value">Funded by Margin</span></li>
+                            <li class="detail-item"><span class="detail-item__label">Lasers</span><span class="detail-item__value">Unlocked at Tier 10</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="detail-card__header">
+                            <span class="detail-card__icon">💳</span>
+                            <h3 class="detail-card__title">Fees</h3>
+                        </div>
+                        <ul class="detail-list">
+                            <li class="detail-item"><span class="detail-item__label">Affiliate Payout</span><span class="detail-item__value">$5.00 Flat</span></li>
+                            <li class="detail-item"><span class="detail-item__label">Stripe Processing</span><span class="detail-item__value">2.9% + $0.30</span></li>
+                            <li class="detail-item"><span class="detail-item__label">Platform Fee</span><span class="detail-item__value">$0.00</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tier Impact -->
+                <div class="tier-impact">
+                    <header class="section__header" style="margin-bottom: 2rem;">
+                        <h2 class="section__title">The "Show Fund" Impact</h2>
+                        <p class="section__subtitle">Higher tiers donate more directly to the Artist & Art budget. This is how we afford headliners.</p>
+                    </header>
+                    <div class="impact-grid">
+                        <div class="impact-card">
+                            <span class="impact-card__tier">Tier 1 Ticket</span>
+                            <span class="impact-card__margin">+$23</span>
+                            <span class="impact-card__desc">Goes to Talent & Art</span>
+                        </div>
+                        <div class="impact-card">
+                            <span class="impact-card__tier">Tier 5 Ticket</span>
+                            <span class="impact-card__margin">+$63</span>
+                            <span class="impact-card__desc">Goes to Talent & Art</span>
+                        </div>
+                        <div class="impact-card">
+                            <span class="impact-card__tier">Tier 10 Ticket</span>
+                            <span class="impact-card__margin">+$113</span>
+                            <span class="impact-card__desc">Goes to Talent & Art</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add-on Economy -->
+                <div class="addon-section">
+                    <div style="display: flex; gap: 2rem; flex-wrap: wrap; align-items: center;">
+                        <div style="flex: 1; min-width: 300px;">
+                            <h3 style="color: var(--color-accent); margin-bottom: 1rem;">The Add-on Economy</h3>
+                            <p style="color: var(--color-text-muted); margin-bottom: 1rem;">We use "Luxury" add-ons to subsidize ticket prices for everyone else.</p>
+                            <ul class="detail-list">
+                                <li class="detail-item"><span class="detail-item__label">Cabin Rental Margin</span><span class="detail-item__value">+$750.00</span></li>
+                                <li class="detail-item"><span class="detail-item__label">Glamping Asset Fund</span><span class="detail-item__value">Pays for future gear</span></li>
+                            </ul>
+                        </div>
+                        <div style="flex: 1; min-width: 300px; padding: 1.5rem; background: rgba(0,0,0,0.3); border-radius: var(--radius-md);">
+                            <h4 style="margin-bottom: 0.5rem;">Community Fund</h4>
+                            <p style="font-size: 13px; color: var(--color-text-muted);">
+                                10% of the final surplus is reserved for a post-event "Community Fund." We use this to pay bonuses to local DJs and volunteers who went above and beyond.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
     </main>
@@ -287,35 +372,43 @@
 
     <script>
         const sel = document.getElementById('ticket-selector');
+        
         const update = () => {
             const price = parseFloat(sel.value);
             const days = parseInt(sel.options[sel.selectedIndex].dataset.days);
             
+            // Hard Math
             const venue = days * 10;
             const prod = 37;
             const stripe = (price * 0.029) + 0.30;
-            const opsTotal = 20 + 5 + stripe; // Level 2 ops + affiliate + stripe
-            const fund = price - venue - prod - opsTotal;
+            // Assuming average ops of $20 for visual simplicity in this chart
+            const ops = 20 + 5 + stripe; 
+            
+            const fund = price - venue - prod - ops;
 
+            // Calculate Widths
             const venuePct = (venue / price) * 100;
             const prodPct = (prod / price) * 100;
-            const opsPct = (opsTotal / price) * 100;
+            const opsPct = (ops / price) * 100;
             const fundPct = (fund / price) * 100;
 
+            // Apply Widths
             document.getElementById('seg-venue').style.width = venuePct + '%';
             document.getElementById('seg-prod').style.width = prodPct + '%';
             document.getElementById('seg-ops').style.width = opsPct + '%';
             document.getElementById('seg-fund').style.width = fundPct + '%';
 
-            document.getElementById('val-venue').textContent = '$' + venue.toFixed(2);
-            document.getElementById('val-prod').textContent = '$' + prod.toFixed(2);
-            document.getElementById('val-ops').textContent = '$' + opsTotal.toFixed(2);
-            document.getElementById('val-fund').textContent = '$' + fund.toFixed(2);
+            // Apply Values
+            document.getElementById('seg-venue').dataset.value = '$' + venue.toFixed(0);
+            document.getElementById('seg-prod').dataset.value = '$' + prod.toFixed(0);
+            document.getElementById('seg-ops').dataset.value = '$' + ops.toFixed(0);
+            document.getElementById('seg-fund').dataset.value = '$' + fund.toFixed(0);
         };
-        sel.addEventListener('change', update);
-        update();
 
-        // Nav toggle
+        sel.addEventListener('change', update);
+        update(); // Init
+
+        // Nav
         const toggle = document.getElementById('nav-toggle');
         const menu = document.getElementById('nav-menu');
         if (toggle && menu) {
