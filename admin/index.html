@@ -355,11 +355,6 @@
     $('#fn-add-tier').addEventListener('click',()=>{ tiers.push({ id:'custom', label:'Custom', price:0, limit:0, sold:0 }); fnRenderTiers(); });
     function fnUpdateSums(){ fnRenderCosts(); fnRenderTiers(); }
     $('#fn-cap').addEventListener('input', fnUpdateSums);
- }
-    $('#fn-add-cost').addEventListener('click',()=>{ costs.push({name:'New Cost',amount:0}); fnRenderCosts(); fnUpdateSums(); });
-    $('#fn-add-tier').addEventListener('click',()=>{ tiers.push({ id:'custom', label:'Custom', price:0, limit:0, sold:0 }); fnRenderTiers(); });
-    function fnUpdateSums(){ const total=costs.reduce((s,x)=>s+(Number(x.amount)||0),0); $('#fn-hard-total').textContent=fmt(total); fnUpdatePer(); fnRenderTiers(); }
-    $('#fn-cap').addEventListener('input', fnUpdatePer);
     $('#fn-export').addEventListener('click',()=>{ const rows=[[ 'item','amount' ], ...costs.map(c=>[c.name,c.amount]), [], ['tier','price','limit','sold'] , ...tiers.map(t=>[t.label||t.id,t.price,t.limit,t.sold])]; const csv=rows.map(r=> r.map(v=> '"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'); saveBlob('financials.csv', csv, 'text/csv'); });
 
     // Live tiers editing
