@@ -92,18 +92,21 @@
 ## 8. Crowdfunding Model
 **Structure:** 10 Tiers (Automatic progression based on sales volume/cost coverage).
 
-| Tier | Price | Milestones / Unlocks |
-| :--- | :--- | :--- |
-| **Tier 1** | $119 | **Foundation Set** (Insurance, permits, and core ops secured) |
-| **Tier 2** | $129 | **Event Confirmed** (100% committed to October) |
-| **Tier 3** | $139 | **Headliner 1 Unlock** (First major artist secured) |
-| **Tier 4** | $149 | **Immersive Forest** (Visual decor and custom lighting) |
-| **Tier 5** | $159 | **Headliner 2 Unlock** (Second major artist secured) |
-| **Tier 6** | $169 | **Local Art Grants** (Funding interactive installations) |
-| **Tier 7** | $179 | **Headliner 3 Unlock** (Third major artist secured) |
-| **Tier 8** | $189 | **Daytime Magic** (Yoga, workshops, forest vibes) |
-| **Tier 9** | $199 | **Final Reveal** (Full support lineup & set times) |
-| **Tier 10** | $209 | **The Full Send** (Lasers) |
+## 8. Crowdfunding Model (Fluid Scaling)
+**Structure:** 10 Tiers (50 tickets per tier). Production ($37/head) and Venue Fees ($10/day) scale automatically.
+
+| Tier | Price | Milestone / Unlock | Margin (Est) |
+| :--- | :--- | :--- | :--- |
+| **Tier 1** | $119 | **Foundation Set** (Insurance & Permits secured) | ~$1,150 |
+| **Tier 2** | $129 | **Event Confirmed** (Overhead covered. 100% committed) | ~$2,800 |
+| **Tier 3** | $139 | **Headliner 1 Unlock** (First major artist secured) | ~$4,950 |
+| **Tier 4** | $149 | **Stage Vibe** (Custom decor & forest lighting rigs) | ~$7,100 |
+| **Tier 5** | $159 | **Headliner 2 Unlock** (Second major artist secured) | ~$9,750 |
+| **Tier 6** | $169 | **Art Grants** (Funding for interactive installations) | ~$12,900 |
+| **Tier 7** | $179 | **Headliner 3 Unlock** (Third major artist secured) | ~$16,550 |
+| **Tier 8** | $189 | **Forest Magic** (Yoga, workshops, and games) | ~$20,100 |
+| **Tier 9** | $199 | **Full Reveal** (Support acts & schedule release) | ~$24,150 |
+| **Tier 10** | $209 | **The Full Send** (Lasers & Max visual production) | ~$28,700 |
 
 **Announcement Logic:**
 *   **Standard:** Artist name revealed *after* tier sells out (Reward).

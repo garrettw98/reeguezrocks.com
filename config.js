@@ -28,16 +28,16 @@ window.TIER_SCHEDULE_FALLBACK = [
 // Crowdfunding Tier Structure (10 Tiers)
 // Amount = Cumulative Revenue Goal (50 tix * Price)
 window.CROWDFUNDING_TIERS = [
-  { id: 1, price: 119, goal: 5950,  name: 'Foundation Set', desc: 'Insurance, permits, and core ops secured.' },
-  { id: 2, price: 129, goal: 12400, name: 'Event Confirmed', desc: '100% committed to October. Let the show begin.' },
+  { id: 1, price: 119, goal: 5950,  name: 'Foundation Set', desc: 'Insurance, permits, and core ops fees secured.' },
+  { id: 2, price: 129, goal: 12400, name: 'Event Confirmed', desc: 'Overhead covered. 100% committed to October.' },
   { id: 3, price: 139, goal: 19350, name: 'Headliner 1 Unlock', desc: 'First major artist secured and announced.' },
-  { id: 4, price: 149, goal: 26800, name: 'Immersive Forest', desc: 'Visual decor and nature-focused lighting rigs.' },
+  { id: 4, price: 149, goal: 26800, name: 'Stage Vibe', desc: 'Custom stage decor and forest lighting rigs.' },
   { id: 5, price: 159, goal: 34750, name: 'Headliner 2 Unlock', desc: 'Second major artist secured and announced.' },
-  { id: 6, price: 169, goal: 43200, name: 'Local Art Grants', desc: 'Funding for interactive forest art installations.' },
+  { id: 6, price: 169, goal: 43200, name: 'Art Grants', desc: 'Funding for interactive forest art installations.' },
   { id: 7, price: 179, goal: 52150, name: 'Headliner 3 Unlock', desc: 'Third major artist secured and announced.' },
-  { id: 8, price: 189, goal: 61600, name: 'Daytime Magic', desc: 'Yoga, workshops, and daytime forest vibes.' },
-  { id: 9, price: 199, goal: 71550, name: 'Final Reveal', desc: 'Full support lineup and set times released.' },
-  { id: 10, price: 209, goal: 82000, name: 'The Full Send', desc: 'Lasers.' }
+  { id: 8, price: 189, goal: 61600, name: 'Forest Magic', desc: 'Yoga, workshops, and games funded.' },
+  { id: 9, price: 199, goal: 71550, name: 'Final Reveal', desc: 'Complete support acts and schedule released.' },
+  { id: 10, price: 209, goal: 82000, name: 'The Full Send', desc: 'Lasers and high-spec visual production.' }
 ];
 
 window.BACKER_TIERS = {
