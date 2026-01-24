@@ -103,7 +103,7 @@
 | **Tier 7** | $179 | **Headliner 3 Unlock** (Third major artist secured) |
 | **Tier 8** | $189 | **Daytime Magic** (Yoga, workshops, forest vibes) |
 | **Tier 9** | $199 | **Final Reveal** (Full support lineup & set times) |
-| **Tier 10** | $209 | **The Full Send** (Lasers and Aftermovie production) |
+| **Tier 10** | $209 | **The Full Send** (Lasers) |
 
 **Announcement Logic:**
 *   **Standard:** Artist name revealed *after* tier sells out (Reward).
