@@ -14,8 +14,8 @@ The website is fully updated to reflect the **499 Capacity "Back to Roots" Plan*
     *   **Car Camping:** **$40** (Limit 200).
     *   **RV Camping:** **$100** (Limit 10).
     *   **Glamping:** **$500** (Limit 25).
-    *   **Cabins:** **$1,000 Flat Rate** (Limit 6).
-*   **Venue Fee:** The pricing model accounts for a ~$40/head venue fee.
+    *   **Cabins:** **$1,000 Flat Rate** (Limit 6, $250 rental cost).
+*   **Venue Fee:** The pricing model accounts for a ~$10/day venue fee.
 
 ### B. Technical Stack
 *   **Frontend:** HTML5, CSS3 (Purple & Gold Theme), Vanilla JS.
