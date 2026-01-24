@@ -13,210 +13,167 @@
 
     <meta property="og:title" content="Tickets & Progress - Reeguez Rocks 2026">
     <meta name="description" content="Secure your spot and track our progress unlocking tiers for Reeguez Rocks 2026.">
-    <meta property="og:description" content="Secure your spot and track our progress unlocking tiers for Reeguez Rocks 2026.">
     <meta property="og:image" content="https://reeguezrocks.com/RR26Logo.png">
     <meta property="og:url" content="https://reeguezrocks.com/tickets.html">
     <meta property="og:type" content="website">
 
-    <link rel="stylesheet" href="assets/main-v5.css?v=20">
+    <link rel="stylesheet" href="assets/main-v5.css?v=21">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Tickets Page Specific Enhancements */
         .tickets-hero {
             padding-top: calc(var(--nav-height) + var(--space-xl));
             padding-bottom: var(--space-3xl);
         }
 
-        .dashboard-grid {
+        /* Dashboard Container */
+        .dashboard {
             display: grid;
             gap: var(--space-xl);
             grid-template-columns: 1fr;
-            align-items: start;
         }
 
         @media (min-width: 1024px) {
-            .dashboard-grid {
-                grid-template-columns: 1.2fr 0.8fr;
+            .dashboard {
+                grid-template-columns: 1fr 380px;
             }
         }
 
-        /* Live Status Card */
-        .status-card {
+        /* Main Viewport */
+        .dashboard-main {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xl);
+        }
+
+        /* View Toggles */
+        .view-switcher {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--color-border);
+        }
+
+        .view-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .view-btn.is-active {
+            background: var(--color-accent);
+            color: #000;
+        }
+
+        .view-panel {
+            display: none;
+        }
+
+        .view-panel.is-active {
+            display: block;
+            animation: hero-fade-in 0.4s ease both;
+        }
+
+        /* Condensed Journey */
+        .journey-compact {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .milestone {
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            opacity: 0.6;
+        }
+
+        .milestone--active {
+            opacity: 1;
+            border-color: var(--color-accent);
+            background: rgba(247, 166, 2, 0.05);
+            transform: scale(1.02);
+        }
+
+        .milestone--unlocked {
+            opacity: 1;
+            border-color: var(--color-success);
+        }
+
+        .milestone__icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .milestone--active .milestone__icon { background: var(--color-accent); color: #000; }
+        .milestone--unlocked .milestone__icon { background: var(--color-success); color: #000; }
+
+        .milestone__title { font-weight: 700; margin-bottom: 2px; }
+        .milestone__desc { font-size: var(--text-sm); color: var(--color-text-muted); }
+
+        /* Sidebar Sidebar Card */
+        .sidebar-card {
             background: var(--color-bg-elevated);
             border: 1px solid var(--color-border-accent);
             border-radius: var(--radius-lg);
-            padding: var(--space-xl);
+            padding: var(--space-lg);
             position: sticky;
             top: calc(var(--nav-height) + var(--space-md));
-            box-shadow: var(--shadow-lg), var(--shadow-glow);
         }
 
-        .status-card__header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: var(--space-lg);
-        }
-
-        .status-card__title {
-            font-family: var(--font-display);
-            font-size: var(--text-lg);
+        .status-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(247, 166, 2, 0.15);
             color: var(--color-accent);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin: 0;
-        }
-
-        /* Journey Timeline */
-        .journey {
-            margin-top: var(--space-3xl);
-            position: relative;
-            padding-left: var(--space-xl);
-        }
-
-        .journey::before {
-            content: '';
-            position: absolute;
-            left: 7px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--color-accent), var(--color-accent-secondary), rgba(255,255,255,0.1));
-        }
-
-        .journey-step {
-            position: relative;
-            margin-bottom: var(--space-2xl);
-            transition: transform var(--transition-base);
-        }
-
-        .journey-step::after {
-            content: '';
-            position: absolute;
-            left: -24px;
-            top: 10px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--color-bg);
-            border: 2px solid var(--color-accent);
-            z-index: 1;
-        }
-
-        .journey-step--active::after {
-            background: var(--color-accent);
-            box-shadow: 0 0 15px var(--color-accent);
-        }
-
-        .journey-step__header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            gap: var(--space-md);
-            margin-bottom: var(--space-xs);
-        }
-
-        .journey-step__title {
-            font-weight: 700;
-            font-size: var(--text-lg);
-            color: var(--color-text);
-        }
-
-        .journey-step__price {
-            color: var(--color-accent);
-            font-weight: 600;
-            font-family: monospace;
-        }
-
-        .journey-step__desc {
-            color: var(--color-text-muted);
-            font-size: var(--text-sm);
-            max-width: 500px;
-        }
-
-        /* Backer Tags */
-        .backer-tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 10px;
             border-radius: var(--radius-full);
             font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-top: var(--space-sm);
-        }
-
-        .backer-tag--founder { background: rgba(247, 166, 2, 0.15); color: var(--color-accent); border: 1px solid var(--color-accent); }
-        .backer-tag--pioneer { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
-
-        /* Accommodation Redesign */
-        .lodging-grid {
-            display: grid;
-            gap: var(--space-md);
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        }
-
-        .lodging-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            display: flex;
-            flex-direction: column;
-            transition: transform var(--transition-base);
-        }
-
-        .lodging-card:hover {
-            border-color: var(--color-border-accent);
-            transform: translateY(-4px);
-        }
-
-        .lodging-card__title {
-            font-size: var(--text-lg);
-            color: var(--color-accent);
-            margin-bottom: var(--space-sm);
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        .lodging-card__price {
-            font-weight: 700;
-            color: var(--color-text);
+            letter-spacing: 0.1em;
             margin-bottom: var(--space-md);
-            font-size: var(--text-base);
         }
 
-        .lodging-card__list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-size: var(--text-sm);
-            color: var(--color-text-muted);
+        /* Minimal Lodging */
+        .lodging-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
         }
 
-        .lodging-card__list li {
-            margin-bottom: var(--space-xs);
-            padding-left: 1.25rem;
-            position: relative;
-        }
-
-        .lodging-card__list li::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: var(--color-accent);
-        }
+        .lodging-row:last-child { border-bottom: none; }
+        .lodging-info { display: flex; flex-direction: column; }
+        .lodging-name { font-weight: 600; color: #fff; }
+        .lodging-price { font-size: 12px; color: var(--color-accent); }
     </style>
     
     <script src="config.js"></script>
 </head>
 <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="bg-layer" aria-hidden="true"></div>
     <div class="bg-overlay" aria-hidden="true"></div>
 
@@ -237,185 +194,114 @@
         </nav>
     </header>
 
-    <main id="main-content" class="tickets-page">
-        
-        <!-- SECTION 1: DASHBOARD HUB -->
+    <main id="main-content">
         <section class="section tickets-hero">
             <div class="container">
-                <header class="section__header" style="text-align: left; margin-bottom: var(--space-2xl);">
-                    <h1 class="section__title" style="margin-left: 0;">Tickets & Progress</h1>
-                    <p class="section__subtitle" style="margin-left: 0;">Every ticket powers the show. Watch the production and lineup grow in real-time.</p>
-                </header>
-
-                <div class="dashboard-grid">
-                    <!-- LEFT: TICKET SELECTION -->
-                    <div class="selection-area">
-                        <div class="ticket-list" id="page-ticket-list">
-                            <div style="padding: 2rem; text-align: center; color: var(--color-text-muted);">Syncing with live inventory...</div>
+                <div class="dashboard">
+                    <!-- MAIN CONTENT: TICKETS & LODGING -->
+                    <div class="dashboard-main">
+                        <div class="view-switcher">
+                            <button class="view-btn is-active" data-view="tickets-view">Event Passes</button>
+                            <button class="view-btn" data-view="lodging-view">Lodging & Camping</button>
                         </div>
-                        
-                        <div style="margin-top: var(--space-xl); text-align: center;">
-                            <button class="btn btn--primary btn--lg btn--pulse" style="width: 100%; max-width: 400px;" onclick="openTickets()">Open Checkout</button>
-                            <p style="font-size: 12px; color: var(--color-text-muted); margin-top: 1rem;">18+ Event • Government ID Required • No Refunds</p>
+
+                        <!-- Ticket Panel -->
+                        <div class="view-panel is-active" id="tickets-view">
+                            <div class="ticket-list" id="page-ticket-list" style="margin-bottom: 2rem;">
+                                <!-- Populated by JS -->
+                            </div>
+                            <div style="text-align: center;">
+                                <button class="btn btn--primary btn--lg btn--pulse" style="width: 100%; max-width: 400px;" onclick="openTickets()">Secure Your Spot</button>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- RIGHT: CAMPAIGN STATUS -->
-                    <div class="status-area">
-                        <div class="status-card">
-                            <div class="status-card__header">
-                                <h2 class="status-card__title">Campaign Status</h2>
-                                <div class="hero__badge" style="margin: 0;">Year Six</div>
-                            </div>
-
-                            <div class="progress-card__tier" id="next-tier-name" style="font-weight: 700; margin-bottom: var(--space-sm);">Loading Tiers...</div>
-                            
-                            <div class="progress-card__bar" style="height: 12px; margin-bottom: var(--space-md);">
-                                <div class="progress-card__fill" id="funding-progress-bar" style="width: 0%"></div>
-                            </div>
-
-                            <div class="progress-card__stats" style="display: flex; justify-content: space-between; font-size: var(--text-sm);">
-                                <span><strong id="funding-current">$0</strong> raised</span>
-                                <span style="color: var(--color-text-muted);">Goal: <strong id="funding-goal" style="color: var(--color-accent);">$5,950</strong></span>
-                            </div>
-
-                            <div class="divider" style="margin: var(--space-lg) 0; height: 1px; background: var(--color-border);"></div>
-
-                            <div class="status-info" style="font-size: var(--text-sm); line-height: 1.4;">
-                                <p style="margin-bottom: 1rem;"><strong>Auto-Scaling Production:</strong> $37 from every ticket goes directly to sound and lighting. The show grows with every sale.</p>
-                                <div class="countdown" id="campaign-countdown" style="justify-content: flex-start; gap: 1rem;">
-                                    <div class="countdown__item"><span class="countdown__num" id="countdown-days">00</span><span class="countdown__label">Days</span></div>
-                                    <div class="countdown__item"><span class="countdown__num" id="countdown-hours">00</span><span class="countdown__label">Hrs</span></div>
-                                    <div class="countdown__item"><span class="countdown__num" id="countdown-mins">00</span><span class="countdown__label">Min</span></div>
+                        <!-- Lodging Panel -->
+                        <div class="view-panel" id="lodging-view">
+                            <div class="transparency-card" style="padding: 0; background: var(--color-bg-card);">
+                                <div class="lodging-row">
+                                    <div class="lodging-info">
+                                        <span class="lodging-name">🚙 Car Camping</span>
+                                        <span class="lodging-price">$40 Add-on</span>
+                                    </div>
+                                    <span style="font-size: 11px; color: var(--color-text-muted);">200 Available</span>
+                                </div>
+                                <div class="lodging-row">
+                                    <div class="lodging-info">
+                                        <span class="lodging-name">⛺ GA Camping</span>
+                                        <span class="lodging-price">Included</span>
+                                    </div>
+                                    <span style="font-size: 11px; color: var(--color-text-muted);">Walk-in</span>
+                                </div>
+                                <div class="lodging-row">
+                                    <div class="lodging-info">
+                                        <span class="lodging-name">🚐 RV Camping</span>
+                                        <span class="lodging-price">$100 Add-on</span>
+                                    </div>
+                                    <span style="font-size: 11px; color: var(--color-text-muted);">Dry Camping</span>
+                                </div>
+                                <div class="lodging-row">
+                                    <div class="lodging-info">
+                                        <span class="lodging-name">✨ Glamping</span>
+                                        <span class="lodging-price">$500 Package</span>
+                                    </div>
+                                    <span style="font-size: 11px; color: var(--color-text-muted);">Full Setup</span>
+                                </div>
+                                <div class="lodging-row">
+                                    <div class="lodging-info">
+                                        <span class="lodging-name">🏠 Historic Cabins</span>
+                                        <span class="lodging-price">$1,000 Flat Rate</span>
+                                    </div>
+                                    <span style="font-size: 11px; color: var(--color-text-muted);">Sleeps 10</span>
                                 </div>
                             </div>
+                            <div style="text-align: center; margin-top: 2rem;">
+                                <button class="btn btn--outline btn--lg" style="width: 100%; max-width: 400px;" onclick="openTickets()">Add Lodging to Order</button>
+                            </div>
+                        </div>
+
+                        <!-- Progress Timeline (Condensed) -->
+                        <div style="margin-top: 2rem;">
+                            <h3 style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-accent); margin-bottom: 1.5rem;">Festival Growth Tracker</h3>
+                            <div class="journey-compact" id="journey-timeline">
+                                <!-- Populated by JS -->
+                            </div>
+                            <details style="margin-top: 1.5rem; cursor: pointer;">
+                                <summary style="font-size: 13px; color: var(--color-text-muted);">View all 10 milestones</summary>
+                                <div id="full-timeline" style="margin-top: 1rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+                                    <!-- Full list here if needed, or JS will handle -->
+                                </div>
+                            </details>
                         </div>
                     </div>
+
+                    <!-- SIDEBAR: STATUS CARD -->
+                    <aside class="dashboard-sidebar">
+                        <div class="sidebar-card">
+                            <span class="status-pill" id="next-tier-name">Tier 1: Foundation</span>
+                            <div class="progress-card__bar" style="height: 10px; margin-bottom: var(--space-sm);">
+                                <div class="progress-card__fill" id="funding-progress-bar" style="width: 0%"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 1.5rem;">
+                                <span id="funding-current">$0</span>
+                                <span style="color: var(--color-text-muted);">Goal: $5,950</span>
+                            </div>
+
+                            <p style="font-size: 12px; line-height: 1.5; color: var(--color-text-muted); margin-bottom: 1.5rem;">
+                                **Auto-Scaling Mode:** Production ($37/head) and Venue Fees ($10/day) grow automatically with every sale. Tiers build the experience.
+                            </p>
+
+                            <div class="countdown" id="campaign-countdown" style="justify-content: center; gap: 1rem;">
+                                <div class="countdown__item"><span class="countdown__num" id="countdown-days">00</span><span class="countdown__label">Days</span></div>
+                                <div class="countdown__item"><span class="countdown__num" id="countdown-hours">00</span><span class="countdown__label">Hrs</span></div>
+                                <div class="countdown__item"><span class="countdown__num" id="countdown-mins">00</span><span class="countdown__label">Min</span></div>
+                            </div>
+
+                            <a href="financials.html" style="display: block; text-align: center; font-size: 11px; color: var(--color-text-muted); margin-top: 1.5rem; text-decoration: underline;">View Budget Transparency</a>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </section>
-
-        <!-- SECTION 2: THE JOURNEY -->
-        <section class="section section--alt reveal-on-scroll">
-            <div class="container">
-                <header class="section__header">
-                    <h2 class="section__title">The Visual Journey</h2>
-                    <p class="section__subtitle">Mapping our path from foundation to the full send.</p>
-                </header>
-
-                <div class="journey" id="journey-timeline">
-                    <!-- Tiers will be visually represented here -->
-                    <div class="journey-step journey-step--active">
-                        <div class="journey-step__header">
-                            <span class="journey-step__title">Tier 1: Foundation Set</span>
-                            <span class="journey-step__price">$119</span>
-                        </div>
-                        <p class="journey-step__desc">Insurance, permits, and core operations secured. Event baseline confirmed.</p>
-                        <span class="backer-tag backer-tag--founder">Founding Backer Rewards</span>
-                    </div>
-
-                    <div class="journey-step">
-                        <div class="journey-step__header">
-                            <span class="journey-step__title">Tier 2: Event Confirmed</span>
-                            <span class="journey-step__price">$129</span>
-                        </div>
-                        <p class="journey-step__desc">Overhead fully covered. 100% committed to October. Let the mountain magic begin.</p>
-                    </div>
-
-                    <div class="journey-step">
-                        <div class="journey-step__header">
-                            <span class="journey-step__title">Tier 3: Headliner 1 Unlock</span>
-                            <span class="journey-step__price">$139</span>
-                        </div>
-                        <p class="journey-step__desc">First major artist secured and added to the official flyer.</p>
-                        <span class="backer-tag backer-tag--pioneer">Pioneer Rewards</span>
-                    </div>
-
-                    <div class="journey-step">
-                        <div class="journey-step__header">
-                            <span class="journey-step__title">Tier 4: Stage Vibe</span>
-                            <span class="journey-step__price">$149</span>
-                        </div>
-                        <p class="journey-step__desc">Custom forest-themed stage decor and immersive lighting rigs.</p>
-                    </div>
-
-                    <div class="journey-step">
-                        <div class="journey-step__header">
-                            <span class="journey-step__title">Tier 10: The Full Send</span>
-                            <span class="journey-step__price">$209</span>
-                        </div>
-                        <p class="journey-step__desc">The absolute peak of production. Lasers, high-spec visuals, and the ultimate experience.</p>
-                    </div>
-                </div>
-
-                <div style="text-align: center; margin-top: var(--space-xl);">
-                    <a href="financials.html" class="btn btn--outline">View Full Budget Transparency</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 3: LODGING GRID -->
-        <section class="section reveal-on-scroll">
-            <div class="container">
-                <header class="section__header">
-                    <h2 class="section__title">Plan Your Stay</h2>
-                    <p class="section__subtitle">640 Acres of forest to call home for 4 days.</p>
-                </header>
-
-                <div class="lodging-grid">
-                    <div class="lodging-card">
-                        <h3 class="lodging-card__title">🚙 Car Camping</h3>
-                        <p class="lodging-card__price">$40 Add-on</p>
-                        <ul class="lodging-card__list">
-                            <li>Assigned 10x30' forest spots</li>
-                            <li>Park directly at your campsite</li>
-                            <li>Limited to 200 passes</li>
-                        </ul>
-                    </div>
-
-                    <div class="lodging-card">
-                        <h3 class="lodging-card__title">⛺ GA Camping</h3>
-                        <p class="lodging-card__price">Included</p>
-                        <ul class="lodging-card__list">
-                            <li>Walk-in forest camping</li>
-                            <li>Designated parking lot access</li>
-                            <li>Short walk to campsites (0.25 mi)</li>
-                        </ul>
-                    </div>
-
-                    <div class="lodging-card">
-                        <h3 class="lodging-card__title">🚐 RV Camping</h3>
-                        <p class="lodging-card__price">$100 Add-on</p>
-                        <ul class="lodging-card__list">
-                            <li>Dry camping (no hookups)</li>
-                            <li>Limited to 10 spots</li>
-                            <li>Quiet hours enforced in RV zone</li>
-                        </ul>
-                    </div>
-
-                    <div class="lodging-card">
-                        <h3 class="lodging-card__title">✨ Glamping</h3>
-                        <p class="lodging-card__price">$500 Package</p>
-                        <ul class="lodging-card__list">
-                            <li>2 Person Package (25 available)</li>
-                            <li>Full Bed, Linens & Pillows</li>
-                            <li>EZ-Up + Cooler with Daily Ice</li>
-                        </ul>
-                    </div>
-
-                    <div class="lodging-card">
-                        <h3 class="lodging-card__title">🏠 Historic Cabins</h3>
-                        <p class="lodging-card__price">$1,000 Flat Rate</p>
-                        <ul class="lodging-card__list">
-                            <li>Unlimited Occupancy (10 beds)</li>
-                            <li>Wood Burning Stove (BYO Wood)</li>
-                            <li>Bathrooms & Showers nearby</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
     <footer class="footer">
@@ -431,50 +317,50 @@
         </div>
     </footer>
 
-    <!-- TICKET MODAL -->
+    <!-- TICKET MODAL (Sync with main.js) -->
     <div class="modal-overlay" id="modal-overlay" aria-hidden="true"></div>
-    <div class="modal modal--checkout" id="ticket-modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
-        <button class="modal__close" id="modal-close" aria-label="Close">&times;</button>
-        <div class="checkout-steps">
-            <div class="checkout-step checkout-step--active" data-step="1"><span class="checkout-step__num">1</span></div>
-            <div class="checkout-step" data-step="2"><span class="checkout-step__num">2</span></div>
-            <div class="checkout-step" data-step="3"><span class="checkout-step__num">3</span></div>
-        </div>
+    <div class="modal modal--checkout" id="ticket-modal" role="dialog" aria-hidden="true">
+        <button class="modal__close" id="modal-close">&times;</button>
+        <div class="checkout-steps"><div class="checkout-step checkout-step--active" data-step="1"><span class="checkout-step__num">1</span></div><div class="checkout-step" data-step="2"><span class="checkout-step__num">2</span></div><div class="checkout-step" data-step="3"><span class="checkout-step__num">3</span></div></div>
         <div class="checkout-panel checkout-panel--active" id="panel-step-1">
-            <h2 id="modal-title" class="modal__title">Choose Your Ticket</h2>
+            <h2 class="modal__title">Choose Your Ticket</h2>
             <div class="ticket-list" id="ticket-list"></div>
-            <div class="checkout-quantity">
-                <div class="qty-selector">
-                    <button type="button" class="qty-btn" id="qty-minus">-</button>
-                    <input type="number" id="ticket-qty" value="1" min="1" max="10" readonly>
-                    <button type="button" class="qty-btn" id="qty-plus">+</button>
-                </div>
-            </div>
+            <div class="checkout-quantity"><div class="qty-selector"><button type="button" class="qty-btn" id="qty-minus">-</button><input type="number" id="ticket-qty" value="1" readonly><button type="button" class="qty-btn" id="qty-plus">+</button></div></div>
             <div class="checkout-actions"><button class="btn btn--primary btn--lg checkout-next" id="step1-next" disabled>Continue</button></div>
         </div>
         <div class="checkout-panel" id="panel-step-2">
             <h2 class="modal__title">Camping & Add-ons</h2>
             <div class="camping-options" id="camping-options">
-                <label class="camping-option"><input type="radio" name="camping" value="ga-parking" checked><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">GA Parking</span><span class="camping-option__price">Included</span></div><p class="camping-option__desc">Park in general area, walk to your campsite.</p></div></label>
-                <label class="camping-option"><input type="radio" name="camping" value="car-camping"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">Car Camping</span><span class="camping-option__price">+$40</span></div><p class="camping-option__desc">Park directly at your campsite.</p></div></label>
-                <label class="camping-option"><input type="radio" name="camping" value="rv-camping"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">RV Camping</span><span class="camping-option__price">+$100</span></div><p class="camping-option__desc">Designated RV spot (dry camping).</p></div></label>
-                <label class="camping-option"><input type="radio" name="camping" value="glamping"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">Glamping</span><span class="camping-option__price">$500</span></div><p class="camping-option__desc">Pre-pitched 4-person tent setup for 2.</p></div></label>
-                <label class="camping-option"><input type="radio" name="camping" value="cabin"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">Cabin</span><span class="camping-option__price">$1,000</span></div><p class="camping-option__desc">Historic cabin with stove.</p></div></label>
+                <label class="camping-option"><input type="radio" name="camping" value="ga-parking" checked><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">GA Parking</span><span class="camping-option__price">Included</span></div><p class="camping-option__desc">Park in lot, walk to camp.</p></div></label>
+                <label class="camping-option"><input type="radio" name="camping" value="car-camping"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">Car Camping</span><span class="camping-option__price">+$40</span></div><p class="camping-option__desc">Park at your site.</p></div></label>
+                <label class="camping-option"><input type="radio" name="camping" value="rv-camping"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">RV Camping</span><span class="camping-option__price">+$100</span></div><p class="camping-option__desc">Dry RV spot.</p></div></label>
+                <label class="camping-option"><input type="radio" name="camping" value="glamping"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">Glamping</span><span class="camping-option__price">$500</span></div><p class="camping-option__desc">Pre-pitched setup.</p></div></label>
+                <label class="camping-option"><input type="radio" name="camping" value="cabin"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">Cabin</span><span class="camping-option__price">$1,000</span></div><p class="camping-option__desc">Historic cabin.</p></div></label>
             </div>
-            <div class="checkout-addon" id="early-arrival-addon" style="margin-top: 1rem;"><label style="display: flex; gap: 0.5rem; cursor: pointer; align-items: center;"><input type="checkbox" id="early-arrival-check"><span>Early Arrival (Wednesday) <strong>+$30</strong></span></label></div>
+            <div style="margin-top: 1rem;"><label style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 12px;"><input type="checkbox" id="early-arrival-check"><span>Early Arrival (Wednesday) <strong>+$30</strong></span></label></div>
             <div class="checkout-actions"><button class="btn btn--outline checkout-back" id="step2-back">Back</button><button class="btn btn--primary btn--lg checkout-next" id="step2-next">Review</button></div>
         </div>
         <div class="checkout-panel" id="panel-step-3">
             <h2 class="modal__title">Review Order</h2>
             <div class="order-summary" id="order-summary"></div>
-            <div class="promo-code-wrap" style="margin-top: 1rem;"><input type="text" id="manual-referral" placeholder="Promo Code" class="input"></div>
-            <div class="waiver-wrap" style="margin-top: 1rem;"><label style="display: flex; gap: 0.5rem; cursor: pointer; font-size: 12px;"><input type="checkbox" id="waiver-check"><span>I agree to the Terms & Waiver.</span></label></div>
-            <div class="order-total" style="margin-top: 1rem; display: flex; justify-content: space-between; font-weight: 700;"><span>Total</span><span id="order-total-amount">$0</span></div>
+            <div style="margin-top: 1rem; display: flex; justify-content: space-between; font-weight: 700;"><span>Total</span><span id="order-total-amount">$0</span></div>
             <div class="checkout-actions"><button class="btn btn--outline checkout-back" id="step3-back">Back</button><button class="btn btn--primary btn--lg" id="checkout-btn" disabled>Proceed</button></div>
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="assets/main.js"></script>
+    <script>
+        // Internal View Switcher logic
+        $$('.view-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                $$('.view-btn').forEach(b => b.classList.remove('is-active'));
+                $$('.view-panel').forEach(p => b.classList.remove('is-active')); // wait, typo
+                $$('.view-panel').forEach(p => p.classList.remove('is-active'));
+                
+                btn.classList.add('is-active');
+                document.getElementById(btn.dataset.view).classList.add('is-active');
+            });
+        });
+    </script>
 </body>
 </html>

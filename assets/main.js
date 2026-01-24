@@ -507,31 +507,45 @@ const initCountdown = () => {
 
 const renderTimeline = () => {
     const timeline = $("#journey-timeline");
+    const fullTimeline = $("#full-timeline");
     if (!timeline || !CROWDFUNDING_TIERS.length) return;
     
     timeline.innerHTML = "";
+    if (fullTimeline) fullTimeline.innerHTML = "";
     
-    CROWDFUNDING_TIERS.forEach((tier, index) => {
-        const step = document.createElement("div");
-        const isActive = checkoutState.raised >= (index > 0 ? CROWDFUNDING_TIERS[index-1].goal : 0);
-        const isUnlocked = checkoutState.raised >= tier.goal;
-        
-        step.className = `journey-step ${isActive ? 'journey-step--active' : ''} ${isUnlocked ? 'journey-step--unlocked' : ''}`;
-        
-        let backerTag = "";
-        if (index === 0) backerTag = '<span class="backer-tag backer-tag--founder">Founding Backer Rewards</span>';
-        else if (index === 2) backerTag = '<span class="backer-tag backer-tag--pioneer">Pioneer Rewards</span>';
-        else if (index === 5) backerTag = '<span class="backer-tag backer-tag--builder">Builder Rewards</span>';
+    // Find current tier index
+    let currentIndex = 0;
+    for (let i = 0; i < CROWDFUNDING_TIERS.length; i++) {
+        if (checkoutState.raised >= CROWDFUNDING_TIERS[i].goal) {
+            currentIndex = i + 1;
+        } else {
+            break;
+        }
+    }
 
-        step.innerHTML = `
-            <div class="journey-step__header">
-                <span class="journey-step__title">Tier ${tier.id}: ${tier.name}</span>
-                <span class="journey-step__price">$${tier.price}</span>
+    CROWDFUNDING_TIERS.forEach((tier, index) => {
+        const isUnlocked = checkoutState.raised >= tier.goal;
+        const isActive = index === currentIndex;
+        
+        const milestoneHtml = `
+            <div class="milestone ${isActive ? 'milestone--active' : ''} ${isUnlocked ? 'milestone--unlocked' : ''}">
+                <div class="milestone__icon">${isUnlocked ? '✓' : tier.id}</div>
+                <div class="milestone__content">
+                    <div class="milestone__title">${tier.name} <span style="float:right; font-size:10px; opacity:0.6;">$${tier.price}</span></div>
+                    <div class="milestone__desc">${tier.desc}</div>
+                </div>
             </div>
-            <p class="journey-step__desc">${tier.desc}</p>
-            ${backerTag}
         `;
-        timeline.appendChild(step);
+
+        // Only show current and next in the main dashboard
+        if (index === currentIndex || index === currentIndex - 1 || (currentIndex === 0 && index === 0)) {
+            timeline.insertAdjacentHTML('beforeend', milestoneHtml);
+        }
+        
+        // Add everything to the full list
+        if (fullTimeline) {
+            fullTimeline.insertAdjacentHTML('beforeend', milestoneHtml);
+        }
     });
 };
 

@@ -11,23 +11,19 @@
     <link rel="apple-touch-icon" href="RR26Logo.png" sizes="180x180">
     <meta name="theme-color" content="#0a0a0f">
 
-    <!-- Config -->
     <script src="config.js"></script>
 
-    <!-- Open Graph -->
     <meta property="og:title" content="Financial Transparency | Reeguez Rocks 2026">
     <meta name="description" content="Full transparency on where every dollar goes. See our complete budget breakdown.">
-    <meta property="og:description" content="Full transparency on where every dollar goes. See our complete budget breakdown.">
     <meta property="og:image" content="https://reeguezrocks.com/RR26Logo.png">
     <meta property="og:url" content="https://reeguezrocks.com/financials.html">
     <meta property="og:type" content="website">
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="assets/main-v5.css?v=20">
+    <link rel="stylesheet" href="assets/main-v5.css?v=21">
     
     <style>
         .finance-hero {
@@ -35,149 +31,105 @@
             padding-bottom: var(--space-3xl);
         }
 
-        .dashboard-grid {
+        .pillar-grid {
             display: grid;
-            gap: var(--space-xl);
-            grid-template-columns: 1fr;
-            align-items: start;
+            gap: var(--space-md);
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            margin-bottom: var(--space-2xl);
         }
 
-        @media (min-width: 1024px) {
-            .dashboard-grid {
-                grid-template-columns: 1.2fr 0.8fr;
-            }
-        }
-
-        /* Transparency Cards */
-        .transparency-card {
+        .pillar {
             background: var(--color-bg-elevated);
             border: 1px solid var(--color-border);
             border-radius: var(--radius-lg);
             padding: var(--space-xl);
-            margin-bottom: var(--space-xl);
-            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: border-color var(--transition-base);
         }
 
-        .transparency-card__title {
+        .pillar:hover { border-color: var(--color-accent); }
+
+        .pillar__icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-md);
+            display: block;
+        }
+
+        .pillar__title {
+            color: var(--color-accent);
             font-family: var(--font-display);
             font-size: var(--text-lg);
-            color: var(--color-accent);
-            margin-bottom: var(--space-lg);
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            margin-bottom: var(--space-sm);
         }
 
-        /* Breakdown List */
-        .breakdown-list {
-            display: grid;
-            gap: var(--space-sm);
+        .pillar__value {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            display: block;
+            margin-bottom: var(--space-sm);
         }
 
-        .breakdown-item {
+        .pillar__desc {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        /* Interactive Splitter */
+        .calculator {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .calc-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: var(--space-md);
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-        }
-
-        .breakdown-item--category {
-            background: rgba(247, 166, 2, 0.05);
-            border-color: transparent;
-            margin-top: var(--space-md);
-        }
-
-        .breakdown-item--category .breakdown-item__name {
-            font-weight: 700;
-            color: var(--color-accent);
-        }
-
-        .breakdown-item__name {
-            color: var(--color-text-muted);
-            font-size: var(--text-sm);
-        }
-
-        .breakdown-item__amount {
-            font-weight: 600;
-            color: var(--color-text);
-            font-family: monospace;
-        }
-
-        /* Ticket Grid */
-        .ticket-grid {
-            display: grid;
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
             gap: var(--space-md);
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         }
 
-        .ticket-mini-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--color-border);
+        .split-bar {
+            display: flex;
+            height: 48px;
             border-radius: var(--radius-md);
-            padding: var(--space-lg);
-            text-align: center;
-        }
-
-        .ticket-mini-card__name {
-            font-weight: 600;
-            font-size: var(--text-sm);
-            margin-bottom: var(--space-xs);
-            color: var(--color-text-muted);
-        }
-
-        .ticket-mini-card__price {
-            font-size: var(--text-xl);
-            font-weight: 700;
-            color: var(--color-accent);
-            margin-bottom: var(--space-md);
-        }
-
-        .ticket-mini-card__stats {
-            font-size: 11px;
-            color: var(--color-text-subtle);
-            line-height: 1.6;
-        }
-
-        .ticket-mini-card__margin {
-            display: block;
-            margin-top: var(--space-sm);
-            padding-top: var(--space-sm);
-            border-top: 1px solid var(--color-border);
-            color: var(--color-success);
-            font-weight: 700;
-        }
-
-        /* Summary Stats */
-        .summary-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-md);
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
             margin-bottom: var(--space-xl);
         }
 
-        .summary-stat {
-            background: var(--color-bg-card);
-            padding: var(--space-lg);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-border-accent);
-            text-align: center;
-        }
-
-        .summary-stat__value {
-            display: block;
-            font-size: var(--text-2xl);
-            font-weight: 700;
-            color: var(--color-accent);
-        }
-
-        .summary-stat__label {
+        .split-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--color-text-subtle);
+            font-weight: 700;
+            color: #000;
+            transition: width 0.4s ease;
         }
+
+        .split-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
     </style>
 </head>
 <body>
@@ -204,133 +156,69 @@
     <main class="finance-page">
         <section class="section finance-hero">
             <div class="container">
-                <header class="section__header" style="text-align: left; margin-bottom: var(--space-2xl);">
-                    <a href="index.html" class="back-link" style="display: flex; align-items: center; gap: 0.5rem; color: var(--color-text-muted); font-size: 14px; margin-bottom: 1rem; text-decoration: none;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                        Back to Home
-                    </a>
-                    <h1 class="section__title" style="margin-left: 0;">Financial Transparency</h1>
-                    <p class="section__subtitle" style="margin-left: 0; max-width: 600px;">Every dollar explained. We operate on a community-funded model where production scales fluidly and margins build the experience.</p>
+                <header class="section__header" style="margin-bottom: var(--space-3xl);">
+                    <h1 class="section__title">Financial Transparency</h1>
+                    <p class="section__subtitle">We are 100% community-funded. No corporate sponsors, just us.</p>
                 </header>
 
-                <div class="dashboard-grid">
-                    <!-- LEFT COLUMN: BUDGET DETAILS -->
-                    <div class="main-content-area">
-                        
-                        <!-- 1. The Scaling Model Explanation -->
-                        <div class="transparency-card">
-                            <h2 class="transparency-card__title">The Scaling Model</h2>
-                            <p class="fund-note__text" style="margin-bottom: 1.5rem;">
-                                We prioritize safety and sound above all else. To achieve this, **Fixed Body Costs** are allocated from every ticket first. As more people join, the Operations budget (Medical/Security) increases to maintain professional standards.
-                            </p>
-                            
-                            <div class="breakdown-list">
-                                <div class="breakdown-item--category breakdown-item">
-                                    <span class="breakdown-item__name">Per-Guest "Body" Costs</span>
-                                </div>
-                                <div class="breakdown-item">
-                                    <span class="breakdown-item__name">Venue Access Fee</span>
-                                    <span class="breakdown-item__amount">$10.00 / day</span>
-                                </div>
-                                <div class="breakdown-item">
-                                    <span class="breakdown-item__name">Stage Production (The Bowl + Dome)</span>
-                                    <span class="breakdown-item__amount">$37.00 flat</span>
-                                </div>
-                                <div class="breakdown-item">
-                                    <span class="breakdown-item__name">Fluid Ops (Medical, Safety, Waste)</span>
-                                    <span class="breakdown-item__amount">$10.00 - $30.00</span>
-                                </div>
-                                <div class="breakdown-item">
-                                    <span class="breakdown-item__name">Processing & Referral Fees</span>
-                                    <span class="breakdown-item__amount">~$8.00 - $11.00</span>
-                                </div>
-                            </div>
-                        </div>
+                <!-- THE 3 PILLARS -->
+                <div class="pillar-grid">
+                    <div class="pillar">
+                        <span class="pillar__icon">👤</span>
+                        <h2 class="pillar__title">The Body Cost</h2>
+                        <span class="pillar__value">$77 - $118</span>
+                        <p class="pillar__desc">Non-negotiable costs to have a guest on site. Includes Venue ($10/day), Pro Sound ($37), Medical, and Safety.</p>
+                    </div>
+                    <div class="pillar">
+                        <span class="pillar__icon">🎵</span>
+                        <h2 class="pillar__title">The Show Fund</h2>
+                        <span class="pillar__value">The Margin</span>
+                        <p class="pillar__desc">Every dollar above the body cost goes directly into the crowdfunding buckets for Talent, Art, and Lasers.</p>
+                    </div>
+                    <div class="pillar">
+                        <span class="pillar__icon">🚀</span>
+                        <h2 class="pillar__title">The Vision</h2>
+                        <span class="pillar__value">$92,000</span>
+                        <p class="pillar__desc">Our stretch goal for a fully maxed-out production, 3+ Headliners, and professional aftermovie.</p>
+                    </div>
+                </div>
 
-                        <!-- 2. Ticket Margins -->
-                        <div class="transparency-card">
-                            <h2 class="transparency-card__title">Sustainable Margins</h2>
-                            <p class="fund-note__text" style="margin-bottom: 1.5rem;">
-                                After the "Body Costs" are covered, the remaining margin goes directly into the Crowdfunding Tiers to pay for headliners, art, and lasers.
-                            </p>
-                            
-                            <div class="ticket-grid">
-                                <div class="ticket-mini-card">
-                                    <div class="ticket-mini-card__name">4-Day Pass</div>
-                                    <div class="ticket-mini-card__price">$119</div>
-                                    <div class="ticket-mini-card__stats">
-                                        $40 Venue • $37 Prod<br>$28.75 Ops/Fees
-                                    </div>
-                                    <span class="ticket-mini-card__margin">+$13.25 to Fund</span>
-                                </div>
-                                <div class="ticket-mini-card">
-                                    <div class="ticket-mini-card__name">3-Day Pass</div>
-                                    <div class="ticket-mini-card__price">$109</div>
-                                    <div class="ticket-mini-card__stats">
-                                        $30 Venue • $37 Prod<br>$28.46 Ops/Fees
-                                    </div>
-                                    <span class="ticket-mini-card__margin">+$13.54 to Fund</span>
-                                </div>
-                                <div class="ticket-mini-card">
-                                    <div class="ticket-mini-card__name">2-Day Pass</div>
-                                    <div class="ticket-mini-card__price">$89</div>
-                                    <div class="ticket-mini-card__stats">
-                                        $20 Venue • $37 Prod<br>$27.88 Ops/Fees
-                                    </div>
-                                    <span class="ticket-mini-card__margin">+$4.12 to Fund</span>
-                                </div>
-                                <div class="ticket-mini-card">
-                                    <div class="ticket-mini-card__name">1-Day Pass</div>
-                                    <div class="ticket-mini-card__price">$79</div>
-                                    <div class="ticket-mini-card__stats">
-                                        $10 Venue • $37 Prod<br>$27.59 Ops/Fees
-                                    </div>
-                                    <span class="ticket-mini-card__margin">+$4.41 to Fund</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 3. Add-on Transparency -->
-                        <div class="transparency-card">
-                            <h2 class="transparency-card__title">Add-on Transparency</h2>
-                            <div class="breakdown-list">
-                                <div class="breakdown-item">
-                                    <span class="breakdown-item__name">Historic Cabin</span>
-                                    <span class="breakdown-item__amount">$250 cost / $1,000 price</span>
-                                </div>
-                                <p class="fund-note__text" style="margin-top: 1rem; font-size: 13px;">Each cabin rental contributes **$750** directly to the festival tiers and artist budget. This is a massive driver for unlocking headliners.</p>
-                            </div>
-                        </div>
+                <!-- INTERACTIVE CALCULATOR -->
+                <div class="calculator">
+                    <div class="calc-header">
+                        <h3 style="margin:0;">Select a Ticket to see the split:</h3>
+                        <select id="ticket-selector" class="input" style="width: auto; min-width: 200px;">
+                            <option value="119" data-days="4">4-Day Pass ($119)</option>
+                            <option value="109" data-days="3">3-Day Pass ($109)</option>
+                            <option value="89" data-days="2">2-Day Pass ($89)</option>
+                            <option value="79" data-days="1">1-Day Pass ($79)</option>
+                        </select>
                     </div>
 
-                    <!-- RIGHT COLUMN: SUMMARY & CTAs -->
-                    <div class="sidebar-area">
-                        <div class="summary-stats">
-                            <div class="summary-stat">
-                                <span class="summary-stat__value">$5,950</span>
-                                <span class="summary-stat__label">Tier 1 Goal</span>
-                            </div>
-                            <div class="summary-stat">
-                                <span class="summary-stat__value">$92,000</span>
-                                <span class="summary-stat__label">Stretch Goal</span>
-                            </div>
-                        </div>
-
-                        <div class="status-card" style="position: relative; top: 0; margin-bottom: var(--space-xl);">
-                            <h2 class="status-card__title" style="margin-bottom: 1rem;">Community Fund</h2>
-                            <p style="font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.5;">
-                                Beyond the tiers, we maintain a **10% Community Fund**. This pool is used post-event to reward artists who performed for the margin-pool and volunteers who went above and beyond to keep the forest clean.
-                            </p>
-                        </div>
-
-                        <div class="status-card" style="position: relative; top: 0; border-color: var(--color-border);">
-                            <h2 class="status-card__title" style="margin-bottom: 1rem; color: #fff;">Affiliate Program</h2>
-                            <p style="font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: 1.5rem;">
-                                Earn **$5.00** for every ticket you help sell. Your friends get **5% off** their purchase. It's a win-win for the community.
-                            </p>
-                            <a href="community.html#affiliate" class="btn btn--primary" style="width: 100%; text-align: center;">Get My Link</a>
-                        </div>
+                    <div class="split-bar">
+                        <div id="seg-venue" class="split-segment" style="background: var(--color-accent-secondary); width: 33%;">VENUE</div>
+                        <div id="seg-prod" class="split-segment" style="background: var(--color-accent); width: 31%;">SOUND</div>
+                        <div id="seg-ops" class="split-segment" style="background: #444; width: 24%;">OPS</div>
+                        <div id="seg-fund" class="split-segment" style="background: var(--color-success); width: 12%;">FUND</div>
                     </div>
+
+                    <div class="split-legend">
+                        <div class="legend-item"><span class="legend-dot" style="background: var(--color-accent-secondary);"></span> <strong>Venue:</strong> <span id="val-venue">$40</span></div>
+                        <div class="legend-item"><span class="legend-dot" style="background: var(--color-accent);"></span> <strong>Sound:</strong> <span id="val-prod">$37</span></div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #444;"></span> <strong>Ops & Fees:</strong> <span id="val-ops">$28.75</span></div>
+                        <div class="legend-item"><span class="legend-dot" style="background: var(--color-success);"></span> <strong>To Show Fund:</strong> <span id="val-fund">$13.25</span></div>
+                    </div>
+
+                    <details style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+                        <summary style="font-size: 13px; color: var(--color-text-muted); cursor: pointer;">Show detailed fee math</summary>
+                        <div style="font-size: 12px; color: var(--color-text-subtle); margin-top: 1rem; line-height: 1.6;">
+                            • <strong>Venue:</strong> $10.00 per guest per day.<br>
+                            • <strong>Production:</strong> $30 (The Bowl) + $7 (The Dome) flat per ticket.<br>
+                            • <strong>Operations:</strong> Scaled $10 - $30 based on crowd size.<br>
+                            • <strong>Stripe:</strong> 2.9% + $0.30 per transaction.<br>
+                            • <strong>Affiliate:</strong> $5.00 per referral.
+                        </div>
+                    </details>
                 </div>
             </div>
         </section>
@@ -350,6 +238,35 @@
     </footer>
 
     <script>
+        const sel = document.getElementById('ticket-selector');
+        const update = () => {
+            const price = parseFloat(sel.value);
+            const days = parseInt(sel.options[sel.selectedIndex].dataset.days);
+            
+            const venue = days * 10;
+            const prod = 37;
+            const stripe = (price * 0.029) + 0.30;
+            const opsTotal = 20 + 5 + stripe; // Level 2 ops + affiliate + stripe
+            const fund = price - venue - prod - opsTotal;
+
+            const venuePct = (venue / price) * 100;
+            const prodPct = (prod / price) * 100;
+            const opsPct = (opsTotal / price) * 100;
+            const fundPct = (fund / price) * 100;
+
+            document.getElementById('seg-venue').style.width = venuePct + '%';
+            document.getElementById('seg-prod').style.width = prodPct + '%';
+            document.getElementById('seg-ops').style.width = opsPct + '%';
+            document.getElementById('seg-fund').style.width = fundPct + '%';
+
+            document.getElementById('val-venue').textContent = '$' + venue.toFixed(2);
+            document.getElementById('val-prod').textContent = '$' + prod.toFixed(2);
+            document.getElementById('val-ops').textContent = '$' + opsTotal.toFixed(2);
+            document.getElementById('val-fund').textContent = '$' + fund.toFixed(2);
+        };
+        sel.addEventListener('change', update);
+        update();
+
         // Nav toggle
         const toggle = document.getElementById('nav-toggle');
         const menu = document.getElementById('nav-menu');
@@ -358,14 +275,6 @@
                 const isOpen = menu.classList.toggle('is-open');
                 toggle.setAttribute('aria-expanded', isOpen);
             });
-        }
-
-        // Nav scroll
-        const nav = document.querySelector('.nav');
-        if (nav) {
-            const handleScroll = () => nav.classList.toggle('nav--scrolled', window.scrollY > 20);
-            handleScroll();
-            window.addEventListener('scroll', handleScroll, { passive: true });
         }
     </script>
 </body>
