@@ -149,9 +149,9 @@
           </div>
         </div>
         <table>
-          <thead><tr><th>Tier</th><th class="right">Price</th><th class="right">Limit</th><th class="right">Sold</th><th class="right">Gross (sold)</th><th></th></tr></thead>
+          <thead><tr><th>Tier</th><th class="right">Price</th><th class="right">Margin/Unit</th><th class="right">Sold</th><th class="right">Total Margin</th><th></th></tr></thead>
           <tbody id="fn-tiers"></tbody>
-          <tfoot><tr><th>Totals</th><th></th><th class="right" id="fn-sum-limit">0</th><th class="right" id="fn-sum-sold">0</th><th class="right" id="fn-sum-gross">$0</th><th></th></tr></tfoot>
+          <tfoot><tr><th>Totals</th><th></th><th class="right" id="fn-sum-margin">0</th><th class="right" id="fn-sum-sold">0</th><th class="right" id="fn-sum-gross">$0</th><th></th></tr></tfoot>
         </table>
         <div class="row" style="margin:8px 0"><button id="fn-add-tier" class="btn secondary">Add tier</button></div>
         <div class="row">
@@ -352,7 +352,7 @@
       $('#fn-hard-total').textContent=fmt(total);
     }
     function fnRenderTiers(){
-      const body=$('#fn-tiers'); body.innerHTML=''; let sumL=0,sumS=0,sumG=0,max=0;
+      const body=$('#fn-tiers'); body.innerHTML=''; let sumL=0,sumS=0,sumG=0,sumM=0,max=0;
       const cap=parseInt(fnCap.value,10)||0;
       const days=parseFloat(fnDays.value)||1;
       const hard=costs.reduce((s,x)=>{
@@ -360,20 +360,57 @@
           if (x.perHead) return s + (x.perHead * cap);
           return s + (Number(x.amount)||0);
       }, 0);
+      
       tiers.forEach((t,i)=>{
+        const price = Number(t.price||0);
+        const sold = Number(t.sold||0);
+        const id = (t.id||'').toLowerCase();
+        const label = (t.label||t.id||'').toLowerCase();
+        
+        let tDays = 0;
+        if (id.includes('4-day') || label.includes('4-day')) tDays = 4;
+        else if (id.includes('3-day') || label.includes('3-day')) tDays = 3;
+        else if (id.includes('2-day') || label.includes('2-day')) tDays = 2;
+        else if (id.includes('1-day') || label.includes('1-day')) tDays = 1;
+        
+        let marginUnit = 0;
+        if (tDays > 0) {
+            marginUnit = price - (tDays * 10) - 37;
+        } else if (id.includes('cabin') || label.includes('cabin')) {
+            marginUnit = price - 250;
+        } else {
+            marginUnit = price;
+        }
+        
+        const soldGross = price * sold;
+        const totalMargin = marginUnit * sold;
+        
+        sumG += soldGross;
+        sumM += totalMargin;
+        sumS += sold;
+        max += (price * (t.limit||0));
+        
         const tr=document.createElement('tr');
         const td=[document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td')];
+        
         const name=document.createElement('input'); name.type='text'; name.value=t.label||t.id||''; name.addEventListener('input',e=> t.label=e.target.value );
-        const price=document.createElement('input'); price.type='number'; price.value=t.price||0; price.addEventListener('input',e=>{ t.price=parseFloat(e.target.value)||0; fnRenderTiers(); });
+        const pInput=document.createElement('input'); pInput.type='number'; pInput.value=price; pInput.addEventListener('input',e=>{ t.price=parseFloat(e.target.value)||0; fnRenderTiers(); });
         const limit=document.createElement('input'); limit.type='number'; limit.value=t.limit??0; limit.addEventListener('input',e=>{ t.limit=parseInt(e.target.value,10)||0; fnRenderTiers(); });
-        const sold=document.createElement('input'); sold.type='number'; sold.value=t.sold||0; sold.addEventListener('input',e=>{ t.sold=parseInt(e.target.value,10)||0; fnRenderTiers(); });
+        const sInput=document.createElement('input'); sInput.type='number'; sInput.value=sold; sInput.addEventListener('input',e=>{ t.sold=parseInt(e.target.value,10)||0; fnRenderTiers(); });
         const rm=document.createElement('button'); rm.textContent='Remove'; rm.className='btn secondary'; rm.addEventListener('click',()=>{ tiers.splice(i,1); fnRenderTiers(); });
-        td[0].appendChild(name); td[1].className='right'; td[1].appendChild(price); td[2].className='right'; td[2].appendChild(limit); td[3].className='right'; td[3].appendChild(sold);
-        const soldGross=(t.price||0)*(t.sold||0); td[4].className='right'; td[4].textContent=fmt(soldGross); td[5].appendChild(rm); tr.append(...td); body.appendChild(tr);
-        sumL+=t.limit||0; sumS+=t.sold||0; sumG+=soldGross; max+= (t.price||0) * (t.limit||0);
+        
+        td[0].appendChild(name); 
+        td[1].className='right'; td[1].appendChild(pInput); 
+        td[2].className='right'; td[2].textContent = fmt(marginUnit);
+        td[3].className='right'; td[3].appendChild(sInput);
+        td[4].className='right'; td[4].textContent=fmt(totalMargin); 
+        td[5].appendChild(rm); 
+        tr.append(...td); body.appendChild(tr);
       });
-      $('#fn-sum-limit').textContent=sumL; $('#fn-sum-sold').textContent=sumS; $('#fn-sum-gross').textContent=fmt(sumG); $('#fn-max').textContent=fmt(max);
-      const avg=sumL>0? (max/sumL):0; const be=avg>0? Math.ceil(hard/avg):null; $('#fn-breakeven').textContent= be!=null? be : '—';
+      $('#fn-sum-sold').textContent=sumS; 
+      $('#fn-sum-gross').textContent=fmt(sumM); // Using gross field for total margin sum in footer
+      $('#fn-max').textContent=fmt(max);
+      const avg=sumS>0? (max/sumS):0; const be=avg>0? Math.ceil(hard/avg):null; $('#fn-breakeven').textContent= be!=null? be : '—';
     }
     $('#fn-add-cost').addEventListener('click',()=>{ costs.push({name:'New Cost',amount:0}); fnRenderCosts(); fnUpdateSums(); });
     $('#fn-add-tier').addEventListener('click',()=>{ tiers.push({ id:'custom', label:'Custom', price:0, limit:0, sold:0 }); fnRenderTiers(); });

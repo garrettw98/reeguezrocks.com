@@ -69,9 +69,9 @@
             <tr>
               <th>Tier</th>
               <th class="right">Price</th>
-              <th class="right">Limit</th>
+              <th class="right">Margin/Unit</th>
               <th class="right">Sold</th>
-              <th class="right">Gross (sold)</th>
+              <th class="right">Total Margin</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -79,9 +79,9 @@
             <tr>
               <th>Totals</th>
               <th></th>
-              <th class="right" id="sum-limit">0</th>
+              <th class="right" id="sum-margin-unit">0</th>
               <th class="right" id="sum-sold">0</th>
-              <th class="right" id="sum-sold-gross">$0</th>
+              <th class="right" id="sum-total-margin">$0</th>
             </tr>
           </tfoot>
         </table>
@@ -159,23 +159,49 @@
 
     function renderTiers(tiers){
       const tbody = $('#tiers tbody'); tbody.innerHTML='';
-      let sumLimit=0, sumSold=0, sumSoldGross=0, maxGross=0;
+      let sumLimit=0, sumSold=0, sumSoldGross=0, sumTotalMargin=0, maxGross=0;
+      
       for (const t of tiers){
-        const price = Number(t.price||0); const limit = (t.limit==null? null : Number(t.limit)); const sold = Number(t.sold||0);
-        const soldGross = price * sold; sumSoldGross += soldGross; sumSold += sold; if (limit!=null){ sumLimit += limit; maxGross += price * limit; }
+        const price = Number(t.price||0); 
+        const limit = (t.limit==null? null : Number(t.limit)); 
+        const sold = Number(t.sold||0);
+        const id = (t.id||'').toLowerCase();
+        
+        let days = 0;
+        if (id.includes('4-day')) days = 4;
+        else if (id.includes('3-day')) days = 3;
+        else if (id.includes('2-day')) days = 2;
+        else if (id.includes('1-day')) days = 1;
+        
+        let marginUnit = 0;
+        if (days > 0) {
+            marginUnit = price - (days * 10) - 37;
+        } else if (id.includes('cabin')) {
+            marginUnit = price - 250;
+        } else {
+            marginUnit = price; // Add-ons like car camping assuming high margin for now
+        }
+        
+        const soldGross = price * sold; 
+        const totalMargin = marginUnit * sold;
+        
+        sumSoldGross += soldGross; 
+        sumTotalMargin += totalMargin;
+        sumSold += sold; 
+        if (limit!=null){ sumLimit += limit; maxGross += price * limit; }
+        
         const tr=document.createElement('tr');
         tr.innerHTML = `
           <td>${t.label||t.id||''}</td>
           <td class="right">${fmt(price)}</td>
-          <td class="right">${limit!=null? limit: '∞'}</td>
+          <td class="right">${fmt(marginUnit)}</td>
           <td class="right">${sold}</td>
-          <td class="right">${fmt(soldGross)}</td>
+          <td class="right">${fmt(totalMargin)}</td>
         `;
         tbody.appendChild(tr);
       }
-      $('#sum-limit').textContent = sumLimit;
       $('#sum-sold').textContent = sumSold;
-      $('#sum-sold-gross').textContent = fmt(sumSoldGross);
+      $('#sum-total-margin').textContent = fmt(sumTotalMargin);
       $('#kpi-max').textContent = fmt(maxGross);
 
       const cap = parseInt($('#capacity').value,10)||0;
