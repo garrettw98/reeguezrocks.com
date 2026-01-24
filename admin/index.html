@@ -131,7 +131,7 @@
           <tfoot><tr><th>Total</th><th class="right" id="fn-hard-total">$0</th><th></th></tr></tfoot>
         </table>
         <div class="row" style="margin:8px 0"><button id="fn-add-cost" class="btn secondary">Add cost</button></div>
-        <div class="row"><label>Capacity: <input id="fn-cap" type="number" min="1" value="110" style="width:100px"></label><div class="muted">Cost per person: <strong id="fn-per">—</strong></div></div>
+        <div class="row"><label>Capacity: <input id="fn-cap" type="number" min="1" value="499" style="width:100px"></label><div class="muted">Cost per person: <strong id="fn-per">—</strong></div></div>
 
         <h3 style="margin-top:16px">Ticket Tiers</h3>
         <div class="row" style="justify-content:space-between">
@@ -293,17 +293,69 @@
 
     /* ------- Financials ------- */
     const COSTS_DEFAULT=[
-      { name:'Venue (up to 110 people)', amount:1400 },
-      { name:'Production Costs', amount:2500 },
+      { name:'Venue Fee ($40/head)', perHead:40 },
+      { name:'The Bowl Production ($25/head)', perHead:25 },
       { name:'Production Costs U-Haul', amount:700 },
       { name:'The Dome U-Haul/Expense', amount:700 },
       { name:'Fun Shit', amount:1000 },
     ];
     let costs=[...COSTS_DEFAULT]; let tiers=[]; const fnCosts=$('#fn-costs'); const fnCap=$('#fn-cap');
     function fmt(n){ return new Intl.NumberFormat(undefined,{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n||0); }
-    function fnRenderCosts(){ fnCosts.innerHTML=''; let total=0; costs.forEach((c,i)=>{ total+=Number(c.amount||0); const tr=document.createElement('tr'); const td1=document.createElement('td'); const td2=document.createElement('td'); td2.className='right'; const td3=document.createElement('td'); const n=document.createElement('input'); n.type='text'; n.value=c.name||''; n.addEventListener('input',e=> c.name=e.target.value ); const a=document.createElement('input'); a.type='number'; a.value=c.amount||0; a.addEventListener('input',e=>{ c.amount=parseFloat(e.target.value)||0; fnUpdateSums(); }); const rm=document.createElement('button'); rm.textContent='Remove'; rm.className='btn secondary'; rm.addEventListener('click',()=>{ costs.splice(i,1); fnRenderCosts(); fnUpdateSums(); }); td1.appendChild(n); td2.appendChild(a); td3.appendChild(rm); tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); fnCosts.appendChild(tr); }); $('#fn-hard-total').textContent=fmt(total); fnUpdatePer(); }
-    function fnUpdatePer(){ const total=costs.reduce((s,x)=>s+(Number(x.amount)||0),0); const cap=parseInt(fnCap.value,10)||0; const per=cap>0? total/cap : 0; $('#fn-per').textContent = per? new Intl.NumberFormat(undefined,{style:'currency',currency:'USD'}).format(per):'—'; }
-    function fnRenderTiers(){ const body=$('#fn-tiers'); body.innerHTML=''; let sumL=0,sumS=0,sumG=0,max=0; tiers.forEach((t,i)=>{ const tr=document.createElement('tr'); const td=[document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td')]; const name=document.createElement('input'); name.type='text'; name.value=t.label||t.id||''; name.addEventListener('input',e=> t.label=e.target.value ); const price=document.createElement('input'); price.type='number'; price.value=t.price||0; price.addEventListener('input',e=>{ t.price=parseFloat(e.target.value)||0; fnRenderTiers(); }); const limit=document.createElement('input'); limit.type='number'; limit.value=t.limit??0; limit.addEventListener('input',e=>{ t.limit=parseInt(e.target.value,10)||0; fnRenderTiers(); }); const sold=document.createElement('input'); sold.type='number'; sold.value=t.sold||0; sold.addEventListener('input',e=>{ t.sold=parseInt(e.target.value,10)||0; fnRenderTiers(); }); const rm=document.createElement('button'); rm.textContent='Remove'; rm.className='btn secondary'; rm.addEventListener('click',()=>{ tiers.splice(i,1); fnRenderTiers(); }); td[0].appendChild(name); td[1].className='right'; td[1].appendChild(price); td[2].className='right'; td[2].appendChild(limit); td[3].className='right'; td[3].appendChild(sold); const soldGross=(t.price||0)*(t.sold||0); td[4].className='right'; td[4].textContent=fmt(soldGross); td[5].appendChild(rm); tr.append(...td); body.appendChild(tr); sumL+=t.limit||0; sumS+=t.sold||0; sumG+=soldGross; max+= (t.price||0) * (t.limit||0); }); $('#fn-sum-limit').textContent=sumL; $('#fn-sum-sold').textContent=sumS; $('#fn-sum-gross').textContent=fmt(sumG); $('#fn-max').textContent=fmt(max); const hard=costs.reduce((s,x)=>s+(Number(x.amount)||0),0); const avg=sumL>0? (max/sumL):0; const be=avg>0? Math.ceil(hard/avg):null; $('#fn-breakeven').textContent= be!=null? be : '—'; }
+    function fnRenderCosts(){
+      fnCosts.innerHTML='';
+      let total=0;
+      const cap=parseInt(fnCap.value,10)||0;
+      costs.forEach((c,i)=>{
+        const amount = c.perHead ? c.perHead * cap : (Number(c.amount)||0);
+        total+=amount;
+        const tr=document.createElement('tr');
+        const td1=document.createElement('td');
+        const td2=document.createElement('td'); td2.className='right';
+        const td3=document.createElement('td');
+        const n=document.createElement('input'); n.type='text'; n.value=c.name||''; n.addEventListener('input',e=> c.name=e.target.value );
+        const a=document.createElement('input'); a.type='number'; a.value=c.perHead ? c.perHead : (c.amount||0);
+        if (c.perHead) a.title = "Per-head rate";
+        a.addEventListener('input',e=>{
+          if (c.perHead) c.perHead = parseFloat(e.target.value)||0;
+          else c.amount=parseFloat(e.target.value)||0;
+          fnUpdateSums();
+        });
+        const rm=document.createElement('button'); rm.textContent='Remove'; rm.className='btn secondary'; rm.addEventListener('click',()=>{ costs.splice(i,1); fnRenderCosts(); fnUpdateSums(); });
+        td1.appendChild(n); td2.appendChild(a); if(c.perHead) td2.appendChild(document.createTextNode(' /head')); td3.appendChild(rm); tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); fnCosts.appendChild(tr);
+      });
+      $('#fn-hard-total').textContent=fmt(total); fnUpdatePer();
+    }
+    function fnUpdatePer(){
+      const cap=parseInt(fnCap.value,10)||0;
+      const total=costs.reduce((s,x)=>s+(x.perHead? x.perHead*cap : (Number(x.amount)||0)),0);
+      const per=cap>0? total/cap : 0;
+      $('#fn-per').textContent = per? new Intl.NumberFormat(undefined,{style:'currency',currency:'USD'}).format(per):'—';
+      $('#fn-hard-total').textContent=fmt(total);
+    }
+    function fnRenderTiers(){
+      const body=$('#fn-tiers'); body.innerHTML=''; let sumL=0,sumS=0,sumG=0,max=0;
+      const cap=parseInt(fnCap.value,10)||0;
+      const hard=costs.reduce((s,x)=>s+(x.perHead? x.perHead*cap : (Number(x.amount)||0)),0);
+      tiers.forEach((t,i)=>{
+        const tr=document.createElement('tr');
+        const td=[document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td')];
+        const name=document.createElement('input'); name.type='text'; name.value=t.label||t.id||''; name.addEventListener('input',e=> t.label=e.target.value );
+        const price=document.createElement('input'); price.type='number'; price.value=t.price||0; price.addEventListener('input',e=>{ t.price=parseFloat(e.target.value)||0; fnRenderTiers(); });
+        const limit=document.createElement('input'); limit.type='number'; limit.value=t.limit??0; limit.addEventListener('input',e=>{ t.limit=parseInt(e.target.value,10)||0; fnRenderTiers(); });
+        const sold=document.createElement('input'); sold.type='number'; sold.value=t.sold||0; sold.addEventListener('input',e=>{ t.sold=parseInt(e.target.value,10)||0; fnRenderTiers(); });
+        const rm=document.createElement('button'); rm.textContent='Remove'; rm.className='btn secondary'; rm.addEventListener('click',()=>{ tiers.splice(i,1); fnRenderTiers(); });
+        td[0].appendChild(name); td[1].className='right'; td[1].appendChild(price); td[2].className='right'; td[2].appendChild(limit); td[3].className='right'; td[3].appendChild(sold);
+        const soldGross=(t.price||0)*(t.sold||0); td[4].className='right'; td[4].textContent=fmt(soldGross); td[5].appendChild(rm); tr.append(...td); body.appendChild(tr);
+        sumL+=t.limit||0; sumS+=t.sold||0; sumG+=soldGross; max+= (t.price||0) * (t.limit||0);
+      });
+      $('#fn-sum-limit').textContent=sumL; $('#fn-sum-sold').textContent=sumS; $('#fn-sum-gross').textContent=fmt(sumG); $('#fn-max').textContent=fmt(max);
+      const avg=sumL>0? (max/sumL):0; const be=avg>0? Math.ceil(hard/avg):null; $('#fn-breakeven').textContent= be!=null? be : '—';
+    }
+    $('#fn-add-cost').addEventListener('click',()=>{ costs.push({name:'New Cost',amount:0}); fnRenderCosts(); fnUpdateSums(); });
+    $('#fn-add-tier').addEventListener('click',()=>{ tiers.push({ id:'custom', label:'Custom', price:0, limit:0, sold:0 }); fnRenderTiers(); });
+    function fnUpdateSums(){ fnRenderCosts(); fnRenderTiers(); }
+    $('#fn-cap').addEventListener('input', fnUpdateSums);
+ }
     $('#fn-add-cost').addEventListener('click',()=>{ costs.push({name:'New Cost',amount:0}); fnRenderCosts(); fnUpdateSums(); });
     $('#fn-add-tier').addEventListener('click',()=>{ tiers.push({ id:'custom', label:'Custom', price:0, limit:0, sold:0 }); fnRenderTiers(); });
     function fnUpdateSums(){ const total=costs.reduce((s,x)=>s+(Number(x.amount)||0),0); $('#fn-hard-total').textContent=fmt(total); fnUpdatePer(); fnRenderTiers(); }

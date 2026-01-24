@@ -49,8 +49,8 @@
           </tfoot>
         </table>
         <div class="row" style="margin-top:10px">
-          <div>Capacity (people): <input type="number" id="capacity" min="1" value="110"></div>
-          <div class="hint">Venue supports up to 110 people</div>
+          <div>Capacity (people): <input type="number" id="capacity" min="1" value="499"></div>
+          <div class="hint">Venue supports up to 499 people</div>
         </div>
         <div class="kpi" style="margin-top:12px">
           <div class="item"><div class="label">Hard Costs Total</div><div class="value" id="kpi-hard">$0</div></div>
@@ -97,8 +97,8 @@
     const $ = (s,d=document)=>d.querySelector(s);
 
     const HARD_COSTS = [
-      { name:'Venue (up to 110 people)', amount: 1400 },
-      { name:'Production Costs', amount: 2500 },
+      { name:'Venue Fee ($40/head)', perHead: 40 },
+      { name:'The Bowl Production ($25/head)', perHead: 25 },
       { name:'Production Costs U-Haul', amount: 700 },
       { name:'The Dome U-Haul/Expense', amount: 700 },
       { name:'Fun Shit', amount: 1000 },
@@ -111,21 +111,23 @@
     function renderHardCosts(){
       const tbody = $('#hardcosts tbody'); tbody.innerHTML='';
       let total=0;
+      const cap = parseInt($('#capacity').value,10)||0;
       for (const row of HARD_COSTS){
-        total += row.amount||0;
+        const amount = row.perHead ? row.perHead * cap : (row.amount||0);
+        total += amount;
         const tr=document.createElement('tr');
         const td1=document.createElement('td'); td1.textContent=row.name; tr.appendChild(td1);
-        const td2=document.createElement('td'); td2.className='right'; td2.textContent=fmt(row.amount); tr.appendChild(td2);
+        const td2=document.createElement('td'); td2.className='right'; td2.textContent=fmt(amount); tr.appendChild(td2);
         tbody.appendChild(tr);
       }
       $('#hard-total').textContent = fmt(total);
       $('#kpi-hard').textContent = fmt(total);
-      updatePerPerson();
+      updatePerPerson(total);
     }
 
-    function updatePerPerson(){
-      const total = HARD_COSTS.reduce((s,x)=>s+(x.amount||0),0);
+    function updatePerPerson(totalOverride){
       const cap = parseInt($('#capacity').value,10)||0;
+      const total = totalOverride !== undefined ? totalOverride : HARD_COSTS.reduce((s,x)=>s+(x.perHead? x.perHead*cap : (x.amount||0)),0);
       const per = cap>0 ? total/cap : 0;
       $('#kpi-per').textContent = per? new Intl.NumberFormat(undefined,{ style:'currency', currency:'USD' }).format(per) : '—';
     }
@@ -165,14 +167,15 @@
       $('#sum-sold-gross').textContent = fmt(sumSoldGross);
       $('#kpi-max').textContent = fmt(maxGross);
 
-      const hard = HARD_COSTS.reduce((s,x)=>s+(x.amount||0),0);
+      const cap = parseInt($('#capacity').value,10)||0;
+      const hard = HARD_COSTS.reduce((s,x)=>s+(x.perHead? x.perHead*cap : (x.amount||0)),0);
       const avgPrice = sumLimit>0 ? (maxGross / sumLimit) : 0;
       const breakeven = avgPrice>0 ? Math.ceil(hard / avgPrice) : null;
       $('#kpi-breakeven').textContent = breakeven!=null? breakeven : '—';
     }
 
     (function init(){
-      $('#capacity').addEventListener('input', updatePerPerson);
+      $('#capacity').addEventListener('input', renderHardCosts);
       renderHardCosts();
       loadInventory();
       const base = window.PAYMENTS_API_BASE || (window.parent && window.parent.PAYMENTS_API_BASE);
