@@ -15,9 +15,9 @@ window.RR_CONFIG = {
 // The active price will be determined by the current Crowdfunding Tier
 window.TIER_SCHEDULE_FALLBACK = [
   { id: 'ga-4-day', label: '4-Day Pass (Thu-Sun)', basePrice: 119, price: 119, startAt: '2026-01-17T00:00:00-08:00', endAt: null },
-  { id: 'ga-3-day', label: '3-Day Pass (Fri-Sun)', basePrice: 99, price: 99, startAt: '2026-01-17T00:00:00-08:00', endAt: null },
-  { id: 'ga-2-day', label: '2-Day Pass (Sat-Sun)', basePrice: 79, price: 79, startAt: '2026-01-17T00:00:00-08:00', endAt: null },
-  { id: 'ga-1-day', label: '1-Day Pass (Sun Only)', basePrice: 49, price: 49, startAt: '2026-01-17T00:00:00-08:00', endAt: null },
+  { id: 'ga-3-day', label: '3-Day Pass (Fri-Sun)', basePrice: 109, price: 109, startAt: '2026-01-17T00:00:00-08:00', endAt: null },
+  { id: 'ga-2-day', label: '2-Day Pass (Sat-Sun)', basePrice: 89, price: 89, startAt: '2026-01-17T00:00:00-08:00', endAt: null },
+  { id: 'ga-1-day', label: '1-Day Pass (Sun Only)', basePrice: 79, price: 79, startAt: '2026-01-17T00:00:00-08:00', endAt: null },
   { id: 'car-camping', label: 'Car Camping (Assigned Spot)', price: 40, isAddon: true, startAt: null, endAt: null },
   { id: 'rv-camping', label: 'RV Camping (No Hookups)', price: 100, isAddon: true, limit: 10, startAt: null, endAt: null },
   { id: 'glamping', label: 'Glamping Package (2 Person)', price: 500, isAddon: true, limit: 25, startAt: null, endAt: null },

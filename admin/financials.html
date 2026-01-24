@@ -102,11 +102,13 @@
       { name:'Cabin Rental (6 Cabins @ $250)', amount: 1500 },
       { name:'The Bowl Production ($30/head)', perHead: 30 },
       { name:'The Dome Production ($7/head)', perHead: 7 },
+      { name:'Operations ($20/head)', perHead: 20 },
+      { name:'Affiliate Payout ($5/head)', perHead: 5 },
       { name:'Fun Shit', amount: 1000 },
     ];
 
     function fmt(n){
-      return new Intl.NumberFormat(undefined,{ style:'currency', currency:'USD', maximumFractionDigits:0 }).format(n||0);
+      return new Intl.NumberFormat(undefined,{ style:'currency', currency:'USD' }).format(n||0);
     }
 
     function renderHardCosts(){
@@ -131,32 +133,6 @@
       updatePerPerson(total);
     }
 
-    function updatePerPerson(totalOverride){
-      const cap = parseInt($('#capacity').value,10)||0;
-      const days = parseFloat($('#avg-days').value)||1;
-      const total = totalOverride !== undefined ? totalOverride : HARD_COSTS.reduce((s,x)=>{
-          if (x.perHeadDay) return s + (x.perHeadDay * days * cap);
-          if (x.perHead) return s + (x.perHead * cap);
-          return s + (x.amount||0);
-      }, 0);
-      const per = cap>0 ? total/cap : 0;
-      $('#kpi-per').textContent = per? new Intl.NumberFormat(undefined,{ style:'currency', currency:'USD' }).format(per) : '—';
-    }
-
-    async function loadInventory(){
-      const base = window.PAYMENTS_API_BASE || (window.parent && window.parent.PAYMENTS_API_BASE);
-      const status = $('#api-status');
-      if (!base){ status.textContent='API base not configured'; return; }
-      try{
-        const res = await fetch(`${base}/inventory`, { method:'GET', cache:'no-store' });
-        if (!res.ok) throw new Error('http_'+res.status);
-        const j = await res.json();
-        const tiers = Array.isArray(j?.tiers)? j.tiers : [];
-        status.textContent = `Loaded ${tiers.length} tiers`;
-        renderTiers(tiers);
-      }catch(e){ status.textContent='Could not load inventory'; }
-    }
-
     function renderTiers(tiers){
       const tbody = $('#tiers tbody'); tbody.innerHTML='';
       let sumLimit=0, sumSold=0, sumSoldGross=0, sumTotalMargin=0, maxGross=0;
@@ -166,20 +142,22 @@
         const limit = (t.limit==null? null : Number(t.limit)); 
         const sold = Number(t.sold||0);
         const id = (t.id||'').toLowerCase();
+        const label = (t.label||t.id||'').toLowerCase();
         
-        let days = 0;
-        if (id.includes('4-day')) days = 4;
-        else if (id.includes('3-day')) days = 3;
-        else if (id.includes('2-day')) days = 2;
-        else if (id.includes('1-day')) days = 1;
+        let tDays = 0;
+        if (id.includes('4-day') || label.includes('4-day')) tDays = 4;
+        else if (id.includes('3-day') || label.includes('3-day')) tDays = 3;
+        else if (id.includes('2-day') || label.includes('2-day')) tDays = 2;
+        else if (id.includes('1-day') || label.includes('1-day')) tDays = 1;
         
+        const stripeFee = (price * 0.029) + 0.30;
         let marginUnit = 0;
-        if (days > 0) {
-            marginUnit = price - (days * 10) - 37;
-        } else if (id.includes('cabin')) {
-            marginUnit = price - 250;
+        if (tDays > 0) {
+            marginUnit = price - (tDays * 10) - 37 - 20 - 5 - stripeFee;
+        } else if (id.includes('cabin') || label.includes('cabin')) {
+            marginUnit = price - 250 - stripeFee;
         } else {
-            marginUnit = price; // Add-ons like car camping assuming high margin for now
+            marginUnit = price - stripeFee;
         }
         
         const soldGross = price * sold; 

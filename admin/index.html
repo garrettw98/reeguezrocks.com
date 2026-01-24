@@ -373,13 +373,14 @@
         else if (id.includes('2-day') || label.includes('2-day')) tDays = 2;
         else if (id.includes('1-day') || label.includes('1-day')) tDays = 1;
         
+        const stripeFee = (price * 0.029) + 0.30;
         let marginUnit = 0;
         if (tDays > 0) {
-            marginUnit = price - (tDays * 10) - 37;
+            marginUnit = price - (tDays * 10) - 37 - 20 - 5 - stripeFee;
         } else if (id.includes('cabin') || label.includes('cabin')) {
-            marginUnit = price - 250;
+            marginUnit = price - 250 - stripeFee;
         } else {
-            marginUnit = price;
+            marginUnit = price - stripeFee;
         }
         
         const soldGross = price * sold;
@@ -395,7 +396,6 @@
         
         const name=document.createElement('input'); name.type='text'; name.value=t.label||t.id||''; name.addEventListener('input',e=> t.label=e.target.value );
         const pInput=document.createElement('input'); pInput.type='number'; pInput.value=price; pInput.addEventListener('input',e=>{ t.price=parseFloat(e.target.value)||0; fnRenderTiers(); });
-        const limit=document.createElement('input'); limit.type='number'; limit.value=t.limit??0; limit.addEventListener('input',e=>{ t.limit=parseInt(e.target.value,10)||0; fnRenderTiers(); });
         const sInput=document.createElement('input'); sInput.type='number'; sInput.value=sold; sInput.addEventListener('input',e=>{ t.sold=parseInt(e.target.value,10)||0; fnRenderTiers(); });
         const rm=document.createElement('button'); rm.textContent='Remove'; rm.className='btn secondary'; rm.addEventListener('click',()=>{ tiers.splice(i,1); fnRenderTiers(); });
         
@@ -408,7 +408,7 @@
         tr.append(...td); body.appendChild(tr);
       });
       $('#fn-sum-sold').textContent=sumS; 
-      $('#fn-sum-gross').textContent=fmt(sumM); // Using gross field for total margin sum in footer
+      $('#fn-sum-gross').textContent=fmt(sumM);
       $('#fn-max').textContent=fmt(max);
       const avg=sumS>0? (max/sumS):0; const be=avg>0? Math.ceil(hard/avg):null; $('#fn-breakeven').textContent= be!=null? be : '—';
     }
