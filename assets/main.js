@@ -465,6 +465,42 @@ const renderLineup = (grid, artists) => {
     });
 };
 
+const initCountdown = () => {
+    const targetDate = new Date('2026-10-14T12:00:00-07:00').getTime();
+    
+    const update = () => {
+        const now = new Date().getTime();
+        const diff = targetDate - now;
+        
+        if (diff <= 0) {
+            $$('.countdown').forEach(el => el.innerHTML = '<div class="countdown__started">Event Live!</div>');
+            return;
+        }
+        
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        // Update hero countdown (index.html)
+        const hDays = $("#hero-days"), hHours = $("#hero-hours"), hMins = $("#hero-mins"), hSecs = $("#hero-secs");
+        if (hDays) hDays.textContent = String(days).padStart(2, '0');
+        if (hHours) hHours.textContent = String(hours).padStart(2, '0');
+        if (hMins) hMins.textContent = String(mins).padStart(2, '0');
+        if (hSecs) hSecs.textContent = String(secs).padStart(2, '0');
+
+        // Update campaign countdown (tickets.html)
+        const cDays = $("#countdown-days"), cHours = $("#countdown-hours"), cMins = $("#countdown-mins"), cSecs = $("#countdown-secs");
+        if (cDays) cDays.textContent = String(days).padStart(2, '0');
+        if (cHours) cHours.textContent = String(hours).padStart(2, '0');
+        if (cMins) cMins.textContent = String(mins).padStart(2, '0');
+        if (cSecs) cSecs.textContent = String(secs).padStart(2, '0');
+    };
+    
+    update();
+    setInterval(update, 1000);
+};
+
 const initTabs = () => {
     $$('.tabs').forEach(tabList => {
         const tabs = $$('.tab', tabList);
@@ -505,6 +541,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initLineup();
     initTabs();
     initAnimations();
+    initCountdown();
     refreshTickets();
 });
 
