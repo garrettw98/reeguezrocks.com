@@ -23,6 +23,7 @@
 *   **Key Expense Scaling:**
     *   **Venue:** **$10 per guest per day** (Approx $40 total for 4-day guests)
     *   **Cabin Rental:** **$250 per cabin** (6 total)
+    *   **Glamping Assets:** **$300 per unit** (Buy Outright Strategy - 25 units)
     *   **Production:** **$30 (Bowl) + $7 (Dome) per ticket sold** (Target ~$18,500 total)
     *   **Talent:** ~$25,000 - $35,000
     *   **Ops/Safety:** ~$10,000 - $15,000
