@@ -28,16 +28,16 @@ window.TIER_SCHEDULE_FALLBACK = [
 // Crowdfunding Tier Structure (10 Tiers)
 // Amount = Cumulative Revenue Goal (50 tix * Price)
 window.CROWDFUNDING_TIERS = [
-  { id: 1, price: 119, goal: 5950,  name: 'Event Confirmed', desc: 'Foundation costs & Venue Deposit covered.' },
-  { id: 2, price: 129, goal: 12400, name: 'Headliner 1 Unlock', desc: 'First major artist announcement.' },
-  { id: 3, price: 139, goal: 19350, name: 'Production Upgrade', desc: 'Base audio/visuals secured.' },
-  { id: 4, price: 149, goal: 26800, name: 'Headliner 2 Unlock', desc: 'Second major artist announcement.' },
-  { id: 5, price: 159, goal: 34750, name: 'The Dome Upgrade', desc: 'Comfy furniture & decor for the late night zone.' },
-  { id: 6, price: 169, goal: 43200, name: 'Headliner 3 Unlock', desc: 'Third major artist announcement.' },
-  { id: 7, price: 179, goal: 52150, name: 'Art Installations', desc: 'Interactive art funding unlocked.' },
-  { id: 8, price: 189, goal: 61600, name: 'Interactive Games', desc: 'Group activities and games unlocked.' },
-  { id: 9, price: 199, goal: 71550, name: 'Full Lineup Drop', desc: 'Every artist revealed.' },
-  { id: 10, price: 209, goal: 82000, name: 'Production Max Out', desc: 'Lasers, massive sound, full send.' }
+  { id: 1, price: 119, goal: 5950,  name: 'Foundation Set', desc: 'Insurance, permits, and core ops secured.' },
+  { id: 2, price: 129, goal: 12400, name: 'Event Confirmed', desc: '100% committed to October. Let the show begin.' },
+  { id: 3, price: 139, goal: 19350, name: 'Headliner 1 Unlock', desc: 'First major artist secured and announced.' },
+  { id: 4, price: 149, goal: 26800, name: 'Immersive Forest', desc: 'Visual decor and nature-focused lighting rigs.' },
+  { id: 5, price: 159, goal: 34750, name: 'Headliner 2 Unlock', desc: 'Second major artist secured and announced.' },
+  { id: 6, price: 169, goal: 43200, name: 'Local Art Grants', desc: 'Funding for interactive forest art installations.' },
+  { id: 7, price: 179, goal: 52150, name: 'Headliner 3 Unlock', desc: 'Third major artist secured and announced.' },
+  { id: 8, price: 189, goal: 61600, name: 'Daytime Magic', desc: 'Yoga, workshops, and daytime forest vibes.' },
+  { id: 9, price: 199, goal: 71550, name: 'Final Reveal', desc: 'Full support lineup and set times released.' },
+  { id: 10, price: 209, goal: 82000, name: 'The Full Send', desc: 'Lasers, Aftermovie production, and Artist bonuses.' }
 ];
 
 window.BACKER_TIERS = {

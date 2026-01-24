@@ -4,7 +4,7 @@
   { "name": "Debased", "soundcloud": null, "image": "assets/lineup/debased.png", "order": 3 },
   { "name": "DirtyD", "soundcloud": null, "image": "archive/artists-raw/DirtyDBB.png", "order": 4 },
   { "name": "HANDZ", "soundcloud": null, "image": "assets/lineup/handz.png", "order": 5 },
-  { "name": "Kitty Counts", "instagram": "https://instagram.com/kristenjcounts", "image": "assets/artist-placeholder.svg", "order": 6 },
+  { "name": "Kitty Counts", "instagram": "https://instagram.com/kristenjcounts", "image": "assets/lineup/kitty-counts.png", "order": 6 },
   { "name": "MiniHandz", "soundcloud": null, "image": "archive/artists-raw/DJMiniHandz.png", "order": 7 },
   { "name": "MiNDTAKE", "soundcloud": null, "image": "assets/lineup/mindtake.png", "order": 8 },
   { "name": "Myskosis", "soundcloud": null, "image": "assets/lineup/myskosis.png", "order": 9 },
