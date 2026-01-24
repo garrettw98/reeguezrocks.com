@@ -18,10 +18,200 @@
     <meta property="og:url" content="https://reeguezrocks.com/tickets.html">
     <meta property="og:type" content="website">
 
-    <link rel="stylesheet" href="assets/main-v5.css?v=19">
+    <link rel="stylesheet" href="assets/main-v5.css?v=20">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Tickets Page Specific Enhancements */
+        .tickets-hero {
+            padding-top: calc(var(--nav-height) + var(--space-xl));
+            padding-bottom: var(--space-3xl);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            gap: var(--space-xl);
+            grid-template-columns: 1fr;
+            align-items: start;
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+        }
+
+        /* Live Status Card */
+        .status-card {
+            background: var(--color-bg-elevated);
+            border: 1px solid var(--color-border-accent);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            position: sticky;
+            top: calc(var(--nav-height) + var(--space-md));
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+        }
+
+        .status-card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-lg);
+        }
+
+        .status-card__title {
+            font-family: var(--font-display);
+            font-size: var(--text-lg);
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 0;
+        }
+
+        /* Journey Timeline */
+        .journey {
+            margin-top: var(--space-3xl);
+            position: relative;
+            padding-left: var(--space-xl);
+        }
+
+        .journey::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--color-accent), var(--color-accent-secondary), rgba(255,255,255,0.1));
+        }
+
+        .journey-step {
+            position: relative;
+            margin-bottom: var(--space-2xl);
+            transition: transform var(--transition-base);
+        }
+
+        .journey-step::after {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--color-bg);
+            border: 2px solid var(--color-accent);
+            z-index: 1;
+        }
+
+        .journey-step--active::after {
+            background: var(--color-accent);
+            box-shadow: 0 0 15px var(--color-accent);
+        }
+
+        .journey-step__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xs);
+        }
+
+        .journey-step__title {
+            font-weight: 700;
+            font-size: var(--text-lg);
+            color: var(--color-text);
+        }
+
+        .journey-step__price {
+            color: var(--color-accent);
+            font-weight: 600;
+            font-family: monospace;
+        }
+
+        .journey-step__desc {
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+            max-width: 500px;
+        }
+
+        /* Backer Tags */
+        .backer-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: var(--space-sm);
+        }
+
+        .backer-tag--founder { background: rgba(247, 166, 2, 0.15); color: var(--color-accent); border: 1px solid var(--color-accent); }
+        .backer-tag--pioneer { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+
+        /* Accommodation Redesign */
+        .lodging-grid {
+            display: grid;
+            gap: var(--space-md);
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .lodging-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition-base);
+        }
+
+        .lodging-card:hover {
+            border-color: var(--color-border-accent);
+            transform: translateY(-4px);
+        }
+
+        .lodging-card__title {
+            font-size: var(--text-lg);
+            color: var(--color-accent);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .lodging-card__price {
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+            font-size: var(--text-base);
+        }
+
+        .lodging-card__list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .lodging-card__list li {
+            margin-bottom: var(--space-xs);
+            padding-left: 1.25rem;
+            position: relative;
+        }
+
+        .lodging-card__list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+        }
+    </style>
     
     <script src="config.js"></script>
 </head>
@@ -47,341 +237,185 @@
         </nav>
     </header>
 
-    <main id="main-content">
-        <!-- Hero / Ticket Purchase Section -->
-        <section class="section" id="tickets" style="padding-top: 120px;">
+    <main id="main-content" class="tickets-page">
+        
+        <!-- SECTION 1: DASHBOARD HUB -->
+        <section class="section tickets-hero">
             <div class="container">
-                <header class="section__header">
-                    <h1 class="section__title">Secure Your Spot</h1>
-                    <p class="section__subtitle">Join us for 4 days of bass music in the mountains. <br>Prices increase as tiers unlock.</p>
+                <header class="section__header" style="text-align: left; margin-bottom: var(--space-2xl);">
+                    <h1 class="section__title" style="margin-left: 0;">Tickets & Progress</h1>
+                    <p class="section__subtitle" style="margin-left: 0;">Every ticket powers the show. Watch the production and lineup grow in real-time.</p>
                 </header>
 
-                <!-- Ticket Options Display -->
-                <div class="ticket-list" id="page-ticket-list" style="max-width: 800px; margin: 0 auto 3rem auto;">
-                    <!-- Will be populated by JS -->
-                    <div style="text-align: center; color: var(--color-text-muted);">Loading ticket options...</div>
-                </div>
-
-                <!-- Accommodations Info -->
-                <div class="accommodations-info" id="accommodations">
-                    <h3 class="accommodations-info__title">Plan Your Stay</h3>
-                    
-                    <div class="info-grid">
-                        <div class="info-card">
-                            <h4>🚙 Car Camping</h4>
-                            <ul>
-                                <li>$40 add-on (200 spots available)</li>
-                                <li>Park directly at your campsite in The Meadows</li>
-                                <li>Assigned 10x30' spots</li>
-                            </ul>
+                <div class="dashboard-grid">
+                    <!-- LEFT: TICKET SELECTION -->
+                    <div class="selection-area">
+                        <div class="ticket-list" id="page-ticket-list">
+                            <div style="padding: 2rem; text-align: center; color: var(--color-text-muted);">Syncing with live inventory...</div>
                         </div>
-
-                        <div class="info-card">
-                            <h4>⛺ GA Camping & Parking</h4>
-                            <ul>
-                                <li>Walk-in camping in designated forest areas</li>
-                                <li>Parking is on-site (approx. 0.25 - 0.5 mile walk)</li>
-                                <li>Included with every festival pass</li>
-                            </ul>
-                        </div>
-
-                        <div class="info-card">
-                            <h4>🚐 RV Camping</h4>
-                            <ul>
-                                <li>$100 add-on (Limited to 10 spots)</li>
-                                <li>Dry camping only (no hookups)</li>
-                                <li>Requires separate RV pass</li>
-                            </ul>
-                        </div>
-
-                        <div class="info-card">
-                            <h4>✨ Glamping (2 Person)</h4>
-                            <ul>
-                                <li>$500 Package (25 available)</li>
-                                <li>Includes Car Parking right next to setup</li>
-                                <li>4-Person Tent w/ Full Bed, Linens, Pillows</li>
-                                <li>EZ-Up Shade + Cooler w/ Free Ice Daily</li>
-                                <li>Access to nearby Showers & Bathrooms</li>
-                            </ul>
-                        </div>
-
-                        <div class="info-card">
-                            <h4>🏠 Historic Cabins</h4>
-                            <ul>
-                                <li>$1,000 Flat Rate (Flexible Capacity)</li>
-                                <li>Includes 10 Beds (8 Twin Bunks + 1 Full)</li>
-                                <li>Heated via Wood Burning Stove (BYO Wood)</li>
-                                <li>Bathrooms & Showers located just outside</li>
-                            </ul>
+                        
+                        <div style="margin-top: var(--space-xl); text-align: center;">
+                            <button class="btn btn--primary btn--lg btn--pulse" style="width: 100%; max-width: 400px;" onclick="openTickets()">Open Checkout</button>
+                            <p style="font-size: 12px; color: var(--color-text-muted); margin-top: 1rem;">18+ Event • Government ID Required • No Refunds</p>
                         </div>
                     </div>
-                    
-                    <p class="accommodations-info__note">
-                        <strong>Note:</strong> Event is 18+. Refunds only available upon event cancellation. <br>
-                        Strictly prohibited: Glass, weapons, fuel generators, and illegal items.
-                    </p>
-                </div>
-                
-                <div style="text-align: center;">
-                    <button class="btn btn--primary btn--lg btn--pulse" onclick="openTickets()">Open Checkout</button>
-                </div>
-            </div>
-        </section>
 
-        <!-- Combined Crowdfunding Content -->
-        <section class="section section--alt reveal-on-scroll" id="crowdfunding">
-            <div class="container">
-                <header class="section__header">
-                    <h2 class="section__title">Crowdfunding Progress</h2>
-                    <p class="section__subtitle">Production scales with every ticket sold. Tiers unlock artists, art, and experience. Prices increase 20% per phase.</p>
-                </header>
-
-                <!-- Early Backer Perks Banner -->
-                <div class="perks-banner">
-                    <div class="perks-banner__badge">FOUNDING BACKER PERKS</div>
-                    <h3 class="perks-banner__title">Buy before Tier 1 unlocks and become a Founder</h3>
-                    <div class="perks-banner__list">
-                        <span class="perk-item">Gold wristband</span>
-                        <span class="perk-item">Founders Wall</span>
-                        <span class="perk-item">Numbered patch</span>
-                        <span class="perk-item">Enamel pin</span>
-                        <span class="perk-item">Early entry</span>
-                        <span class="perk-item">Meet & greet lottery</span>
-                    </div>
-                    <a href="#perks" class="perks-banner__link">See all early backer rewards &rarr;</a>
-                </div>
-
-                <!-- Progress Card -->
-                <div class="progress-card">
-                    <div class="progress-card__header">
-                        <span class="progress-card__label">Next Unlock</span>
-                        <span class="progress-card__tier" id="next-tier-name">Tier 1: Foundation Set</span>
-                    </div>
-                    <div class="progress-card__bar">
-                        <div class="progress-card__fill" id="funding-progress-bar" style="width: 0%"></div>
-                    </div>
-                    <div class="progress-card__stats">
-                         <span><strong id="funding-current">$0</strong> of <strong id="funding-goal">$5,950</strong></span>
-                    </div>
-                    <div class="progress-card__stretch">Stretch goal: <strong>$82,000</strong> (all 10 tiers unlocked)</div>
-
-                    <!-- Campaign Countdown -->
-                    <div class="countdown" id="campaign-countdown" role="timer" aria-live="polite" aria-label="Campaign countdown" style="margin-top: var(--space-lg);">
-                        <div class="countdown__item">
-                            <span class="countdown__num" id="countdown-days">--</span>
-                            <span class="countdown__label">Days</span>
-                        </div>
-                        <div class="countdown__item">
-                            <span class="countdown__num" id="countdown-hours">--</span>
-                            <span class="countdown__label">Hours</span>
-                        </div>
-                        <div class="countdown__item">
-                            <span class="countdown__num" id="countdown-mins">--</span>
-                            <span class="countdown__label">Mins</span>
-                        </div>
-                        <div class="countdown__item">
-                            <span class="countdown__num" id="countdown-secs">--</span>
-                            <span class="countdown__label">Secs</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tiers -->
-                <div class="tiers">
-                    <!-- Tiers 1-3 (Visible) -->
-                    <div class="phase" data-phase="1">
-                        <div class="phase__header">
-                            <div class="phase__info">
-                                <h3 class="phase__title">The Foundation (Tiers 1-3)</h3>
-                                <span class="phase__badge">Active</span>
+                    <!-- RIGHT: CAMPAIGN STATUS -->
+                    <div class="status-area">
+                        <div class="status-card">
+                            <div class="status-card__header">
+                                <h2 class="status-card__title">Campaign Status</h2>
+                                <div class="hero__badge" style="margin: 0;">Year Six</div>
                             </div>
-                            <div class="phase__prices">$79 - $139</div>
-                        </div>
-                        <div class="phase__tiers">
-                            <div class="tier tier--active" data-tier="1">
-                                <div class="tier__main">
-                                    <span class="tier__number">1</span>
-                                    <span class="tier__desc"><strong>FOUNDATION SET</strong> — Insurance, permits, and core ops fees secured.</span>
-                                    <span class="tier__amount">$79 - $119</span>
-                                </div>
-                                <div class="tier__progress">
-                                    <div class="tier__bar"><div class="tier__fill" style="width: 0%"></div></div>
-                                    <span class="tier__status">Goal: 50 Tickets</span>
-                                </div>
-                            </div>
-                            <div class="tier" data-tier="2">
-                                <div class="tier__main">
-                                    <span class="tier__number">2</span>
-                                    <span class="tier__desc"><strong>EVENT CONFIRMED</strong> — Overhead covered. 100% committed to October.</span>
-                                    <span class="tier__amount">$129</span>
-                                </div>
-                            </div>
-                            <div class="tier" data-tier="3">
-                                <div class="tier__main">
-                                    <span class="tier__number">3</span>
-                                    <span class="tier__desc"><strong>HEADLINER 1 UNLOCK</strong> — First major artist secured and announced.</span>
-                                    <span class="tier__amount">$139</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Future Tiers (Collapsible) -->
-                    <details class="phase-details" open>
-                        <summary class="phase-details__summary">
-                            <span>Future Unlocks (Tiers 4-10)</span>
-                            <span class="phase-details__hint">Crowdfunded Goals</span>
-                        </summary>
-                        <div class="phase-details__content">
+                            <div class="progress-card__tier" id="next-tier-name" style="font-weight: 700; margin-bottom: var(--space-sm);">Loading Tiers...</div>
                             
-                            <!-- Mid Tiers -->
-                            <div class="phase phase--future" data-phase="2">
-                                <div class="phase__header">
-                                    <div class="phase__info">
-                                        <h3 class="phase__title">The Experience (Tiers 4-6)</h3>
-                                    </div>
-                                    <div class="phase__prices">$149 - $169</div>
-                                </div>
-                                <div class="phase__tiers">
-                                    <div class="tier" data-tier="4">
-                                        <div class="tier__main">
-                                            <span class="tier__number">4</span>
-                                            <span class="tier__desc"><strong>STAGE VIBE</strong> — Custom stage decor and forest lighting rigs.</span>
-                                            <span class="tier__amount">$149</span>
-                                        </div>
-                                    </div>
-                                    <div class="tier" data-tier="5">
-                                        <div class="tier__main">
-                                            <span class="tier__number">5</span>
-                                            <span class="tier__desc"><strong>HEADLINER 2 UNLOCK</strong> — Second major artist secured and announced.</span>
-                                            <span class="tier__amount">$159</span>
-                                        </div>
-                                    </div>
-                                    <div class="tier" data-tier="6">
-                                        <div class="tier__main">
-                                            <span class="tier__number">6</span>
-                                            <span class="tier__desc"><strong>ART GRANTS</strong> — Funding for interactive forest art installations.</span>
-                                            <span class="tier__amount">$169</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="progress-card__bar" style="height: 12px; margin-bottom: var(--space-md);">
+                                <div class="progress-card__fill" id="funding-progress-bar" style="width: 0%"></div>
                             </div>
 
-                            <!-- High Tiers -->
-                            <div class="phase phase--future" data-phase="3">
-                                <div class="phase__header">
-                                    <div class="phase__info">
-                                        <h3 class="phase__title">Full Send (Tiers 7-10)</h3>
-                                    </div>
-                                    <div class="phase__prices">$179 - $209</div>
-                                </div>
-                                <div class="phase__tiers">
-                                    <div class="tier" data-tier="7">
-                                        <div class="tier__main">
-                                            <span class="tier__number">7</span>
-                                            <span class="tier__desc"><strong>HEADLINER 3 UNLOCK</strong> — Third major artist secured and announced.</span>
-                                            <span class="tier__amount">$179</span>
-                                        </div>
-                                    </div>
-                                    <div class="tier" data-tier="8">
-                                        <div class="tier__main">
-                                            <span class="tier__number">8</span>
-                                            <span class="tier__desc"><strong>FOREST MAGIC</strong> — Yoga, workshops, and games funded.</span>
-                                            <span class="tier__amount">$189</span>
-                                        </div>
-                                    </div>
-                                    <div class="tier" data-tier="9">
-                                        <div class="tier__main">
-                                            <span class="tier__number">9</span>
-                                            <span class="tier__desc"><strong>FINAL REVEAL</strong> — Complete support lineup and schedule released.</span>
-                                            <span class="tier__amount">$199</span>
-                                        </div>
-                                    </div>
-                                    <div class="tier" data-tier="10">
-                                        <div class="tier__main">
-                                            <span class="tier__number">10</span>
-                                            <span class="tier__desc"><strong>THE FULL SEND</strong> — Lasers and high-spec visual production.</span>
-                                            <span class="tier__amount">$209</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="progress-card__stats" style="display: flex; justify-content: space-between; font-size: var(--text-sm);">
+                                <span><strong id="funding-current">$0</strong> raised</span>
+                                <span style="color: var(--color-text-muted);">Goal: <strong id="funding-goal" style="color: var(--color-accent);">$5,950</strong></span>
                             </div>
 
+                            <div class="divider" style="margin: var(--space-lg) 0; height: 1px; background: var(--color-border);"></div>
+
+                            <div class="status-info" style="font-size: var(--text-sm); line-height: 1.4;">
+                                <p style="margin-bottom: 1rem;"><strong>Auto-Scaling Production:</strong> $37 from every ticket goes directly to sound and lighting. The show grows with every sale.</p>
+                                <div class="countdown" id="campaign-countdown" style="justify-content: flex-start; gap: 1rem;">
+                                    <div class="countdown__item"><span class="countdown__num" id="countdown-days">00</span><span class="countdown__label">Days</span></div>
+                                    <div class="countdown__item"><span class="countdown__num" id="countdown-hours">00</span><span class="countdown__label">Hrs</span></div>
+                                    <div class="countdown__item"><span class="countdown__num" id="countdown-mins">00</span><span class="countdown__label">Min</span></div>
+                                </div>
+                            </div>
                         </div>
-                    </details>
+                    </div>
                 </div>
-
-                <p class="tiers__note">Tier progress calculated after venue fees. <a href="financials.html">See full financial breakdown &rarr;</a></p>
             </div>
         </section>
 
-        <!-- ========== EARLY BACKER PERKS SECTION ========== -->
-        <section class="section section--perks reveal-on-scroll" id="perks">
+        <!-- SECTION 2: THE JOURNEY -->
+        <section class="section section--alt reveal-on-scroll">
             <div class="container">
                 <header class="section__header">
-                    <h2 class="section__title">Early Backer Rewards</h2>
-                    <p class="section__subtitle">The earlier you buy, the more you get. These perks are locked once each phase completes.</p>
+                    <h2 class="section__title">The Visual Journey</h2>
+                    <p class="section__subtitle">Mapping our path from foundation to the full send.</p>
                 </header>
 
-                <div class="perks-grid">
-                    <!-- Founding Backers -->
-                    <div class="perk-card perk-card--founder">
-                        <div class="perk-card__badge">Before Tier 1</div>
-                        <h3 class="perk-card__title">Founding Backers</h3>
-                        <p class="perk-card__desc">"You believed when it was just a dream."</p>
-                        <ul class="perk-card__list">
-                            <li>Gold "Founder" wristband</li>
-                            <li>Name on permanent Founders Wall</li>
-                            <li>Numbered patch (#1-100 only)</li>
-                            <li>Commemorative enamel pin</li>
-                            <li>Early Thursday entry (1hr before GA)</li>
-                            <li>Priority cabin access</li>
-                            <li>Founding Backer Discord role</li>
-                            <li>All headliner meet & greet lotteries</li>
+                <div class="journey" id="journey-timeline">
+                    <!-- Tiers will be visually represented here -->
+                    <div class="journey-step journey-step--active">
+                        <div class="journey-step__header">
+                            <span class="journey-step__title">Tier 1: Foundation Set</span>
+                            <span class="journey-step__price">$119</span>
+                        </div>
+                        <p class="journey-step__desc">Insurance, permits, and core operations secured. Event baseline confirmed.</p>
+                        <span class="backer-tag backer-tag--founder">Founding Backer Rewards</span>
+                    </div>
+
+                    <div class="journey-step">
+                        <div class="journey-step__header">
+                            <span class="journey-step__title">Tier 2: Event Confirmed</span>
+                            <span class="journey-step__price">$129</span>
+                        </div>
+                        <p class="journey-step__desc">Overhead fully covered. 100% committed to October. Let the mountain magic begin.</p>
+                    </div>
+
+                    <div class="journey-step">
+                        <div class="journey-step__header">
+                            <span class="journey-step__title">Tier 3: Headliner 1 Unlock</span>
+                            <span class="journey-step__price">$139</span>
+                        </div>
+                        <p class="journey-step__desc">First major artist secured and added to the official flyer.</p>
+                        <span class="backer-tag backer-tag--pioneer">Pioneer Rewards</span>
+                    </div>
+
+                    <div class="journey-step">
+                        <div class="journey-step__header">
+                            <span class="journey-step__title">Tier 4: Stage Vibe</span>
+                            <span class="journey-step__price">$149</span>
+                        </div>
+                        <p class="journey-step__desc">Custom forest-themed stage decor and immersive lighting rigs.</p>
+                    </div>
+
+                    <div class="journey-step">
+                        <div class="journey-step__header">
+                            <span class="journey-step__title">Tier 10: The Full Send</span>
+                            <span class="journey-step__price">$209</span>
+                        </div>
+                        <p class="journey-step__desc">The absolute peak of production. Lasers, high-spec visuals, and the ultimate experience.</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: var(--space-xl);">
+                    <a href="financials.html" class="btn btn--outline">View Full Budget Transparency</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: LODGING GRID -->
+        <section class="section reveal-on-scroll">
+            <div class="container">
+                <header class="section__header">
+                    <h2 class="section__title">Plan Your Stay</h2>
+                    <p class="section__subtitle">640 Acres of forest to call home for 4 days.</p>
+                </header>
+
+                <div class="lodging-grid">
+                    <div class="lodging-card">
+                        <h3 class="lodging-card__title">🚙 Car Camping</h3>
+                        <p class="lodging-card__price">$40 Add-on</p>
+                        <ul class="lodging-card__list">
+                            <li>Assigned 10x30' forest spots</li>
+                            <li>Park directly at your campsite</li>
+                            <li>Limited to 200 passes</li>
                         </ul>
                     </div>
 
-                    <!-- Pioneer Backers -->
-                    <div class="perk-card perk-card--pioneer">
-                        <div class="perk-card__badge">Tiers 1-5</div>
-                        <h3 class="perk-card__title">Pioneer Backers</h3>
-                        <p class="perk-card__desc">"You helped us book our first headliner."</p>
-                        <ul class="perk-card__list">
-                            <li>Silver "Pioneer" wristband</li>
-                            <li>Artist-signed poster</li>
-                            <li>Exclusive sticker pack</li>
-                            <li>Pioneer Discord role</li>
-                            <li>Headliner meet & greet lottery</li>
-                            <li>Early access to 2027 tickets</li>
+                    <div class="lodging-card">
+                        <h3 class="lodging-card__title">⛺ GA Camping</h3>
+                        <p class="lodging-card__price">Included</p>
+                        <ul class="lodging-card__list">
+                            <li>Walk-in forest camping</li>
+                            <li>Designated parking lot access</li>
+                            <li>Short walk to campsites (0.25 mi)</li>
                         </ul>
                     </div>
 
-                    <!-- Builder Backers -->
-                    <div class="perk-card perk-card--builder">
-                        <div class="perk-card__badge">Tiers 6-9</div>
-                        <h3 class="perk-card__title">Builder Backers</h3>
-                        <p class="perk-card__desc">"You helped us grow."</p>
-                        <ul class="perk-card__list">
-                            <li>Bronze "Builder" wristband</li>
-                            <li>Exclusive art print</li>
-                            <li>Name in event program</li>
-                            <li>Free drink token at event</li>
-                            <li>Builder Discord role</li>
+                    <div class="lodging-card">
+                        <h3 class="lodging-card__title">🚐 RV Camping</h3>
+                        <p class="lodging-card__price">$100 Add-on</p>
+                        <ul class="lodging-card__list">
+                            <li>Dry camping (no hookups)</li>
+                            <li>Limited to 10 spots</li>
+                            <li>Quiet hours enforced in RV zone</li>
                         </ul>
                     </div>
 
-                    <!-- Supporter Backers -->
-                    <div class="perk-card perk-card--supporter">
-                        <div class="perk-card__badge">Tiers 10-15</div>
-                        <h3 class="perk-card__title">Supporter Backers</h3>
-                        <p class="perk-card__desc">"You helped us reach our potential."</p>
-                        <ul class="perk-card__list">
-                            <li>Standard wristband</li>
+                    <div class="lodging-card">
+                        <h3 class="lodging-card__title">✨ Glamping</h3>
+                        <p class="lodging-card__price">$500 Package</p>
+                        <ul class="lodging-card__list">
+                            <li>2 Person Package (25 available)</li>
+                            <li>Full Bed, Linens & Pillows</li>
+                            <li>EZ-Up + Cooler with Daily Ice</li>
+                        </ul>
+                    </div>
+
+                    <div class="lodging-card">
+                        <h3 class="lodging-card__title">🏠 Historic Cabins</h3>
+                        <p class="lodging-card__price">$1,000 Flat Rate</p>
+                        <ul class="lodging-card__list">
+                            <li>Unlimited Occupancy (10 beds)</li>
+                            <li>Wood Burning Stove (BYO Wood)</li>
+                            <li>Bathrooms & Showers nearby</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
+
     </main>
 
     <footer class="footer">
@@ -397,142 +431,47 @@
         </div>
     </footer>
 
-    <!-- Ticket Modal (Included for compatibility with main.js and checkout flow) -->
+    <!-- TICKET MODAL -->
     <div class="modal-overlay" id="modal-overlay" aria-hidden="true"></div>
     <div class="modal modal--checkout" id="ticket-modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
         <button class="modal__close" id="modal-close" aria-label="Close">&times;</button>
         <div class="checkout-steps">
-            <div class="checkout-step checkout-step--active" data-step="1">
-                <span class="checkout-step__num">1</span>
-                <span class="checkout-step__label">Tickets & Progress</span>
-            </div>
-            <div class="checkout-step" data-step="2">
-                <span class="checkout-step__num">2</span>
-                <span class="checkout-step__label">Camping</span>
-            </div>
-            <div class="checkout-step" data-step="3">
-                <span class="checkout-step__num">3</span>
-                <span class="checkout-step__label">Checkout</span>
-            </div>
+            <div class="checkout-step checkout-step--active" data-step="1"><span class="checkout-step__num">1</span></div>
+            <div class="checkout-step" data-step="2"><span class="checkout-step__num">2</span></div>
+            <div class="checkout-step" data-step="3"><span class="checkout-step__num">3</span></div>
         </div>
-        <!-- Step 1: Ticket Selection -->
         <div class="checkout-panel checkout-panel--active" id="panel-step-1">
             <h2 id="modal-title" class="modal__title">Choose Your Ticket</h2>
             <div class="ticket-list" id="ticket-list"></div>
             <div class="checkout-quantity">
-                <label for="ticket-qty">How many tickets?</label>
                 <div class="qty-selector">
                     <button type="button" class="qty-btn" id="qty-minus">-</button>
                     <input type="number" id="ticket-qty" value="1" min="1" max="10" readonly>
                     <button type="button" class="qty-btn" id="qty-plus">+</button>
                 </div>
             </div>
-            <div class="checkout-actions">
-                <button class="btn btn--primary btn--lg checkout-next" id="step1-next" disabled>Continue to Camping</button>
-            </div>
+            <div class="checkout-actions"><button class="btn btn--primary btn--lg checkout-next" id="step1-next" disabled>Continue</button></div>
         </div>
-        <!-- Step 2: Camping Selection -->
         <div class="checkout-panel" id="panel-step-2">
-            <h2 class="modal__title">Choose Your Add-ons</h2>
+            <h2 class="modal__title">Camping & Add-ons</h2>
             <div class="camping-options" id="camping-options">
-                <label class="camping-option camping-option--selected">
-                    <input type="radio" name="camping" value="ga-parking" checked>
-                    <div class="camping-option__content">
-                        <div class="camping-option__header">
-                            <span class="camping-option__name">GA Parking</span>
-                            <span class="camping-option__price">Included</span>
-                        </div>
-                        <p class="camping-option__desc">Park in general area, walk to your campsite.</p>
-                    </div>
-                </label>
-                <label class="camping-option">
-                    <input type="radio" name="camping" value="car-camping">
-                    <div class="camping-option__content">
-                        <div class="camping-option__header">
-                            <span class="camping-option__name">Car Camping</span>
-                            <span class="camping-option__price">+$40</span>
-                        </div>
-                        <p class="camping-option__desc">Park directly at your campsite.</p>
-                        <div class="addon-qty-controls">
-                            <label>Quantity:</label>
-                            <div class="qty-selector">
-                                <button type="button" class="qty-btn" onclick="updateAddonQty('car-camping', -1)">-</button>
-                                <input type="number" id="qty-car-camping" value="1" min="1" max="10" readonly>
-                                <button type="button" class="qty-btn" onclick="updateAddonQty('car-camping', 1)">+</button>
-                            </div>
-                        </div>
-                    </div>
-                </label>
-<label class="camping-option"><input type="radio" name="camping" value="rv-camping"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">RV Camping</span><span class="camping-option__price">+$100</span></div><p class="camping-option__desc">Designated RV spot (dry camping).</p></div></label><label class="camping-option"><input type="radio" name="camping" value="glamping"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">Glamping (2 Person)</span><span class="camping-option__price">$500</span></div><p class="camping-option__desc">Pre-pitched 4-person tent with full bed, linens, EZ-Up, cooler (daily ice), and car parking next to your spot.</p></div></label><label class="camping-option"><input type="radio" name="camping" value="cabin">
-                    <div class="camping-option__content">
-                        <div class="camping-option__header">
-                            <span class="camping-option__name">Cabin</span>
-                            <span class="camping-option__price">$1,000</span>
-                        </div>
-                        <p class="camping-option__desc">Historic cabin with Wood Burning Stove (BYO Firewood). Includes 10 beds + floor space. Bathrooms & showers nearby.</p>
-                    </div>
-                </label>
+                <label class="camping-option"><input type="radio" name="camping" value="ga-parking" checked><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">GA Parking</span><span class="camping-option__price">Included</span></div><p class="camping-option__desc">Park in general area, walk to your campsite.</p></div></label>
+                <label class="camping-option"><input type="radio" name="camping" value="car-camping"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">Car Camping</span><span class="camping-option__price">+$40</span></div><p class="camping-option__desc">Park directly at your campsite.</p></div></label>
+                <label class="camping-option"><input type="radio" name="camping" value="rv-camping"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">RV Camping</span><span class="camping-option__price">+$100</span></div><p class="camping-option__desc">Designated RV spot (dry camping).</p></div></label>
+                <label class="camping-option"><input type="radio" name="camping" value="glamping"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">Glamping</span><span class="camping-option__price">$500</span></div><p class="camping-option__desc">Pre-pitched 4-person tent setup for 2.</p></div></label>
+                <label class="camping-option"><input type="radio" name="camping" value="cabin"><div class="camping-option__content"><div class="camping-option__header"><span class="camping-option__name">Cabin</span><span class="camping-option__price">$1,000</span></div><p class="camping-option__desc">Historic cabin with stove.</p></div></label>
             </div>
-            <div class="checkout-addon" id="early-arrival-addon">
-                <label class="addon-checkbox">
-                    <input type="checkbox" id="early-arrival-check">
-                    <div class="addon-checkbox__content">
-                        <div class="addon-checkbox__header">
-                            <span class="addon-checkbox__name">Early Arrival (Wednesday, Oct 14)</span>
-                            <span class="addon-checkbox__price">+$30</span>
-                        </div>
-                        <p class="addon-checkbox__desc">Arrive a day early for best campsite selection.</p>
-                        <div class="addon-qty-controls" id="early-arrival-qty-wrap">
-                            <label>Quantity:</label>
-                            <div class="qty-selector">
-                                <button type="button" class="qty-btn" onclick="updateAddonQty('early-arrival', -1)">-</button>
-                                <input type="number" id="qty-early-arrival" value="1" min="1" max="10" readonly>
-                                <button type="button" class="qty-btn" onclick="updateAddonQty('early-arrival', 1)">+</button>
-                            </div>
-                        </div>
-                    </div>
-                </label>
-            </div>
-            <div class="checkout-actions">
-                <button class="btn btn--outline checkout-back" id="step2-back">Back</button>
-                <button class="btn btn--primary btn--lg checkout-next" id="step2-next">Review Order</button>
-            </div>
+            <div class="checkout-addon" id="early-arrival-addon" style="margin-top: 1rem;"><label style="display: flex; gap: 0.5rem; cursor: pointer; align-items: center;"><input type="checkbox" id="early-arrival-check"><span>Early Arrival (Wednesday) <strong>+$30</strong></span></label></div>
+            <div class="checkout-actions"><button class="btn btn--outline checkout-back" id="step2-back">Back</button><button class="btn btn--primary btn--lg checkout-next" id="step2-next">Review</button></div>
         </div>
-        <!-- Step 3: Order Summary -->
         <div class="checkout-panel" id="panel-step-3">
-            <h2 class="modal__title">Review Your Order</h2>
+            <h2 class="modal__title">Review Order</h2>
             <div class="order-summary" id="order-summary"></div>
-            
-            <div class="promo-code-wrap" style="margin-top: 1.5rem;">
-                <label for="manual-referral" style="display: block; font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">Promo / Affiliate Code</label>
-                <div style="display: flex; gap: 0.5rem;">
-                    <input type="text" id="manual-referral" placeholder="Enter code" class="input" style="flex: 1; min-height: 40px;">
-                </div>
-                <p id="referral-status" style="font-size: 0.75rem; margin-top: 0.5rem; display: none;"></p>
-            </div>
-
-            <!-- Digital Waiver -->
-            <div class="waiver-wrap" style="margin-top: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                <label class="checkbox-label" style="display: flex; gap: 0.75rem; align-items: flex-start; cursor: pointer;">
-                    <input type="checkbox" id="waiver-check" style="margin-top: 0.25rem;">
-                    <span style="font-size: 0.9rem; line-height: 1.4; color: var(--color-text-muted);">
-                        I agree to the <a href="terms.html" target="_blank" style="color: var(--color-accent); text-decoration: underline;">Terms & Conditions</a> and <strong>Release of Liability Waiver</strong>. I understand that tickets are non-refundable unless the event is cancelled.
-                    </span>
-                </label>
-            </div>
-
-            <div class="order-total">
-                <span>Total</span>
-                <span id="order-total-amount">$0</span>
-            </div>
-            <div class="checkout-actions">
-                <button class="btn btn--outline checkout-back" id="step3-back">Back</button>
-                <button class="btn btn--primary btn--lg" id="checkout-btn" disabled>Proceed to Payment</button>
-            </div>
+            <div class="promo-code-wrap" style="margin-top: 1rem;"><input type="text" id="manual-referral" placeholder="Promo Code" class="input"></div>
+            <div class="waiver-wrap" style="margin-top: 1rem;"><label style="display: flex; gap: 0.5rem; cursor: pointer; font-size: 12px;"><input type="checkbox" id="waiver-check"><span>I agree to the Terms & Waiver.</span></label></div>
+            <div class="order-total" style="margin-top: 1rem; display: flex; justify-content: space-between; font-weight: 700;"><span>Total</span><span id="order-total-amount">$0</span></div>
+            <div class="checkout-actions"><button class="btn btn--outline checkout-back" id="step3-back">Back</button><button class="btn btn--primary btn--lg" id="checkout-btn" disabled>Proceed</button></div>
         </div>
-        <p class="modal__note">Questions? Email <strong>reeguezrocks@gmail.com</strong></p>
-        <div id="success-message" class="modal__success" role="alert" hidden>Thank you for your purchase!</div>
-        <div id="error-message" class="modal__error" role="alert" hidden></div>
     </div>
 
     <!-- Scripts -->

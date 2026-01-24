@@ -393,6 +393,7 @@ const initFunding = async () => {
         const r = await fetch(API_BASE + "/inventory?t=" + Date.now());
         const data = await r.json();
         const raised = data.totalRaised || 0;
+        checkoutState.raised = raised;
         
         // Find current tier target
         let currentTier = CROWDFUNDING_TIERS[0];
@@ -416,6 +417,9 @@ const initFunding = async () => {
         progressBar.style.width = `${pct}%`;
         $("#funding-current").textContent = `$${raised.toLocaleString()}`;
         $("#next-tier-name").textContent = `Current: ${currentTier.name} ($${currentTier.goal.toLocaleString()} Goal)`;
+        
+        // Update timeline if exists
+        renderTimeline();
     } catch (e) {}
 };
 
@@ -499,6 +503,36 @@ const initCountdown = () => {
     
     update();
     setInterval(update, 1000);
+};
+
+const renderTimeline = () => {
+    const timeline = $("#journey-timeline");
+    if (!timeline || !CROWDFUNDING_TIERS.length) return;
+    
+    timeline.innerHTML = "";
+    
+    CROWDFUNDING_TIERS.forEach((tier, index) => {
+        const step = document.createElement("div");
+        const isActive = checkoutState.raised >= (index > 0 ? CROWDFUNDING_TIERS[index-1].goal : 0);
+        const isUnlocked = checkoutState.raised >= tier.goal;
+        
+        step.className = `journey-step ${isActive ? 'journey-step--active' : ''} ${isUnlocked ? 'journey-step--unlocked' : ''}`;
+        
+        let backerTag = "";
+        if (index === 0) backerTag = '<span class="backer-tag backer-tag--founder">Founding Backer Rewards</span>';
+        else if (index === 2) backerTag = '<span class="backer-tag backer-tag--pioneer">Pioneer Rewards</span>';
+        else if (index === 5) backerTag = '<span class="backer-tag backer-tag--builder">Builder Rewards</span>';
+
+        step.innerHTML = `
+            <div class="journey-step__header">
+                <span class="journey-step__title">Tier ${tier.id}: ${tier.name}</span>
+                <span class="journey-step__price">$${tier.price}</span>
+            </div>
+            <p class="journey-step__desc">${tier.desc}</p>
+            ${backerTag}
+        `;
+        timeline.appendChild(step);
+    });
 };
 
 const initTabs = () => {
