@@ -102,7 +102,7 @@
       { name:'Cabin Rental (6 Cabins @ $250)', amount: 1500 },
       { name:'The Bowl Production ($30/head)', perHead: 30 },
       { name:'The Dome Production ($7/head)', perHead: 7 },
-      { name:'Operations ($20/head)', perHead: 20 },
+      { name:'Operations (Fluid Scaling)', isOps: true },
       { name:'Affiliate Payout ($5/head)', perHead: 5 },
       { name:'Fun Shit', amount: 1000 },
     ];
@@ -111,20 +111,34 @@
       return new Intl.NumberFormat(undefined,{ style:'currency', currency:'USD' }).format(n||0);
     }
 
+    function getOpsRate(count) {
+        if (count <= 150) return 10;
+        if (count <= 350) return 20;
+        return 30;
+    }
+
     function renderHardCosts(){
       const tbody = $('#hardcosts tbody'); tbody.innerHTML='';
       let total=0;
       const cap = parseInt($('#capacity').value,10)||0;
       const days = parseFloat($('#avg-days').value)||1;
+      const opsRate = getOpsRate(cap);
+
       for (const row of HARD_COSTS){
         let amount = 0;
+        let displayName = row.name;
+
         if (row.perHeadDay) amount = row.perHeadDay * days * cap;
         else if (row.perHead) amount = row.perHead * cap;
+        else if (row.isOps) {
+            amount = opsRate * cap;
+            displayName = `Operations ($${opsRate}/head)`;
+        }
         else amount = (row.amount||0);
         
         total += amount;
         const tr=document.createElement('tr');
-        const td1=document.createElement('td'); td1.textContent=row.name; tr.appendChild(td1);
+        const td1=document.createElement('td'); td1.textContent=displayName; tr.appendChild(td1);
         const td2=document.createElement('td'); td2.className='right'; td2.textContent=fmt(amount); tr.appendChild(td2);
         tbody.appendChild(tr);
       }
@@ -137,6 +151,11 @@
       const tbody = $('#tiers tbody'); tbody.innerHTML='';
       let sumLimit=0, sumSold=0, sumSoldGross=0, sumTotalMargin=0, maxGross=0;
       
+      // Calculate ops rate based on total currently sold for live view, or capacity for max view?
+      // We'll use total sold for the margin calculation
+      const totalSoldAll = tiers.reduce((s, t) => s + Number(t.sold || 0), 0);
+      const opsRate = getOpsRate(totalSoldAll || parseInt($('#capacity').value, 10));
+
       for (const t of tiers){
         const price = Number(t.price||0); 
         const limit = (t.limit==null? null : Number(t.limit)); 
@@ -153,7 +172,7 @@
         const stripeFee = (price * 0.029) + 0.30;
         let marginUnit = 0;
         if (tDays > 0) {
-            marginUnit = price - (tDays * 10) - 37 - 20 - 5 - stripeFee;
+            marginUnit = price - (tDays * 10) - 37 - opsRate - 5 - stripeFee;
         } else if (id.includes('cabin') || label.includes('cabin')) {
             marginUnit = price - 250 - stripeFee;
         } else {
@@ -184,9 +203,11 @@
 
       const cap = parseInt($('#capacity').value,10)||0;
       const days = parseFloat($('#avg-days').value)||1;
+      const simOpsRate = getOpsRate(cap);
       const hard = HARD_COSTS.reduce((s,x)=>{
           if (x.perHeadDay) return s + (x.perHeadDay * days * cap);
           if (x.perHead) return s + (x.perHead * cap);
+          if (x.isOps) return s + (simOpsRate * cap);
           return s + (x.amount||0);
       }, 0);
       const avgPrice = sumLimit>0 ? (maxGross / sumLimit) : 0;
