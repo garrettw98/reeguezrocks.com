@@ -22,7 +22,7 @@
     *   Glamping/Cabins/RV: ~$15,000
 *   **Key Expense Scaling:**
     *   **Venue:** **$40 per ticket sold**
-    *   **Production:** **$30 per ticket sold** (Target ~$15,000 total)
+    *   **Production:** **$30 (Bowl) + $7 (Dome) per ticket sold** (Target ~$18,500 total)
     *   **Talent:** ~$25,000 - $35,000
     *   **Ops/Safety:** ~$10,000 - $15,000
 
