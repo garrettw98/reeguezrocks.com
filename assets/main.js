@@ -506,46 +506,27 @@ const initCountdown = () => {
 };
 
 const renderTimeline = () => {
-    const timeline = $("#journey-timeline");
-    const fullTimeline = $("#full-timeline");
-    if (!timeline || !CROWDFUNDING_TIERS.length) return;
-    
-    timeline.innerHTML = "";
-    if (fullTimeline) fullTimeline.innerHTML = "";
-    
-    // Find current tier index
-    let currentIndex = 0;
-    for (let i = 0; i < CROWDFUNDING_TIERS.length; i++) {
-        if (checkoutState.raised >= CROWDFUNDING_TIERS[i].goal) {
-            currentIndex = i + 1;
-        } else {
-            break;
-        }
-    }
+    // This traditional list layout doesn't need dynamic injection for the main list 
+    // as it is handled by the static HTML, but we update the progress bars here.
+    const tiers = $$(".tier");
+    if (!tiers.length) return;
 
     CROWDFUNDING_TIERS.forEach((tier, index) => {
-        const isUnlocked = checkoutState.raised >= tier.goal;
-        const isActive = index === currentIndex;
-        
-        const milestoneHtml = `
-            <div class="milestone ${isActive ? 'milestone--active' : ''} ${isUnlocked ? 'milestone--unlocked' : ''}">
-                <div class="milestone__icon">${isUnlocked ? '✓' : tier.id}</div>
-                <div class="milestone__content">
-                    <div class="milestone__title">${tier.name} <span style="float:right; font-size:10px; opacity:0.6;">$${tier.price}</span></div>
-                    <div class="milestone__desc">${tier.desc}</div>
-                </div>
-            </div>
-        `;
+        const el = $(`.tier[data-tier="${tier.id}"]`);
+        if (!el) return;
 
-        // Only show current and next in the main dashboard
-        if (index === currentIndex || index === currentIndex - 1 || (currentIndex === 0 && index === 0)) {
-            timeline.insertAdjacentHTML('beforeend', milestoneHtml);
-        }
+        const isUnlocked = checkoutState.raised >= tier.goal;
+        const prevGoal = index > 0 ? CROWDFUNDING_TIERS[index-1].goal : 0;
         
-        // Add everything to the full list
-        if (fullTimeline) {
-            fullTimeline.insertAdjacentHTML('beforeend', milestoneHtml);
-        }
+        const tierSpan = tier.goal - prevGoal;
+        const progressInTier = checkoutState.raised - prevGoal;
+        const pct = Math.min(100, Math.max(0, (progressInTier / tierSpan) * 100));
+
+        el.classList.toggle("tier--active", checkoutState.raised < tier.goal && checkoutState.raised >= prevGoal);
+        el.classList.toggle("tier--unlocked", isUnlocked);
+
+        const fill = $(".tier__fill", el);
+        if (fill) fill.style.width = `${pct}%`;
     });
 };
 
