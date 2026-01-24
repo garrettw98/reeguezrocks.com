@@ -407,8 +407,8 @@ const initFunding = async () => {
         }
         
         // Calculate % within this tier (not total 0-100%)
-        // Example: Tier 2 starts at 4500 (Tier 1 goal) and ends at 9500. Raised 7000.
-        // Progress = (7000 - 4500) / (9500 - 4500)
+        // Example: Tier 2 starts at 5950 (Tier 1 goal) and ends at 12400. Raised 7000.
+        // Progress = (7000 - 5950) / (12400 - 5950)
         const tierSpan = currentTier.goal - prevGoal;
         const progressInTier = raised - prevGoal;
         const pct = Math.min(100, Math.max(0, (progressInTier / tierSpan) * 100));
