@@ -256,30 +256,39 @@
                         <div id="seg-venue" class="bar-segment" style="background: #8A2BE2; width: 33%;" data-value="$40">VENUE</div>
                         <div id="seg-prod" class="bar-segment" style="background: #f7a602; width: 31%;" data-value="$37">STAGE</div>
                         <div id="seg-ops" class="bar-segment" style="background: #444; width: 24%;" data-value="$29">OPS</div>
-                        <div id="seg-fund" class="bar-segment" style="background: #4ade80; width: 12%;" data-value="$13">ART</div>
+                        <!-- Margin Split -->
+                        <div id="seg-talent" class="bar-segment" style="background: #4ade80; width: 7.2%;" data-value="$8">TALENT</div>
+                        <div id="seg-art" class="bar-segment" style="background: #2dd4bf; width: 2.4%;" data-value="$3">ART</div>
+                        <div id="seg-future" class="bar-segment" style="background: #60a5fa; width: 2.4%;" data-value="$3">FUT</div>
                     </div>
 
                     <div class="legend">
                         <div class="legend-item"><span class="legend-dot" style="background: #8A2BE2;"></span> Venue ($10/day)</div>
-                        <div class="legend-item"><span class="legend-dot" style="background: #f7a602;"></span> Stage & Production ($37 Flat)</div>
-                        <div class="legend-item"><span class="legend-dot" style="background: #444;"></span> Ops & Fees (~$29)</div>
-                        <div class="legend-item"><span class="legend-dot" style="background: #4ade80;"></span> <strong>The Show Fund (Margin)</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #f7a602;"></span> Stage ($37)</div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #444;"></span> Ops (~$29)</div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #4ade80;"></span> <strong>Talent (60%)</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #2dd4bf;"></span> <strong>Art (20%)</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #60a5fa;"></span> <strong>Future (20%)</strong></div>
                     </div>
-                    
-                    <details style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
-                        <summary style="font-size: 13px; color: var(--color-text-muted); cursor: pointer;">Show detailed fee math</summary>
-                        <div style="font-size: 12px; color: var(--color-text-subtle); margin-top: 1rem; line-height: 1.6;">
-                            • <strong>Venue:</strong> $10.00 per guest per day.<br>
-                            • <strong>Production:</strong> $30 (The Bowl) + $7 (The Dome) flat per ticket covers the full stage build, audio, and visual production for both stages.<br>
-                            • <strong>Operations:</strong> Scaled $10 - $30 based on crowd size.<br>
-                            • <strong>Stripe:</strong> 2.9% + $0.30 per transaction.<br>
-                            • <strong>Affiliate:</strong> $5.00 (only when promo code is used).
-                        </div>
-                    </details>
                 </div>
 
                 <!-- Detailed Breakdown Grid -->
                 <div class="details-grid">
+                    <div class="detail-card">
+                        <div class="detail-card__header">
+                            <span class="detail-card__icon">📊</span>
+                            <h3 class="detail-card__title">The 60/20/20 Protocol</h3>
+                        </div>
+                        <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 1rem;">
+                            We don't use generic "slush funds." Every dollar of margin is split strictly by this algorithm:
+                        </p>
+                        <ul class="detail-list">
+                            <li class="detail-item"><span class="detail-item__label">60% to Talent</span><span class="detail-item__value">Artist Fees & Hospitality</span></li>
+                            <li class="detail-item"><span class="detail-item__label">20% to Immersion</span><span class="detail-item__value">Decor, Lasers, & Art Grants</span></li>
+                            <li class="detail-item"><span class="detail-item__label">20% to Future</span><span class="detail-item__value">2027 Venue Deposit</span></li>
+                        </ul>
+                    </div>
+
                     <div class="detail-card">
                         <div class="detail-card__header">
                             <span class="detail-card__icon">🏕️</span>
@@ -305,41 +314,41 @@
                             <li class="detail-item"><span class="detail-item__label">Lasers</span><span class="detail-item__value">Unlocked at Tier 10</span></li>
                         </ul>
                     </div>
-
-                    <div class="detail-card">
-                        <div class="detail-card__header">
-                            <span class="detail-card__icon">💳</span>
-                            <h3 class="detail-card__title">Fees</h3>
-                        </div>
-                        <ul class="detail-list">
-                            <li class="detail-item"><span class="detail-item__label">Affiliate Payout (If Used)</span><span class="detail-item__value">$5.00 per referral</span></li>
-                            <li class="detail-item"><span class="detail-item__label">Stripe Processing</span><span class="detail-item__value">2.9% + $0.30</span></li>
-                            <li class="detail-item"><span class="detail-item__label">Platform Fee</span><span class="detail-item__value">$0.00</span></li>
-                        </ul>
-                    </div>
                 </div>
 
                 <!-- Tier Impact -->
                 <div class="tier-impact">
                     <header class="section__header" style="margin-bottom: 2rem;">
-                        <h2 class="section__title">The "Show Fund" Impact</h2>
-                        <p class="section__subtitle">Higher tiers donate more directly to the Artist & Art budget. This is how we afford headliners.</p>
+                        <h2 class="section__title">Impact Calculator</h2>
+                        <p class="section__subtitle">See exactly where the extra money from higher tiers goes.</p>
                     </header>
                     <div class="impact-grid">
                         <div class="impact-card">
-                            <span class="impact-card__tier">Tier 1 Ticket</span>
-                            <span class="impact-card__margin">+$23</span>
-                            <span class="impact-card__desc">Goes to Talent & Art</span>
+                            <span class="impact-card__tier">Tier 1 Ticket ($119)</span>
+                            <span class="impact-card__margin" style="color: var(--color-text-muted); font-size: 1.5rem;">$13.25 Margin</span>
+                            <div style="text-align: left; margin-top: 0.5rem; font-size: 11px; color: var(--color-text-muted);">
+                                <div>Talent: <strong>$7.95</strong></div>
+                                <div>Art: <strong>$2.65</strong></div>
+                                <div>Future: <strong>$2.65</strong></div>
+                            </div>
                         </div>
                         <div class="impact-card">
-                            <span class="impact-card__tier">Tier 5 Ticket</span>
-                            <span class="impact-card__margin">+$63</span>
-                            <span class="impact-card__desc">Goes to Talent & Art</span>
+                            <span class="impact-card__tier">Tier 5 Ticket ($159)</span>
+                            <span class="impact-card__margin" style="color: var(--color-accent); font-size: 1.5rem;">$53.25 Margin</span>
+                            <div style="text-align: left; margin-top: 0.5rem; font-size: 11px; color: var(--color-text-muted);">
+                                <div>Talent: <strong>$31.95</strong></div>
+                                <div>Art: <strong>$10.65</strong></div>
+                                <div>Future: <strong>$10.65</strong></div>
+                            </div>
                         </div>
                         <div class="impact-card">
-                            <span class="impact-card__tier">Tier 10 Ticket</span>
-                            <span class="impact-card__margin">+$113</span>
-                            <span class="impact-card__desc">Goes to Talent & Art</span>
+                            <span class="impact-card__tier">Tier 10 Ticket ($209)</span>
+                            <span class="impact-card__margin" style="color: var(--color-success); font-size: 1.5rem;">$103.25 Margin</span>
+                            <div style="text-align: left; margin-top: 0.5rem; font-size: 11px; color: var(--color-text-muted);">
+                                <div>Talent: <strong>$61.95</strong></div>
+                                <div>Art: <strong>$20.65</strong></div>
+                                <div>Future: <strong>$20.65</strong></div>
+                            </div>
                         </div>
                     </div>
                 </div>
