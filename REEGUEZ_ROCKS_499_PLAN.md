@@ -96,18 +96,18 @@
 ## 8. Crowdfunding Model (Fluid Scaling)
 **Structure:** 10 Tiers (50 tickets per tier). Production ($37/head) and Venue Fees ($10/day) scale automatically.
 
-| Tier | Price | Milestone / Unlock | Margin (Est) |
+| Tier | Price | Milestone / Unlock | Tier Fund (80%) |
 | :--- | :--- | :--- | :--- |
-| **Tier 1** | $119 | **Event Confirmed** (Venue, insurance, & permits secured) | ~$1,800 |
+| **Tier 1** | $119 | **Event Confirmed** (Venue, insurance, & permits secured) | ~$1,700 |
 | **Tier 2** | $129 | **Headliner 1 Unlock** (First major artist secured) | ~$3,200 |
-| **Tier 3** | $139 | **Stage Vibe** (Custom decor & forest lighting rigs) | ~$4,950 |
-| **Tier 4** | $149 | **Headliner 2 Unlock** (Second major artist secured) | ~$7,100 |
-| **Tier 5** | $159 | **Art Grants** (Funding for interactive installations) | ~$9,750 |
-| **Tier 6** | $169 | **Headliner 3 Unlock** (Third major artist secured) | ~$12,900 |
-| **Tier 7** | $179 | **Interactive Art** (Funding for physical art installations) | ~$16,550 |
-| **Tier 8** | $189 | **Daytime Magic** (Yoga, workshops, and flow arts) | ~$20,100 |
-| **Tier 9** | $199 | **Final Reveal** (Support acts & schedule release) | ~$24,150 |
-| **Tier 10** | $209 | **The Full Send** (Lasers & Max visual production) | ~$28,700 |
+| **Tier 3** | $139 | **Stage Vibe** (Custom decor & forest lighting rigs) | ~$4,700 |
+| **Tier 4** | $149 | **Headliner 2 Unlock** (Second major artist secured) | ~$6,600 |
+| **Tier 5** | $159 | **Art Grants** (Funding for interactive installations) | ~$8,600 |
+| **Tier 6** | $169 | **Headliner 3 Unlock** (Third major artist secured) | ~$11,000 |
+| **Tier 7** | $179 | **Interactive Art** (Funding for physical art installations) | ~$13,500 |
+| **Tier 8** | $189 | **Daytime Magic** (Yoga, workshops, and flow arts) | ~$16,000 |
+| **Tier 9** | $199 | **Final Reveal** (Support acts & schedule release) | ~$19,000 |
+| **Tier 10** | $209 | **The Full Send** (Lasers & Max visual production) | ~$25,000+ |
 
 **Announcement Logic:**
 *   **Standard:** Artist name revealed *after* tier sells out (Reward).

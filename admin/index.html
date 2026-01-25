@@ -149,9 +149,9 @@
           </div>
         </div>
         <table>
-          <thead><tr><th>Tier</th><th class="right">Price</th><th class="right">Margin/Unit</th><th class="right">Sold</th><th class="right">Total Margin</th><th></th></tr></thead>
+          <thead><tr><th>Tier</th><th class="right">Price</th><th class="right">Margin/Unit</th><th class="right">Sold</th><th class="right">Tier Fund (80%)</th><th class="right">Contingency (20%)</th><th></th></tr></thead>
           <tbody id="fn-tiers"></tbody>
-          <tfoot><tr><th>Totals</th><th></th><th class="right" id="fn-sum-margin">0</th><th class="right" id="fn-sum-sold">0</th><th class="right" id="fn-sum-gross">$0</th><th></th></tr></tfoot>
+          <tfoot><tr><th>Totals</th><th></th><th class="right"></th><th class="right" id="fn-sum-sold">0</th><th class="right" id="fn-sum-tier">$0</th><th class="right" id="fn-sum-cont">$0</th><th></th></tr></tfoot>
         </table>
         <div class="row" style="margin:8px 0"><button id="fn-add-tier" class="btn secondary">Add tier</button></div>
         <div class="row">
@@ -387,6 +387,8 @@
         
         const soldGross = price * sold;
         const totalMargin = marginUnit * sold;
+        const tierFund = totalMargin * 0.8;
+        const contFund = totalMargin * 0.2;
         
         sumG += soldGross;
         sumM += totalMargin;
@@ -394,7 +396,15 @@
         max += (price * (t.limit||0));
         
         const tr=document.createElement('tr');
-        const td=[document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td'),document.createElement('td')];
+        const td=[
+            document.createElement('td'), // Name
+            document.createElement('td'), // Price
+            document.createElement('td'), // Gross Margin
+            document.createElement('td'), // Sold
+            document.createElement('td'), // Tier Fund
+            document.createElement('td'), // Contingency
+            document.createElement('td')  // Remove
+        ];
         
         const name=document.createElement('input'); name.type='text'; name.value=t.label||t.id||''; name.addEventListener('input',e=> t.label=e.target.value );
         const pInput=document.createElement('input'); pInput.type='number'; pInput.value=price; pInput.addEventListener('input',e=>{ t.price=parseFloat(e.target.value)||0; fnRenderTiers(); });
@@ -405,12 +415,17 @@
         td[1].className='right'; td[1].appendChild(pInput); 
         td[2].className='right'; td[2].textContent = fmt(marginUnit);
         td[3].className='right'; td[3].appendChild(sInput);
-        td[4].className='right'; td[4].textContent=fmt(totalMargin); 
-        td[5].appendChild(rm); 
+        td[4].className='right'; td[4].textContent = fmt(tierFund);
+        td[4].style.color = '#4ade80';
+        td[5].className='right'; td[5].textContent = fmt(contFund);
+        td[5].style.color = '#60a5fa';
+        td[6].appendChild(rm); 
         tr.append(...td); body.appendChild(tr);
       });
       $('#fn-sum-sold').textContent=sumS; 
       $('#fn-sum-gross').textContent=fmt(sumM);
+      $('#fn-sum-tier').textContent=fmt(sumM * 0.8);
+      $('#fn-sum-cont').textContent=fmt(sumM * 0.2);
       $('#fn-max').textContent=fmt(max);
       const avg=sumS>0? (max/sumS):0; const be=avg>0? Math.ceil(hard/avg):null; $('#fn-breakeven').textContent= be!=null? be : '—';
     }
