@@ -98,15 +98,15 @@
 
 | Tier | Price | Milestone / Unlock | Margin (Est) |
 | :--- | :--- | :--- | :--- |
-| **Tier 1** | $119 | **Foundation Set** (Insurance & Permits secured) | ~$1,150 |
-| **Tier 2** | $129 | **Event Confirmed** (Overhead covered. 100% committed) | ~$2,800 |
-| **Tier 3** | $139 | **Headliner 1 Unlock** (First major artist secured) | ~$4,950 |
-| **Tier 4** | $149 | **Stage Vibe** (Custom decor & forest lighting rigs) | ~$7,100 |
-| **Tier 5** | $159 | **Headliner 2 Unlock** (Second major artist secured) | ~$9,750 |
-| **Tier 6** | $169 | **Art Grants** (Funding for interactive installations) | ~$12,900 |
-| **Tier 7** | $179 | **Headliner 3 Unlock** (Third major artist secured) | ~$16,550 |
-| **Tier 8** | $189 | **Forest Magic** (Yoga, workshops, and games) | ~$20,100 |
-| **Tier 9** | $199 | **Full Reveal** (Support acts & schedule release) | ~$24,150 |
+| **Tier 1** | $119 | **Event Confirmed** (Venue, insurance, & permits secured) | ~$1,800 |
+| **Tier 2** | $129 | **Headliner 1 Unlock** (First major artist secured) | ~$3,200 |
+| **Tier 3** | $139 | **Stage Vibe** (Custom decor & forest lighting rigs) | ~$4,950 |
+| **Tier 4** | $149 | **Headliner 2 Unlock** (Second major artist secured) | ~$7,100 |
+| **Tier 5** | $159 | **Art Grants** (Funding for interactive installations) | ~$9,750 |
+| **Tier 6** | $169 | **Headliner 3 Unlock** (Third major artist secured) | ~$12,900 |
+| **Tier 7** | $179 | **Forest Magic** (Yoga, workshops, and games) | ~$16,550 |
+| **Tier 8** | $189 | **The Dome Upgrade** (Furniture & chill zone decor) | ~$20,100 |
+| **Tier 9** | $199 | **Final Reveal** (Support acts & schedule release) | ~$24,150 |
 | **Tier 10** | $209 | **The Full Send** (Lasers & Max visual production) | ~$28,700 |
 
 **Announcement Logic:**

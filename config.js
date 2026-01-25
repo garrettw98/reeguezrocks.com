@@ -28,14 +28,14 @@ window.TIER_SCHEDULE_FALLBACK = [
 // Crowdfunding Tier Structure (10 Tiers)
 // Tier 1: 75 Tix | Tiers 2-4: 50 Tix | Tiers 5-10: 45 Tix
 window.CROWDFUNDING_TIERS = [
-  { id: 1, price: 119, goal: 8925,  name: 'Foundation Set', desc: 'Insurance, permits, and core ops fees secured.' },
-  { id: 2, price: 129, goal: 15375, name: 'Event Confirmed', desc: 'Overhead covered. 100% committed to October.' },
-  { id: 3, price: 139, goal: 22325, name: 'Headliner 1 Unlock', desc: 'First major artist secured and announced.' },
-  { id: 4, price: 149, goal: 29775, name: 'Stage Vibe', desc: 'Custom stage decor and forest lighting rigs.' },
-  { id: 5, price: 159, goal: 36930, name: 'Headliner 2 Unlock', desc: 'Second major artist secured and announced.' },
-  { id: 6, price: 169, goal: 44535, name: 'Art Grants', desc: 'Funding for interactive forest art installations.' },
-  { id: 7, price: 179, goal: 52590, name: 'Headliner 3 Unlock', desc: 'Third major artist secured and announced.' },
-  { id: 8, price: 189, goal: 61095, name: 'Forest Magic', desc: 'Yoga, workshops, and games funded.' },
+  { id: 1, price: 119, goal: 8925,  name: 'Event Confirmed', desc: 'Venue, insurance, and permits secured. We are 100% go.' },
+  { id: 2, price: 129, goal: 15375, name: 'Headliner 1 Unlock', desc: 'First major artist secured and announced.' },
+  { id: 3, price: 139, goal: 22325, name: 'Stage Vibe', desc: 'Custom stage decor and forest lighting rigs.' },
+  { id: 4, price: 149, goal: 29775, name: 'Headliner 2 Unlock', desc: 'Second major artist secured and announced.' },
+  { id: 5, price: 159, goal: 36930, name: 'Art Grants', desc: 'Funding for interactive forest art installations.' },
+  { id: 6, price: 169, goal: 44535, name: 'Headliner 3 Unlock', desc: 'Third major artist secured and announced.' },
+  { id: 7, price: 179, goal: 52590, name: 'Forest Magic', desc: 'Yoga, workshops, and games funded.' },
+  { id: 8, price: 189, goal: 61095, name: 'The Dome Upgrade', desc: 'Furniture and decor for the chill zone.' },
   { id: 9, price: 199, goal: 69050, name: 'Final Reveal', desc: 'Complete support acts and schedule released.' },
   { id: 10, price: 209, goal: 79455, name: 'The Full Send', desc: 'Lasers and high-spec visual production.' }
 ];
