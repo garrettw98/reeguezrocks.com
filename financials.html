@@ -252,23 +252,28 @@
                         </select>
                     </div>
 
-                    <div class="bar-container">
+                    <div class="bar-container" id="bar-main">
                         <div id="seg-venue" class="bar-segment" style="background: #8A2BE2; width: 33%;" data-value="$40">VENUE</div>
                         <div id="seg-prod" class="bar-segment" style="background: #f7a602; width: 31%;" data-value="$37">STAGE</div>
                         <div id="seg-ops" class="bar-segment" style="background: #444; width: 24%;" data-value="$29">OPS</div>
-                        <!-- Margin Split -->
-                        <div id="seg-talent" class="bar-segment" style="background: #4ade80; width: 7.2%;" data-value="$8">TALENT</div>
-                        <div id="seg-art" class="bar-segment" style="background: #2dd4bf; width: 2.4%;" data-value="$3">ART</div>
-                        <div id="seg-future" class="bar-segment" style="background: #60a5fa; width: 2.4%;" data-value="$3">CONT</div>
+                        <div id="seg-margin" class="bar-segment" style="background: #ffffff; color: #000; width: 12%;" data-value="$13">MARGIN</div>
+                    </div>
+
+                    <div style="text-align: center; margin: 1rem 0; color: var(--color-text-muted); font-size: 1.5rem;">↓</div>
+                    
+                    <h3 style="font-size: 14px; text-transform: uppercase; color: var(--color-text-subtle); margin-bottom: 0.5rem; text-align: center;">How the Margin is Split (60/20/20)</h3>
+
+                    <div class="bar-container" id="bar-margin" style="margin-top: 0.5rem;">
+                        <div id="seg-talent" class="bar-segment" style="background: #4ade80; width: 60%;" data-value="$8">TALENT</div>
+                        <div id="seg-art" class="bar-segment" style="background: #2dd4bf; width: 20%;" data-value="$3">ART</div>
+                        <div id="seg-future" class="bar-segment" style="background: #60a5fa; width: 20%;" data-value="$3">CONT</div>
                     </div>
 
                     <div class="legend">
                         <div class="legend-item"><span class="legend-dot" style="background: #8A2BE2;"></span> Venue ($10/day)</div>
-                        <div class="legend-item"><span class="legend-dot" style="background: #f7a602;"></span> Stage & Production ($37 Flat)</div>
-                        <div class="legend-item"><span class="legend-dot" style="background: #444;"></span> Ops & Fees (~$29)</div>
-                        <div class="legend-item"><span class="legend-dot" style="background: #4ade80;"></span> <strong>Talent (60%)</strong></div>
-                        <div class="legend-item"><span class="legend-dot" style="background: #2dd4bf;"></span> <strong>Art (20%)</strong></div>
-                        <div class="legend-item"><span class="legend-dot" style="background: #60a5fa;"></span> <strong>Contingency (20%)</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #f7a602;"></span> Stage ($37)</div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #444;"></span> Ops (~$29)</div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #ffffff; border: 1px solid #ccc;"></span> <strong>Margin Surplus</strong></div>
                     </div>
                 </div>
 
@@ -406,23 +411,35 @@
             
             const fund = price - venue - prod - ops;
 
-            // Calculate Widths
+            // Calculate Widths for Top Bar
             const venuePct = (venue / price) * 100;
             const prodPct = (prod / price) * 100;
             const opsPct = (ops / price) * 100;
-            const fundPct = (fund / price) * 100;
+            const marginPct = (fund / price) * 100;
 
-            // Apply Widths
+            // Calculate Split Values
+            const talentVal = fund * 0.60;
+            const artVal = fund * 0.20;
+            const futureVal = fund * 0.20;
+
+            // Apply Widths - Top Bar
             document.getElementById('seg-venue').style.width = venuePct + '%';
             document.getElementById('seg-prod').style.width = prodPct + '%';
             document.getElementById('seg-ops').style.width = opsPct + '%';
-            document.getElementById('seg-fund').style.width = fundPct + '%';
+            document.getElementById('seg-margin').style.width = marginPct + '%';
+
+            // Apply Widths - Bottom Bar (Fixed 60/20/20 of the container)
+            // No need to change widths, they are fixed CSS percentages
 
             // Apply Values
             document.getElementById('seg-venue').dataset.value = '$' + venue.toFixed(0);
             document.getElementById('seg-prod').dataset.value = '$' + prod.toFixed(0);
             document.getElementById('seg-ops').dataset.value = '$' + ops.toFixed(0);
-            document.getElementById('seg-fund').dataset.value = '$' + fund.toFixed(0);
+            document.getElementById('seg-margin').dataset.value = '$' + fund.toFixed(0);
+            
+            document.getElementById('seg-talent').dataset.value = '$' + talentVal.toFixed(0);
+            document.getElementById('seg-art').dataset.value = '$' + artVal.toFixed(0);
+            document.getElementById('seg-future').dataset.value = '$' + futureVal.toFixed(0);
         };
 
         sel.addEventListener('change', update);
