@@ -261,19 +261,19 @@
 
                     <div style="text-align: center; margin: 1rem 0; color: var(--color-text-muted); font-size: 1.5rem;">↓</div>
                     
-                    <h3 style="font-size: 14px; text-transform: uppercase; color: var(--color-text-subtle); margin-bottom: 0.5rem; text-align: center;">How the Margin is Split (60/20/20)</h3>
+                    <h3 style="font-size: 14px; text-transform: uppercase; color: var(--color-text-subtle); margin-bottom: 0.5rem; text-align: center;">How the Margin is Split (80/20)</h3>
 
                     <div class="bar-container" id="bar-margin" style="margin-top: 0.5rem;">
-                        <div id="seg-talent" class="bar-segment" style="background: #4ade80; width: 60%;" data-value="$8">TALENT</div>
-                        <div id="seg-art" class="bar-segment" style="background: #2dd4bf; width: 20%;" data-value="$3">ART</div>
-                        <div id="seg-future" class="bar-segment" style="background: #60a5fa; width: 20%;" data-value="$3">CONT</div>
+                        <div id="seg-tiers" class="bar-segment" style="background: #4ade80; width: 80%;" data-value="$10">TIERS</div>
+                        <div id="seg-cont" class="bar-segment" style="background: #60a5fa; width: 20%;" data-value="$3">CONTINGENCY</div>
                     </div>
 
                     <div class="legend">
                         <div class="legend-item"><span class="legend-dot" style="background: #8A2BE2;"></span> Venue ($10/day)</div>
                         <div class="legend-item"><span class="legend-dot" style="background: #f7a602;"></span> Stage ($37)</div>
-                        <div class="legend-item"><span class="legend-dot" style="background: #444;"></span> Ops (~$29)</div>
-                        <div class="legend-item"><span class="legend-dot" style="background: #ffffff; border: 1px solid #ccc;"></span> <strong>Margin Surplus</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #444;"></span> Ops (~$20)</div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #4ade80;"></span> <strong>Tiers (80%)</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background: #60a5fa;"></span> <strong>Contingency (20%)</strong></div>
                     </div>
                 </div>
                 
@@ -283,8 +283,7 @@
                         • <strong>Venue:</strong> $10.00 per guest per day.<br>
                         • <strong>Production:</strong> $30 (The Bowl) + $7 (The Dome) flat per ticket covers the full stage build, audio, and visual production for both stages.<br>
                         • <strong>Operations:</strong> EMTs, Security, Sanitation, and Waste Management (scaled by crowd size).<br>
-                        • <strong>Stripe:</strong> 2.9% + $0.30 per transaction.<br>
-                        • <strong>Affiliate:</strong> $5.00 (only when promo code is used).
+                        • <strong>Stripe:</strong> 2.9% + $0.30 per transaction.
                     </div>
                 </details>
 
@@ -417,8 +416,8 @@
             const venue = days * 10;
             const prod = 37;
             const stripe = (price * 0.029) + 0.30;
-            // Assuming average ops of $20 for visual simplicity in this chart
-            const ops = 20 + 5 + stripe; 
+            // Assuming average ops of $20 for visual simplicity
+            const ops = 20 + stripe; 
             
             const fund = price - venue - prod - ops;
 
@@ -429,9 +428,8 @@
             const marginPct = (fund / price) * 100;
 
             // Calculate Split Values
-            const talentVal = fund * 0.60;
-            const artVal = fund * 0.20;
-            const futureVal = fund * 0.20;
+            const tiersVal = fund * 0.80;
+            const contVal = fund * 0.20;
 
             // Apply Widths - Top Bar
             document.getElementById('seg-venue').style.width = venuePct + '%';
@@ -439,7 +437,7 @@
             document.getElementById('seg-ops').style.width = opsPct + '%';
             document.getElementById('seg-margin').style.width = marginPct + '%';
 
-            // Apply Widths - Bottom Bar (Fixed 60/20/20 of the container)
+            // Apply Widths - Bottom Bar (Fixed 80/20 of the container)
             // No need to change widths, they are fixed CSS percentages
 
             // Apply Values
@@ -448,9 +446,8 @@
             document.getElementById('seg-ops').dataset.value = '$' + ops.toFixed(0);
             document.getElementById('seg-margin').dataset.value = '$' + fund.toFixed(0);
             
-            document.getElementById('seg-talent').dataset.value = '$' + talentVal.toFixed(0);
-            document.getElementById('seg-art').dataset.value = '$' + artVal.toFixed(0);
-            document.getElementById('seg-future').dataset.value = '$' + futureVal.toFixed(0);
+            document.getElementById('seg-tiers').dataset.value = '$' + tiersVal.toFixed(0);
+            document.getElementById('seg-cont').dataset.value = '$' + contVal.toFixed(0);
         };
 
         sel.addEventListener('change', update);

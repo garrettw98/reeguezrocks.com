@@ -303,7 +303,6 @@
       { name:'The Bowl Production ($30/head)', perHead:30 },
       { name:'The Dome Production ($7/head)', perHead:7 },
       { name:'Operations (Fluid Scaling)', isOps: true },
-      { name:'Affiliate Payout ($5/head)', perHead: 5 },
       { name:'Fun Shit', amount:1000 },
     ];
     let costs=[...COSTS_DEFAULT]; let tiers=[]; const fnCosts=$('#fn-costs'); const fnCap=$('#fn-cap'); const fnDays=$('#fn-days');
@@ -379,7 +378,7 @@
         const stripeFee = (price * 0.029) + 0.30;
         let marginUnit = 0;
         if (tDays > 0) {
-            marginUnit = price - (tDays * 10) - 37 - 20 - 5 - stripeFee;
+            marginUnit = price - (tDays * 10) - 37 - 20 - stripeFee;
         } else if (id.includes('cabin') || label.includes('cabin')) {
             marginUnit = price - 250 - stripeFee;
         } else {
