@@ -104,8 +104,8 @@
 | **Tier 4** | $149 | **Headliner 2 Unlock** (Second major artist secured) | ~$7,100 |
 | **Tier 5** | $159 | **Art Grants** (Funding for interactive installations) | ~$9,750 |
 | **Tier 6** | $169 | **Headliner 3 Unlock** (Third major artist secured) | ~$12,900 |
-| **Tier 7** | $179 | **Forest Magic** (Yoga, workshops, and games) | ~$16,550 |
-| **Tier 8** | $189 | **The Dome Upgrade** (Furniture & chill zone decor) | ~$20,100 |
+| **Tier 7** | $179 | **Interactive Art** (Funding for physical art installations) | ~$16,550 |
+| **Tier 8** | $189 | **Daytime Magic** (Yoga, workshops, and flow arts) | ~$20,100 |
 | **Tier 9** | $199 | **Final Reveal** (Support acts & schedule release) | ~$24,150 |
 | **Tier 10** | $209 | **The Full Send** (Lasers & Max visual production) | ~$28,700 |
 

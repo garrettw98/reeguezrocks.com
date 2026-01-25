@@ -34,8 +34,8 @@ window.CROWDFUNDING_TIERS = [
   { id: 4, price: 149, goal: 29775, name: 'Headliner 2 Unlock', desc: 'Second major artist secured and announced.' },
   { id: 5, price: 159, goal: 36930, name: 'Art Grants', desc: 'Funding for interactive forest art installations.' },
   { id: 6, price: 169, goal: 44535, name: 'Headliner 3 Unlock', desc: 'Third major artist secured and announced.' },
-  { id: 7, price: 179, goal: 52590, name: 'Forest Magic', desc: 'Yoga, workshops, and games funded.' },
-  { id: 8, price: 189, goal: 61095, name: 'The Dome Upgrade', desc: 'Furniture and decor for the chill zone.' },
+  { id: 7, price: 179, goal: 52590, name: 'Interactive Art', desc: 'Funding for physical art installations.' },
+  { id: 8, price: 189, goal: 61095, name: 'Daytime Magic', desc: 'Yoga, workshops, and flow arts programming.' },
   { id: 9, price: 199, goal: 69050, name: 'Final Reveal', desc: 'Complete support acts and schedule released.' },
   { id: 10, price: 209, goal: 79455, name: 'The Full Send', desc: 'Lasers and high-spec visual production.' }
 ];
