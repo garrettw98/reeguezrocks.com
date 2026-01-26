@@ -13,5 +13,6 @@
   { "name": "PrimeTime", "soundcloud": null, "image": "assets/lineup/primetime.png", "order": 12 },
   { "name": "Reeguez", "soundcloud": "https://soundcloud.com/reeguez", "image": "assets/lineup/reeguez.png", "order": 13 },
   { "name": "Sherpa Suby", "soundcloud": null, "image": "assets/lineup/SherpaSuby.JPG", "order": 14 },
-  { "name": "XOXO", "soundcloud": null, "image": "assets/lineup/xoxo.png", "order": 15 }
+  { "name": "XOXO", "soundcloud": null, "image": "assets/lineup/xoxo.png", "order": 15 },
+  { "name": "ZURGLIN", "soundcloud": "https://soundcloud.com/zurglin", "image": "https://unavatar.io/soundcloud/zurglin", "order": 16 }
 ]
