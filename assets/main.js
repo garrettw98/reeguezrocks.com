@@ -442,6 +442,9 @@ const initLineup = async () => {
             artists = await res.json();
         }
         
+        // Force A-Z Sort
+        artists.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+        
         // Handle both main grid and teaser grid
         const mainGrid = $("#lineup-grid");
         const teaserGrid = $("#lineup-teaser-grid");
