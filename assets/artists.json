@@ -12,6 +12,6 @@
   { "name": "Sherpa Suby", "soundcloud": null, "image": "assets/lineup/SherpaSuby.JPG", "order": 11 },
   { "name": "LEO", "soundcloud": null, "image": "archive/artists-raw/TOPSCORELEO.png", "order": 12 },
   { "name": "XOXO", "soundcloud": null, "image": "assets/lineup/xoxo.png", "order": 13 },
-  { "name": "Harvest", "soundcloud": "https://soundcloud.com/harvestbass", "image": null, "order": 14 },
-  { "name": "Bloomsmack", "soundcloud": "https://soundcloud.com/bloomsmack", "image": null, "order": 15 }
+  { "name": "Harvest", "soundcloud": "https://soundcloud.com/harvestbass", "image": "https://unavatar.io/soundcloud/harvestbass", "order": 14 },
+  { "name": "Bloomsmack", "soundcloud": "https://soundcloud.com/bloomsmack", "image": "https://unavatar.io/soundcloud/bloomsmack", "order": 15 }
 ]
